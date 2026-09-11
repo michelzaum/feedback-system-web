@@ -40,11 +40,19 @@ function StatCard({
     yellow: "text-yellow-600",
   }
 
+  const variantBgColors = {
+    default: "bg-muted/50",
+    positive: "bg-green-50 dark:bg-green-950/30",
+    negative: "bg-red-50 dark:bg-red-950/30",
+    neutral: "bg-muted/50",
+    yellow: "bg-yellow-50 dark:bg-yellow-950/30",
+  }
+
   return (
-    <Card>
+    <Card className={cn(variantBgColors[variant])}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className={cn("h-4 w-4", variantColors[variant])} />
+        <Icon className={cn("h-5 w-5", variantColors[variant])} />
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
@@ -105,7 +113,7 @@ function CategoryChart() {
   const maxCount = Math.max(...categories.map(([, cat]) => feedbacks.filter(f => f.category === cat).length))
 
   return (
-    <Card className="flex flex-col">
+    <Card>
       <CardHeader className="pb-1">
         <CardTitle className="text-xs font-medium">Feedbacks por Categoria</CardTitle>
       </CardHeader>
@@ -133,7 +141,7 @@ function CategoryChart() {
 
 function RecentFeedbacks({ items }: { items: Feedback[] }) {
   return (
-    <Card className="flex flex-col">
+    <Card>
       <CardHeader>
         <CardTitle className="text-sm font-medium">Feedbacks Recentes</CardTitle>
         <CardDescription>Últimos feedbacks do público</CardDescription>
@@ -151,7 +159,7 @@ export function Dashboard() {
   const recentFeedbacks = [...feedbacks].reverse().slice(0, 4)
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <div className="flex flex-1 flex-col gap-4 bg-neutral-50 dark:bg-neutral-950 p-4 pt-0">
       <div className="grid auto-rows-min gap-4 md:grid-cols-5">
         <StatCard title="Total de Feedbacks" value={stats.total} icon={MessageCircle} variant="default" />
         <StatCard title="Positivos" value={stats.positive} icon={CheckCircle2} variant="positive" />
