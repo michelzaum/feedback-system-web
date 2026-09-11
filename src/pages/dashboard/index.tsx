@@ -99,10 +99,6 @@ function FeedbackCard({ feedback }: { feedback: Feedback }) {
       </CardContent>
       <CardFooter className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">{feedback.createdAt}</span>
-        <Button variant="ghost" size="sm">
-          <MessageCircle className="mr-1 h-3 w-3" />
-          Responder
-        </Button>
       </CardFooter>
     </Card>
   )
