@@ -4,11 +4,14 @@ import { BrowserRouter } from "react-router";
 
 import './index.css'
 import { RoutesComponent } from './routes.tsx';
+import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <RoutesComponent />
+      <App>
+        <RoutesComponent />
+      </App>
     </BrowserRouter>,
   </StrictMode>,
 )
