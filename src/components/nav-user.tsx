@@ -74,7 +74,7 @@ export function NavUser({
               <DropdownMenuItem>
                 <SparklesIcon
                 />
-                Upgrade to Pro
+                Assinar plano Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -82,19 +82,19 @@ export function NavUser({
               <DropdownMenuItem>
                 <BadgeCheckIcon
                 />
-                Account
+                Meu perfil
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon
                 />
-                Billing
+                Cobranças
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOutIcon
               />
-              Log out
+              Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
