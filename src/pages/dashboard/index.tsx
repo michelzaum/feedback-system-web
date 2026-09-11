@@ -70,11 +70,16 @@ function StatCard({
 
 function StatusBadge({ status }: { status: FeedbackStatus }) {
   return (
-    <Badge variant={status === "positive" ? "default" : status === "negative" ? "destructive" : status === "pending" ? "outline" : "secondary"}>
+    <Badge className={cn(
+      status === "positive" && "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100",
+      status === "negative" && "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100",
+      status === "neutral" && "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
+      status === "pending" && "bg-muted text-muted-foreground",
+    )}>
       {status === "positive" && <CheckCircle2 className="mr-1 h-3 w-3" />}
       {status === "negative" && <XCircle className="mr-1 h-3 w-3" />}
       {status === "pending" && <AlertCircle className="mr-1 h-3 w-3 text-muted-foreground" />}
-      {status === "neutral" && <MinusCircle className="mr-1 h-3 w-3 text-yellow-600" />}
+      {status === "neutral" && <MinusCircle className="mr-1 h-3 w-3" />}
       {statusLabels[status]}
     </Badge>
   )
