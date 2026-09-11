@@ -86,7 +86,7 @@ export function TeamSwitcher({
                   <PlusIcon className="size-4" />
                 </div>
                 <div className="font-medium text-muted-foreground">
-                  Add team
+                  Adicionar projeto
                 </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>
