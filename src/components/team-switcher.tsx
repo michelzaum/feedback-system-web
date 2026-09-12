@@ -73,7 +73,7 @@ export function TeamSwitcher({
                 <DropdownMenuItem
                   key={team.name}
                   onClick={() => setActiveTeam(team)}
-                  className="gap-2 p-2"
+                  className="gap-2 p-2 cursor-pointer"
                 >
                   <div className="flex size-6 items-center justify-center rounded-md border">
                     {team.logo}
@@ -86,7 +86,7 @@ export function TeamSwitcher({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem
-                className="gap-2 p-2"
+                className="gap-2 p-2 hover:cursor-pointer"
                 onClick={() => setIsCreateOrganizationModalOpen(true)}
               >
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">

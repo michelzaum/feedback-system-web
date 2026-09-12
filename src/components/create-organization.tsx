@@ -15,11 +15,11 @@ import { Label } from "@/components/ui/label"
 export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-sm p-4" showCloseButton={false}>
+      <DialogContent className="sm:max-w-sm p-2" showCloseButton={false}>
         <DialogHeader className="flex flez-col gap-2 py-8">
           <DialogTitle>Adicionar organização</DialogTitle>
           <DialogDescription>
-            Crie uma nova organização para gerenciar seus feedbacks dos projetos
+            Crie uma nova organização para gerenciar feedback dos projetos
           </DialogDescription>
         </DialogHeader>
           <Field className="px-4">
