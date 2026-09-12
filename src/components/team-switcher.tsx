@@ -19,7 +19,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { ChevronsUpDownIcon, PlusIcon } from "lucide-react"
-import { CreateOrganizationModal } from "@/pages/create-organization"
+import { CreateOrganizationModal } from "@/components/create-organization"
 
 export function TeamSwitcher({
   teams,
