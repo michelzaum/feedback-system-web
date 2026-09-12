@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState, type ReactNode } from "react"
 
 import {
   DropdownMenu,
@@ -19,21 +19,25 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { ChevronsUpDownIcon, PlusIcon } from "lucide-react"
+import { CreateOrganizationModal } from "@/pages/create-organization"
 
 export function TeamSwitcher({
   teams,
 }: {
   teams: {
     name: string
-    logo: React.ReactNode
+    logo: ReactNode
     plan: string
   }[]
 }) {
   const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  const [activeTeam, setActiveTeam] = useState(teams[0])
+  const [isCreateOrganizationModalOpen, setIsCreateOrganizationModalOpen] = useState(false)
+
   if (!activeTeam) {
     return null
   }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -81,18 +85,20 @@ export function TeamSwitcher({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 p-2">
+              <DropdownMenuItem
+                className="gap-2 p-2"
+                onClick={() => setIsCreateOrganizationModalOpen(true)}
+              >
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <PlusIcon className="size-4" />
                 </div>
-                <div className="font-medium text-muted-foreground">
-                  Adicionar organização
-                </div>
+                Adicionar organização
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <CreateOrganizationModal open={isCreateOrganizationModalOpen} onOpenChange={setIsCreateOrganizationModalOpen} />
     </SidebarMenu>
   )
 }
