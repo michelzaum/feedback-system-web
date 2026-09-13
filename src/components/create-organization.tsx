@@ -1,6 +1,7 @@
 import { useRef, type SubmitEvent } from "react";
 import { toast } from "sonner"
-import axios from "axios";
+
+import { api } from "@/api/request";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -27,7 +28,7 @@ export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean,
     if (!newOrganizationName) return;
 
     try {
-      await axios.post("http://localhost:3001/organizations", { name: newOrganizationName });
+      await api.post("/organizations", { name: newOrganizationName });
       toast.success("Organização criada com sucesso!");
     } catch (error) {
       toast.error("Erro ao criar organização");
