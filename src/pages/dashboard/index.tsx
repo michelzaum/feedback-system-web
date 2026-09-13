@@ -14,6 +14,7 @@ import {
   AlertCircle,
   MinusCircle,
   ArrowRight,
+  Filter,
 } from "lucide-react"
 import { cn } from "cn"
 import { feedbacks, stats, categoryLabels, statusLabels, type Feedback, type FeedbackStatus } from "@/data/feedbacks"
@@ -189,8 +190,8 @@ export function Dashboard() {
                   <CardDescription>Tendências de feedback em todos os projetos</CardDescription>
                 </div>
                 <Button variant="outline" size="sm">
-                  <TrendingUp className="mr-1 h-3 w-3" />
-                  Ver Tudo
+                  <Filter className="mr-1 h-3 w-3" />
+                  Filtrar por projeto
                 </Button>
               </div>
             </CardHeader>
