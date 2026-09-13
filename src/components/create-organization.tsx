@@ -1,4 +1,5 @@
-import { useRef, type SubmitEvent } from "react"
+import { useRef, type SubmitEvent } from "react";
+import { toast } from "sonner"
 import axios from "axios";
 
 import { Button } from "@/components/ui/button"
@@ -27,7 +28,9 @@ export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean,
 
     try {
       await axios.post("http://localhost:3001/organizations", { name: newOrganizationName });
+      toast.success("Organização criada com sucesso!");
     } catch (error) {
+      toast.error("Erro ao criar organização");
       console.log(error);
     }
 
