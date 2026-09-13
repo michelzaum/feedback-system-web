@@ -1,8 +1,3 @@
-import { useRef, type SubmitEvent } from "react";
-import { toast } from "sonner"
-
-import { api } from "@/api/request";
-
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -17,26 +12,10 @@ import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import { useCreateOrganization } from "./useCreateOrganization";
+
 export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-  const organizationName = useRef<HTMLInputElement>({} as HTMLInputElement);
-
-  const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const newOrganizationName = organizationName.current.value;
-
-    if (!newOrganizationName) return;
-
-    try {
-      await api.post("/organizations", { name: newOrganizationName });
-      toast.success("Organização criada com sucesso!");
-    } catch (error) {
-      toast.error("Erro ao criar organização");
-      console.log(error);
-    }
-
-    onOpenChange(false);
-  }
+  const { organizationName, onSubmit } = useCreateOrganization(onOpenChange);
 
   return (
     <Dialog open={open}>
