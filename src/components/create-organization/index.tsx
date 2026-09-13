@@ -1,8 +1,3 @@
-import { useRef, type SubmitEvent } from "react";
-import { toast } from "sonner"
-
-import { api } from "@/api/request";
-
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -17,29 +12,14 @@ import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-  const organizationName = useRef<HTMLInputElement>({} as HTMLInputElement);
+import { useCreateOrganization } from "./useCreateOrganization";
+import type { CreateOrganizationModalProps } from "./types"
 
-  const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const newOrganizationName = organizationName.current.value;
-
-    if (!newOrganizationName) return;
-
-    try {
-      await api.post("/organizations", { name: newOrganizationName });
-      toast.success("Organização criada com sucesso!");
-    } catch (error) {
-      toast.error("Erro ao criar organização");
-      console.log(error);
-    }
-
-    onOpenChange(false);
-  }
+export function CreateOrganizationModal({ isModalOpen, onOpenModalChange }: CreateOrganizationModalProps) {
+  const { organizationName, onSubmit } = useCreateOrganization({ onOpenModalChange });
 
   return (
-    <Dialog open={open}>
+    <Dialog open={isModalOpen}>
       <DialogContent className="sm:max-w-sm p-2" showCloseButton={false}>
         <DialogHeader className="flex flez-col gap-2 py-8">
           <DialogTitle>Adicionar organização</DialogTitle>
@@ -55,7 +35,7 @@ export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean,
           <DialogFooter className="flex flex-row items-center py-8">
             <DialogClose
               render={
-                <Button onClick={() => onOpenChange(false)} variant="secondary" className="flex-1 h-12 hover:cursor-pointer transition-all duration-300">
+                <Button onClick={() => onOpenModalChange(false)} variant="secondary" className="flex-1 h-12 hover:cursor-pointer transition-all duration-300">
                   Cancel
                 </Button>
               }
