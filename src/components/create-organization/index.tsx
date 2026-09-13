@@ -14,11 +14,11 @@ import { Label } from "@/components/ui/label"
 
 import { useCreateOrganization } from "./useCreateOrganization";
 
-export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-  const { organizationName, onSubmit } = useCreateOrganization(onOpenChange);
+export function CreateOrganizationModal({ open: isModalOpen, onOpenChange: onOpenModalChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
+  const { organizationName, onSubmit } = useCreateOrganization(onOpenModalChange);
 
   return (
-    <Dialog open={open}>
+    <Dialog open={isModalOpen}>
       <DialogContent className="sm:max-w-sm p-2" showCloseButton={false}>
         <DialogHeader className="flex flez-col gap-2 py-8">
           <DialogTitle>Adicionar organização</DialogTitle>
@@ -34,7 +34,7 @@ export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean,
           <DialogFooter className="flex flex-row items-center py-8">
             <DialogClose
               render={
-                <Button onClick={() => onOpenChange(false)} variant="secondary" className="flex-1 h-12 hover:cursor-pointer transition-all duration-300">
+                <Button onClick={() => onOpenModalChange(false)} variant="secondary" className="flex-1 h-12 hover:cursor-pointer transition-all duration-300">
                   Cancel
                 </Button>
               }
