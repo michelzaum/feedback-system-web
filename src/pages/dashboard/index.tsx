@@ -13,6 +13,8 @@ import {
   XCircle,
   AlertCircle,
   MinusCircle,
+  ArrowRight,
+  Filter,
 } from "lucide-react"
 import { cn } from "cn"
 import { feedbacks, stats, categoryLabels, statusLabels, type Feedback, type FeedbackStatus } from "@/data/feedbacks"
@@ -147,17 +149,23 @@ function RecentFeedbacks({ items }: { items: Feedback[] }) {
         <CardTitle className="text-sm font-medium">Feedbacks Recentes</CardTitle>
         <CardDescription>Últimos feedbacks do público</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-3">
+      <CardContent className="flex-1 flex flex-col gap-3 py-4">
         {items.map((feedback) => (
           <FeedbackCard key={feedback.id} feedback={feedback} />
         ))}
       </CardContent>
+      <CardFooter className="flex items-center justify-end p-4">
+        <Button variant="outline" size="sm" className="hover:cursor-pointer">
+          Ver todos feedbacks
+          <ArrowRight className="ml-1 h-3 w-3" />
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
 
 export function Dashboard() {
-  const recentFeedbacks = [...feedbacks].reverse().slice(0, 4)
+  const recentFeedbacks = [...feedbacks].reverse().slice(0, 3);
 
   return (
     <div className="flex flex-1 flex-col gap-4 bg-neutral-50 dark:bg-neutral-950 p-4 pt-0">
@@ -182,8 +190,8 @@ export function Dashboard() {
                   <CardDescription>Tendências de feedback em todos os projetos</CardDescription>
                 </div>
                 <Button variant="outline" size="sm">
-                  <TrendingUp className="mr-1 h-3 w-3" />
-                  Ver Tudo
+                  <Filter className="mr-1 h-3 w-3" />
+                  Filtrar por projeto
                 </Button>
               </div>
             </CardHeader>
