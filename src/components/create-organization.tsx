@@ -30,6 +30,8 @@ export function CreateOrganizationModal({ open, onOpenChange }: { open: boolean,
     } catch (error) {
       console.log(error);
     }
+
+    onOpenChange(false);
   }
 
   return (
