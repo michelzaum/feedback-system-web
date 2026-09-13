@@ -98,7 +98,7 @@ export function TeamSwitcher({
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
-      <CreateOrganizationModal open={isCreateOrganizationModalOpen} onOpenChange={setIsCreateOrganizationModalOpen} />
+      <CreateOrganizationModal isModalOpen={isCreateOrganizationModalOpen} onOpenModalChange={setIsCreateOrganizationModalOpen} />
     </SidebarMenu>
   )
 }

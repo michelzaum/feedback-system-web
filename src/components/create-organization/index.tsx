@@ -13,9 +13,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { useCreateOrganization } from "./useCreateOrganization";
+import type { CreateOrganizationModalProps } from "./types"
 
-export function CreateOrganizationModal({ open: isModalOpen, onOpenChange: onOpenModalChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-  const { organizationName, onSubmit } = useCreateOrganization(onOpenModalChange);
+export function CreateOrganizationModal({ isModalOpen, onOpenModalChange }: CreateOrganizationModalProps) {
+  const { organizationName, onSubmit } = useCreateOrganization({ onOpenModalChange });
 
   return (
     <Dialog open={isModalOpen}>
