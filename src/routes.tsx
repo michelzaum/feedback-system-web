@@ -5,7 +5,10 @@ import SignInPage from "./pages/sign-in";
 import SignUpPage from "./pages/sign-up";
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
+  if (!isLoaded) {
+    return null;
+  }
 
   if (!isSignedIn) {
     return <Navigate to="/sign-in" />;
