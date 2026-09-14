@@ -27,7 +27,7 @@ export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCr
             Crie um novo projeto para gerenciar feedback
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit}>
+        <form className="flex flex-col gap-6" onSubmit={onSubmit}>
           <Field className="px-4">
             <Label htmlFor="name-1">Nome do projeto</Label>
             <Input id="name-1" name="name" ref={projectName} />

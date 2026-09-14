@@ -17,6 +17,7 @@ export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCre
     if (!newProjectName) return;
 
     try {
+      // Mock organizationId until the auth flow is implemented
       await api.post("/organizations/9612393f-1510-47e4-9140-4e897f884305/projects", {
         name: newProjectName,
         description: newProjectDescription,
