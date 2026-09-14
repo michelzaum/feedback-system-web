@@ -16,7 +16,7 @@ import { useCreateProject } from "./useCreateProject";
 import type { CreateProjectModalProps } from "./types"
 
 export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCreated }: CreateProjectModalProps) {
-  const { projectName, onSubmit } = useCreateProject({ onOpenModalChange, onProjectCreated });
+  const { projectName, projectDescription, onSubmit } = useCreateProject({ onOpenModalChange, onProjectCreated });
 
   return (
     <Dialog open={isModalOpen}>
@@ -32,6 +32,10 @@ export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCr
             <Label htmlFor="name-1">Nome do projeto</Label>
             <Input id="name-1" name="name" ref={projectName} />
           </Field>
+          <Field className="px-4">
+            <Label htmlFor="description-1">Descrição do projeto</Label>
+            <Input id="description-1" name="description" ref={projectDescription} />
+          </Field>
           <DialogFooter className="flex flex-row items-center py-8">
             <DialogClose
               render={
@@ -41,7 +45,7 @@ export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCr
               }
             />
             <Button type="submit" className="flex-1 h-12 hover:cursor-pointer transition-all duration-300">
-              Save changes
+              Salvar
             </Button>
           </DialogFooter>
         </form>

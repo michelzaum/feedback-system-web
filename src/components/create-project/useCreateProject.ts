@@ -6,16 +6,22 @@ import type { UseCreateProjectModalProps } from "./types";
 
 export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCreateProjectModalProps) {
   const projectName = useRef<HTMLInputElement>({} as HTMLInputElement);
+  const projectDescription = useRef<HTMLInputElement>({} as HTMLInputElement);
 
   const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const newProjectName = projectName.current.value;
+    const newProjectDescription = projectDescription.current.value;
 
     if (!newProjectName) return;
 
     try {
-      await api.post("/projects", { name: newProjectName });
+      await api.post("/organizations/9612393f-1510-47e4-9140-4e897f884305/projects", {
+        name: newProjectName,
+        description: newProjectDescription,
+      });
+
       toast.success("Projeto criado com sucesso!");
       onProjectCreated?.(newProjectName);
     } catch (error) {
@@ -28,6 +34,7 @@ export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCre
 
   return {
     projectName,
+    projectDescription,
     onSubmit,
   };
 }

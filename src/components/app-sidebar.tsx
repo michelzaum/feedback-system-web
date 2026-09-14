@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState, type ReactNode } from "react"
 
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
@@ -82,9 +82,9 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false)
-  const [isProjectsOpen, setIsProjectsOpen] = React.useState(false)
-  const [projectsList, setProjectsList] = React.useState<{ name: string; url: string; icon: React.ReactNode }[]>([])
+  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
+  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [projectsList, setProjectsList] = useState<{ name: string; url: string; icon: ReactNode }[]>([]);
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -93,11 +93,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={data.projects} />
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => setIsProjectsOpen(!isProjectsOpen)}>
+              <SidebarMenuButton onClick={() => setIsProjectsOpen(!isProjectsOpen)} className="hover:cursor-pointer">
                 <AppWindow />
                 <span>Projetos</span>
               </SidebarMenuButton>
@@ -114,12 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
         <CreateProjectModal
           isModalOpen={isCreateProjectModalOpen}
-          onOpenModalChange={(open) => {
-            setIsCreateProjectModalOpen(open)
-            if (open) {
-              setIsProjectsOpen(true)
-            }
-          }}
+          onOpenModalChange={setIsCreateProjectModalOpen}
           onProjectCreated={(name) => {
             setProjectsList((prev) => [...prev, { name, url: "#", icon: <AppWindow /> }])
           }}
