@@ -1,20 +1,26 @@
 "use client"
 
-import * as React from "react"
+import { useState, type ReactNode } from "react"
 
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
+import { CreateProjectModal } from "@/components/create-project"
+import { ListProjects } from "@/components/list-projects"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
   SidebarRail,
+  SidebarHeader,
 } from "@/components/ui/sidebar"
-import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, FrameIcon, LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
+import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -57,14 +63,6 @@ const data = {
       ),
     },
     {
-      name: "Projetos",
-      url: "#",
-      icon: (
-        <AppWindow
-        />
-      ),
-    },
-    {
       name: "Feedbacks",
       url: "#",
       icon: (
@@ -84,6 +82,10 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
+  const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [projectsList, setProjectsList] = useState<{ name: string; url: string; icon: ReactNode }[]>([]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -91,6 +93,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={data.projects} />
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
+          <SidebarGroupLabel>Projetos</SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={() => setIsProjectsOpen(!isProjectsOpen)} className="hover:cursor-pointer">
+                <AppWindow />
+                <span>Projetos</span>
+              </SidebarMenuButton>
+              {isProjectsOpen && (
+                <ListProjects
+                  projects={projectsList}
+                  onNewProjectClick={() => {
+                    setIsCreateProjectModalOpen(true)
+                  }}
+                />
+              )}
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+        <CreateProjectModal
+          isModalOpen={isCreateProjectModalOpen}
+          onOpenModalChange={setIsCreateProjectModalOpen}
+          onProjectCreated={(name) => {
+            setProjectsList((prev) => [...prev, { name, url: "#", icon: <AppWindow /> }])
+          }}
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
