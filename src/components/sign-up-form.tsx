@@ -23,11 +23,11 @@ export function SignUpForm({
   ...props
 }: Omit<React.ComponentProps<"div">, "onSubmit"> & { onSubmit?: React.FormEventHandler<HTMLFormElement> }) {
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Create your account</CardTitle>
-          <CardDescription>
+    <div className={cn("flex w-full flex-col gap-6", className)} {...props}>
+      <Card className="w-full shadow-sm">
+        <CardHeader className="text-center sm:text-left">
+          <CardTitle className="text-xl sm:text-2xl">Create your account</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
             Enter your details below to create an account
           </CardDescription>
         </CardHeader>
@@ -36,28 +36,60 @@ export function SignUpForm({
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="name">Name</FieldLabel>
-                <Input id="name" placeholder="Your name" required />
+                <Input
+                  id="name"
+                  placeholder="Your name"
+                  autoComplete="name"
+                  required
+                  className="h-9"
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" name="email" placeholder="m@example.com" required />
+                <Input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="m@example.com"
+                  autoComplete="email"
+                  required
+                  className="h-9"
+                />
               </Field>
               <Field>
-                <div className="flex items-center">
+                <div className="flex items-center justify-between gap-2">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                  <a
+                    href="#"
+                    className="text-xs sm:text-sm underline-offset-4 hover:underline text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" name="password" type="password" required />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  className="h-9"
+                />
               </Field>
-              <Field>
-                <Button type="submit">Sign up</Button>
-                <Button variant="outline" type="button">
+              <Field className="gap-2">
+                <Button type="submit" size="lg" className="w-full">
+                  Sign up
+                </Button>
+                <Button variant="outline" type="button" size="lg" className="w-full">
                   Sign up with Google
                 </Button>
-                <FieldDescription className="text-center">
-                  Already have an account? <Link to="/sign-in" className="underline underline-offset-4 hover:text-primary">Sign in</Link>
+                <FieldDescription className="text-center text-xs sm:text-sm mt-2">
+                  Already have an account?{" "}
+                  <Link
+                    to="/sign-in"
+                    className="font-medium underline underline-offset-4 hover:text-primary"
+                  >
+                    Sign in
+                  </Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
