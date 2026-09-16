@@ -28,7 +28,13 @@ function SignIn() {
     }
   };
 
-  return <LoginForm onSubmit={handleSubmit} />;
+  return (
+    <div className="min-h-svh w-full flex items-center justify-center bg-background px-4">
+      <div className="w-full max-w-sm">
+        <LoginForm onSubmit={handleSubmit} />
+      </div>
+    </div>
+  );
 }
 
 export default SignIn;
