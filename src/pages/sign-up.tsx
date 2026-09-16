@@ -12,28 +12,17 @@ function SignUp() {
     e.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
     try {
       toast.success("Account created successfully!");
       navigate("/sign-in");
-    } catch (error) {
+    } catch {
       toast.error("Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center">
-      <div className="w-xl">
-        <SignUpForm onSubmit={handleSubmit} />
-      </div>
-    </div>
-  );
+  return <SignUpForm onSubmit={handleSubmit} />;
 }
 
 export default SignUp;

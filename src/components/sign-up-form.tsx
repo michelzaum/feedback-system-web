@@ -1,3 +1,4 @@
+import { Link } from "react-router"
 import { cn } from "cn"
 
 import { Button } from "@/components/ui/button"
@@ -56,7 +57,7 @@ export function SignUpForm({
                   Sign up with Google
                 </Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <a href="/sign-in">Sign in</a>
+                  Already have an account? <Link to="/sign-in" className="underline underline-offset-4 hover:text-primary">Sign in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

@@ -28,13 +28,7 @@ function SignIn() {
     }
   };
 
-  return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center">
-      <div className="w-xl">
-        <LoginForm onSubmit={handleSubmit} />
-      </div>
-    </div>
-  );
+  return <LoginForm onSubmit={handleSubmit} />;
 }
 
 export default SignIn;
