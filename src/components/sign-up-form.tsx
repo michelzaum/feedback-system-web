@@ -38,6 +38,7 @@ export function SignUpForm({
                 <FieldLabel htmlFor="name">Name</FieldLabel>
                 <Input
                   id="name"
+                  name="name"
                   placeholder="Your name"
                   autoComplete="name"
                   required
