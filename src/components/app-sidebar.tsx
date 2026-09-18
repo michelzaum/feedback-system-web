@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useState } from "react"
 
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import { CreateProjectModal } from "@/components/create-project"
 import { ListProjects } from "@/components/list-projects"
+import { useProjects } from "@/components/use-projects"
 import {
   Sidebar,
   SidebarContent,
@@ -57,10 +58,17 @@ const projects = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
-  const [projectsList, setProjectsList] = useState<{ name: string; url: string; icon: ReactNode }[]>([]);
+  const { organizationsWithProjects, fetchProjects } = useProjects();
   const authUser = useAuthStore((state) => state.user)
 
   const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" }
+
+  const handleProjectsClick = () => {
+    if (!isProjectsOpen) {
+      fetchProjects();
+    }
+    setIsProjectsOpen(!isProjectsOpen);
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -73,13 +81,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => setIsProjectsOpen(!isProjectsOpen)} className="hover:cursor-pointer">
+              <SidebarMenuButton onClick={handleProjectsClick} className="hover:cursor-pointer">
                 <AppWindow />
                 <span>Projetos</span>
               </SidebarMenuButton>
               {isProjectsOpen && (
                 <ListProjects
-                  projects={projectsList}
+                  organizations={organizationsWithProjects}
                   onNewProjectClick={() => {
                     setIsCreateProjectModalOpen(true)
                   }}
@@ -91,8 +99,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <CreateProjectModal
           isModalOpen={isCreateProjectModalOpen}
           onOpenModalChange={setIsCreateProjectModalOpen}
-          onProjectCreated={(name) => {
-            setProjectsList((prev) => [...prev, { name, url: "#", icon: <AppWindow /> }])
+          onProjectCreated={() => {
+            fetchProjects();
           }}
         />
       </SidebarContent>

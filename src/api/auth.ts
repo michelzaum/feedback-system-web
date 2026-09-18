@@ -37,6 +37,22 @@ export async function me(): Promise<UserResponse> {
   return data;
 }
 
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  archivedAt: string | null;
+  organizationId: string;
+}
+
+export async function getProjects(): Promise<Project[]> {
+  const { data } = await api.get<Project[]>("/me/projects");
+  return data;
+}
+
 interface Organization {
   id: string;
   name: string;
