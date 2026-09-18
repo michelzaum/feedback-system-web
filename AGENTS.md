@@ -22,7 +22,8 @@ React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + Zustand + React Router
 
 ## Auth Pattern
 - `User` interface: `{ id?: string; name?: string; email: string; avatar?: string }`
-- After sign-in or sign-up, call `/me` endpoint to get user info, then `login({ name, email })` to store in Zustand
+- After sign-in, call `/me` endpoint to get user info, then `login({ name, email })` to store in Zustand
+- Sign-up does NOT authenticate the user — it creates an account and redirects to sign-in
 - `NavUser` component reads `authUser` from `useAuthStore` to display name + email in sidebar
 - `AppSidebar` reads from auth store, passes user to `NavUser`
 
@@ -48,6 +49,8 @@ React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + Zustand + React Router
 
 ## Important
 - **NEVER commit changes unless explicitly asked by the user. ALWAYS wait for explicit permission before committing.**
-- The `/me` endpoint returns `{ message, name, email, avatar? }` and must be called after sign-in/sign-up to get user name
+- The `/me` endpoint returns `{ message, name, email, avatar? }` and must be called after sign-in to get user name
+- Sign-up does not return a token, so it does not authenticate the user
+- Sign-in calls `signIn` then `me()` sequentially, not in parallel
 - Never hardcode user data in components — always read from `useAuthStore`
-- Sign-in uses `Promise.all([signIn({ email, password }), me()])` for parallel requests
+- Sign-in calls `signIn` then `me()` sequentially, not in parallel

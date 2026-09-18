@@ -3,11 +3,9 @@ import { useNavigate } from "react-router"
 import { toast } from "sonner"
 
 import { signUp } from "@/api/auth"
-import { useAuthStore } from "@/store/auth"
 
 export function useSignUp() {
   const navigate = useNavigate()
-  const login = useAuthStore((state) => state.login)
   const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -21,7 +19,6 @@ export function useSignUp() {
 
     try {
       await signUp({ name, email, password })
-      login({ name, email })
       toast.success("Account created successfully!")
       navigate("/sign-in")
     } catch {

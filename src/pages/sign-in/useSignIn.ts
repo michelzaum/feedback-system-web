@@ -22,11 +22,8 @@ export function useSignIn() {
     const password = formData.get("password") as string
 
     try {
-      const [, user] = await Promise.all([
-        signIn({ email, password }),
-        me(),
-      ])
-
+      await signIn({ email, password })
+      const user = await me()
       login({ name: user.name, email: user.email })
       toast.success("Signed in successfully!")
       navigate(from, { replace: true })
