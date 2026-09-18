@@ -1,13 +1,18 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { LoginForm } from "@/components/login-form";
 import { signIn } from "@/api/auth";
+import { useAuthStore } from "@/store/auth";
 
 function SignIn() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const login = useAuthStore((state) => state.login);
   const [, setIsLoading] = useState(false);
+
+  const from = (location.state as { from?: Location })?.from?.pathname || "/";
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,8 +24,9 @@ function SignIn() {
 
     try {
       await signIn({ email, password });
+      login({ email });
       toast.success("Signed in successfully!");
-      navigate("/");
+      navigate(from, { replace: true });
     } catch {
       toast.error("Failed to sign in. Please try again.");
     } finally {
