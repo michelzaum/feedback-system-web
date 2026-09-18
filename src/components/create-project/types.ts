@@ -1,3 +1,10 @@
+export type Organization = {
+  id: string;
+  name: string;
+  slug: string;
+  role: string;
+};
+
 export type CreateProjectModalProps = {
   isModalOpen: boolean;
   onOpenModalChange: (open: boolean) => void;

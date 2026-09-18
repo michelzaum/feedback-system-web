@@ -36,3 +36,15 @@ export async function me(): Promise<UserResponse> {
   const { data } = await api.get<UserResponse>("/me");
   return data;
 }
+
+interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  role: string;
+}
+
+export async function getOrganizations(): Promise<Organization[]> {
+  const { data } = await api.get("/me/organizations");
+  return Array.isArray(data) ? data : data.organizations ?? [];
+}
