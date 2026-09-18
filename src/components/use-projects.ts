@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 
 import { getOrganizations, getProjects } from "@/api/auth";
@@ -41,6 +41,10 @@ export function useProjects() {
       setIsLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
   return { organizationsWithProjects, isLoading, fetchProjects };
 }

@@ -64,9 +64,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" }
 
   const handleProjectsClick = () => {
-    if (!isProjectsOpen) {
-      fetchProjects();
-    }
     setIsProjectsOpen(!isProjectsOpen);
   };
 
