@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { LoginForm } from "@/components/login-form";
-import { signIn } from "@/api/auth";
+import { signIn, me } from "@/api/auth";
 import { useAuthStore } from "@/store/auth";
 
 function SignIn() {
@@ -23,10 +23,18 @@ function SignIn() {
     const password = formData.get("password") as string;
 
     try {
-      await signIn({ email, password });
-      login({ email });
-      toast.success("Signed in successfully!");
+      const [, user] = await Promise.all([
+        signIn({ email, password }),
+        me(),
+      ]);
+
+      login({
+        name: user.name,
+        email: user.email,
+      });
+
       navigate(from, { replace: true });
+      toast.success("Signed in successfully!");
     } catch {
       toast.error("Failed to sign in. Please try again.");
     } finally {

@@ -20,79 +20,71 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar"
 import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
+import { useAuthStore } from "@/store/auth"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+const teams = [
+  {
+    name: "Acme Inc",
+    logo: (
+      <GalleryVerticalEndIcon />
+    ),
+    plan: "Enterprise",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: (
-        <GalleryVerticalEndIcon
-        />
-      ),
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: (
-        <AudioLinesIcon
-        />
-      ),
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: (
-        <TerminalIcon
-        />
-      ),
-      plan: "Free",
-    },
-  ],
-  projects: [
-    {
-      name: "Overview",
-      url: "#",
-      icon: (
-        <LayoutDashboard
-        />
-      ),
-    },
-    {
-      name: "Feedbacks",
-      url: "#",
-      icon: (
-        <MessageCircle
-        />
-      ),
-    },
-    {
-      name: "Membros",
-      url: "#",
-      icon: (
-        <Users
-        />
-      ),
-    },
-  ],
-}
+  {
+    name: "Acme Corp.",
+    logo: (
+      <AudioLinesIcon />
+    ),
+    plan: "Startup",
+  },
+  {
+    name: "Evil Corp.",
+    logo: (
+      <TerminalIcon />
+    ),
+    plan: "Free",
+  },
+]
+
+const projects = [
+  {
+    name: "Overview",
+    url: "#",
+    icon: (
+      <LayoutDashboard />
+    ),
+  },
+  {
+    name: "Feedbacks",
+    url: "#",
+    icon: (
+      <MessageCircle />
+    ),
+  },
+  {
+    name: "Membros",
+    url: "#",
+    icon: (
+      <Users />
+    ),
+  },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const [projectsList, setProjectsList] = useState<{ name: string; url: string; icon: ReactNode }[]>([]);
+  const authUser = useAuthStore((state) => state.user)
+
+  const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" }
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={projects} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>
@@ -121,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
