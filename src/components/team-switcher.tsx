@@ -22,8 +22,8 @@ export function TeamSwitcher({
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
-        <Link to="/" className="hover:cursor-pointer">
+      <SidebarMenuItem className="hover:cursor-pointer">
+        <Link to="/">
           <SidebarMenuButton size="lg" className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground">
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               {team.logo}
