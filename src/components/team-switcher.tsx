@@ -1,4 +1,5 @@
 import { type ReactNode } from "react"
+import { Link } from "react-router"
 
 import {
   SidebarMenu,
@@ -22,15 +23,17 @@ export function TeamSwitcher({
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton size="lg" className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            {team.logo}
-          </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{team.name}</span>
-            <span className="truncate text-xs">{team.plan}</span>
-          </div>
-        </SidebarMenuButton>
+        <Link to="/" className="hover:cursor-pointer">
+          <SidebarMenuButton size="lg" className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              {team.logo}
+            </div>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{team.name}</span>
+              <span className="truncate text-xs">{team.plan}</span>
+            </div>
+          </SidebarMenuButton>
+        </Link>
       </SidebarMenuItem>
     </SidebarMenu>
   )
