@@ -1,5 +1,5 @@
 import { SignUpForm } from "@/components/sign-up-form"
-import { useSignUp } from "@/hooks/useSignUp"
+import { useSignUp } from "@/pages/sign-up/useSignUp"
 
 function SignUp() {
   const { onSubmit } = useSignUp()

@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form"
-import { useSignIn } from "@/hooks/useSignIn"
+import { useSignIn } from "@/pages/sign-in/useSignIn"
 
 function SignIn() {
   const { onSubmit } = useSignIn()

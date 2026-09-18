@@ -11,7 +11,8 @@ React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + Zustand + React Router
 
 ## Project Structure
 - `src/api/auth.ts` — API functions: `signIn`, `signUp`, `me`
-- `src/hooks/` — Custom hooks (e.g., `useSignIn`)
+- `src/pages/sign-in/` — Sign-in page + `useSignIn` hook
+- `src/pages/sign-up/` — Sign-up page + `useSignUp` hook
 - `src/store/auth.ts` — Zustand auth store with `login(user?)`, `logout()`, `user`, `isAuthenticated`
 - `src/components/` — UI components and component-level hooks
 - `src/pages/` — Page components (sign-in, sign-up, dashboard)
