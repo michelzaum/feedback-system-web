@@ -46,20 +46,20 @@ export function ListProjects({
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 ))}
-                <SidebarMenuSubItem>
-                  <SidebarMenuSubButton
-                    className="hover:cursor-pointer"
-                    onClick={onNewProjectClick}
-                  >
-                    <PlusIcon className="size-4" />
-                    <span>Novo projeto</span>
-                  </SidebarMenuSubButton>
-                </SidebarMenuSubItem>
               </SidebarMenuSub>
             </CollapsibleContent>
           </Collapsible>
         </SidebarMenuSubItem>
       ))}
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton
+          className="hover:cursor-pointer"
+          onClick={onNewProjectClick}
+        >
+          <PlusIcon className="size-4" />
+          <span>Novo projeto</span>
+        </SidebarMenuSubButton>
+      </SidebarMenuSubItem>
     </SidebarMenuSub>
   )
 }
