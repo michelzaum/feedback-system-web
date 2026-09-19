@@ -36,7 +36,7 @@ export function ListProjects({
       {organizations.map((org) => (
         <SidebarMenuSubItem key={org.id}>
           <Collapsible>
-            <CollapsibleTrigger render={<SidebarMenuSubButton><ChevronRight className="size-4 mr-1" /><span>{org.name}</span></SidebarMenuSubButton>} />
+            <CollapsibleTrigger render={<SidebarMenuSubButton><ChevronRight className="size-4 mr-1" /><span>{org.name}</span></SidebarMenuSubButton>} nativeButton={false} />
             <CollapsibleContent>
               <SidebarMenuSub>
                 {org.projects.map((project) => (
