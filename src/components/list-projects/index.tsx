@@ -1,13 +1,12 @@
 "use client"
 
+import { PlusIcon, ChevronRight } from "lucide-react"
 import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
-import { PlusIcon } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { ChevronRight } from "lucide-react"
 
 interface Project {
   id: string;
