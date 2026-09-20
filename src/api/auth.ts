@@ -37,7 +37,7 @@ export async function me(): Promise<UserResponse> {
   return data;
 }
 
-interface Project {
+export interface Project {
   id: string;
   name: string;
   description: string;
@@ -74,6 +74,11 @@ export interface OrganizationMember {
 
 export async function getOrganizationMembers(organizationId: string): Promise<OrganizationMember[]> {
   const { data } = await api.get<OrganizationMember[]>(`/organizations/${organizationId}/members`);
+  return data;
+}
+
+export async function getOrganizationProjects(organizationId: string): Promise<Project[]> {
+  const { data } = await api.get<Project[]>(`/organizations/${organizationId}/projects`);
   return data;
 }
 
