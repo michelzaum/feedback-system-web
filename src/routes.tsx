@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import Dashboard from "./pages/dashboard";
+import Members from "./pages/members";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import { AppLayout, AuthLayout } from "./layouts";
@@ -26,6 +27,7 @@ export const RoutesComponent = () => {
         <Route element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/members" element={<Members />} />
         </Route>
       </Route>
 
