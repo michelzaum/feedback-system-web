@@ -27,14 +27,14 @@ import { useLocation } from "react-router"
 const projects = [
   {
     name: "Overview",
-    url: "#",
+    url: "/",
     icon: (
       <LayoutDashboard />
     ),
   },
   {
     name: "Feedbacks",
-    url: "#",
+    url: "/",
     icon: (
       <MessageCircle />
     ),
