@@ -47,7 +47,12 @@ export function OrganizationSelectForm({
                 <FieldLabel htmlFor="organization">Organization</FieldLabel>
                 <Select name="organization" required>
                   <SelectTrigger id="organization">
-                    <SelectValue placeholder="Select an organization" />
+                    <SelectValue placeholder="Select an organization">
+                      {(value) => {
+                        const org = organizations.find((o) => o.id === value);
+                        return org?.name ?? "Select an organization";
+                      }}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {organizations.map((org) => (
