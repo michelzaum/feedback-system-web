@@ -53,7 +53,7 @@ export async function getProjects(): Promise<Project[]> {
   return data;
 }
 
-interface Organization {
+export interface Organization {
   id: string;
   name: string;
   slug: string;

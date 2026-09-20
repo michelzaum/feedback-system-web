@@ -14,8 +14,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/store/auth";
 
 export function AppLayout() {
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -31,7 +34,7 @@ export function AppLayout() {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    Acme (nome organização)
+                    {selectedOrganization?.name ?? "Acme"}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />

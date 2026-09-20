@@ -20,17 +20,9 @@ import {
   SidebarRail,
   SidebarHeader,
 } from "@/components/ui/sidebar"
-import { GalleryVerticalEndIcon, LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
+import { LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
 import { useAuthStore } from "@/store/auth"
 import { useLocation } from "react-router"
-
-const team = {
-  name: "Acme Inc",
-  logo: (
-    <GalleryVerticalEndIcon />
-  ),
-  plan: "Enterprise",
-}
 
 const projects = [
   {
@@ -72,7 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher team={team} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={projects} activeUrl={location.pathname} />
