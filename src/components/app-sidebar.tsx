@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sidebar"
 import { GalleryVerticalEndIcon, LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
 import { useAuthStore } from "@/store/auth"
+import { useLocation } from "react-router"
 
 const team = {
   name: "Acme Inc",
@@ -48,7 +49,7 @@ const projects = [
   },
   {
     name: "Membros",
-    url: "#",
+    url: "/members",
     icon: (
       <Users />
     ),
@@ -60,6 +61,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const { organizationsWithProjects, fetchProjects } = useProjects();
   const authUser = useAuthStore((state) => state.user)
+  const location = useLocation();
 
   const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" }
 
@@ -73,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher team={team} />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={projects} />
+        <NavProjects projects={projects} activeUrl={location.pathname} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>

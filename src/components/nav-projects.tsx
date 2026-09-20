@@ -18,12 +18,14 @@ import { FolderIcon, ArrowRightIcon, Trash2Icon } from "lucide-react"
 
 export function NavProjects({
   projects,
+  activeUrl,
 }: {
   projects: {
     name: string
     url: string
     icon: React.ReactNode
   }[]
+  activeUrl?: string
 }) {
   const { isMobile } = useSidebar()
   return (
@@ -32,7 +34,7 @@ export function NavProjects({
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton render={<a href={item.url} />}>
+            <SidebarMenuButton render={<a href={item.url} />} isActive={activeUrl === item.url}>
               {item.icon}
               <span>{item.name}</span>
             </SidebarMenuButton>
