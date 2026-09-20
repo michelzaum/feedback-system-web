@@ -9,21 +9,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useMembers } from "./useMembers";
 
-function flattenMembers(members: { id: string; name: string; email: string; organizations: { id: string; name: string; role: string }[] }[]) {
-  return members.flatMap((member) =>
-    member.organizations.map((org) => ({
-      memberId: member.id,
-      memberName: member.name,
-      memberEmail: member.email,
-      orgName: org.name + ",,,",
-      orgRole: org.role,
-    }))
-  );
-}
-
 export function Members() {
   const { members, isLoading } = useMembers();
-  const rows = flattenMembers(members);
 
   if (isLoading) {
     return <div>Carregando...</div>;
@@ -36,18 +23,16 @@ export function Members() {
           <TableRow>
             <TableHead>Nome</TableHead>
             <TableHead>E-mail</TableHead>
-            <TableHead>Organização</TableHead>
             <TableHead>Role</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={`${row.memberId}-${row.orgName}`}>
-              <TableCell>{row.memberName}</TableCell>
-              <TableCell>{row.memberEmail}</TableCell>
-              <TableCell>{row.orgName}</TableCell>
+          {members.map((member) => (
+            <TableRow key={member.id}>
+              <TableCell>{member.name}</TableCell>
+              <TableCell>{member.email}</TableCell>
               <TableCell>
-                <Badge variant="outline">{row.orgRole}</Badge>
+                <Badge variant="outline">{member.role}</Badge>
               </TableCell>
             </TableRow>
           ))}

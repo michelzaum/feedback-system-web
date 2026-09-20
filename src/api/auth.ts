@@ -65,6 +65,18 @@ export async function getOrganizations(): Promise<Organization[]> {
   return Array.isArray(data) ? data : data.organizations ?? [];
 }
 
+export interface OrganizationMember {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export async function getOrganizationMembers(organizationId: string): Promise<OrganizationMember[]> {
+  const { data } = await api.get<OrganizationMember[]>(`/organizations/${organizationId}/members`);
+  return data;
+}
+
 export interface MemberOrganization {
   id: string;
   name: string;
