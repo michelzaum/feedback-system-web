@@ -26,5 +26,17 @@ export function useMembers() {
     fetchMembers();
   }, [selectedOrganization]);
 
-  return { members, isLoading };
+  const refetch = () => {
+    setIsLoading(true);
+    if (!selectedOrganization) return;
+    getOrganizationMembers(selectedOrganization.id)
+      .then((data) => setMembers(data))
+      .catch((error) => {
+        toast.error("Erro ao carregar membros");
+        console.log(error);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  return { members, isLoading, refetch };
 }
