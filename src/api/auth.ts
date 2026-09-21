@@ -99,3 +99,24 @@ export async function getMembers(): Promise<Member[]> {
   const { data } = await api.get<Member[]>("/me/members");
   return data;
 }
+
+export interface MemberInfo {
+  userId: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export async function findOrganizationMemberByEmail(organizationId: string, email: string): Promise<MemberInfo> {
+  const { data } = await api.get<MemberInfo>(`/organizations/${organizationId}/members/find-by-email/${email}`);
+  return data;
+}
+
+export interface CreateMemberPayload {
+  userId: string;
+  role: "ADMIN" | "MEMBER";
+}
+
+export async function createOrganizationMember(organizationId: string, payload: CreateMemberPayload): Promise<void> {
+  await api.post(`/organizations/${organizationId}/members`, payload);
+}
