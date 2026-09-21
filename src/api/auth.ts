@@ -37,7 +37,7 @@ export async function me(): Promise<UserResponse> {
   return data;
 }
 
-interface Project {
+export interface Project {
   id: string;
   name: string;
   description: string;
@@ -53,7 +53,7 @@ export async function getProjects(): Promise<Project[]> {
   return data;
 }
 
-interface Organization {
+export interface Organization {
   id: string;
   name: string;
   slug: string;
@@ -63,6 +63,23 @@ interface Organization {
 export async function getOrganizations(): Promise<Organization[]> {
   const { data } = await api.get("/me/organizations");
   return Array.isArray(data) ? data : data.organizations ?? [];
+}
+
+export interface OrganizationMember {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export async function getOrganizationMembers(organizationId: string): Promise<OrganizationMember[]> {
+  const { data } = await api.get<OrganizationMember[]>(`/organizations/${organizationId}/members`);
+  return data;
+}
+
+export async function getOrganizationProjects(organizationId: string): Promise<Project[]> {
+  const { data } = await api.get<Project[]>(`/organizations/${organizationId}/projects`);
+  return data;
 }
 
 export interface MemberOrganization {
