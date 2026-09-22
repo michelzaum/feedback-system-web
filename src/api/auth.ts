@@ -120,3 +120,11 @@ export interface CreateMemberPayload {
 export async function createOrganizationMember(organizationId: string, payload: CreateMemberPayload): Promise<void> {
   await api.post(`/organizations/${organizationId}/members`, payload);
 }
+
+export async function updateOrganizationMember(organizationId: string, userId: string, role: "ADMIN" | "MEMBER"): Promise<void> {
+  await api.patch(`/organizations/${organizationId}/members/${userId}`, { role });
+}
+
+export async function deleteOrganizationMember(organizationId: string, userId: string): Promise<void> {
+  await api.delete(`/organizations/${organizationId}/members/${userId}`);
+}
