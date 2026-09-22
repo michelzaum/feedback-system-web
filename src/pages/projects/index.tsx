@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, Loader2, CircleHelp } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useProject } from "./useProject";
 
 export function ProjectManagement() {
@@ -102,7 +110,23 @@ export function ProjectManagement() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Slug do Projeto</CardTitle>
+            <CardTitle>
+              <div className="flex items-center gap-2">
+                Slug do Projeto
+                <Dialog>
+                  <DialogTrigger render={<button className="hover:cursor-pointer" type="button"><CircleHelp className="h-4 w-4 text-muted-foreground" /></button>}>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-sm p-2">
+                    <DialogHeader className="flex flex-col gap-2 py-8">
+                      <DialogTitle>O que é um slug?</DialogTitle>
+                      <DialogDescription>
+                        O slug é o identificador único do projeto na URL. Ele é gerado automaticamente a partir do nome do projeto e não pode ser alterado. É usado para que os usuários possam acessar a URL pública de feedback.
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardTitle>
             <CardDescription>Identificador único do projeto</CardDescription>
           </CardHeader>
           <CardContent>
