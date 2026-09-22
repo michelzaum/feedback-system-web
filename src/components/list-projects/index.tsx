@@ -35,7 +35,7 @@ export function ListProjects({
     <SidebarMenuSub>
       {projects.map((project) => (
         <SidebarMenuSubItem key={project.id}>
-          <SidebarMenuSubButton render={<a href={`/projects/${project.slug}`} />}>
+          <SidebarMenuSubButton render={<a href={`/projects/${project.id}`} />}>
             <span>{project.name}</span>
           </SidebarMenuSubButton>
         </SidebarMenuSubItem>

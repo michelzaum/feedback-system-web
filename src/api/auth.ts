@@ -82,6 +82,20 @@ export async function getOrganizationProjects(organizationId: string): Promise<P
   return data;
 }
 
+export async function getProjectByOrganizationId(organizationId: string, projectId: string): Promise<Project> {
+  const { data } = await api.get<Project>(`/organizations/${organizationId}/projects/${projectId}`);
+  return data;
+}
+
+export interface UpdateProjectPayload {
+  name: string;
+}
+
+export async function updateProject(organizationId: string, projectId: string, payload: UpdateProjectPayload): Promise<Project> {
+  const { data } = await api.patch<Project>(`/organizations/${organizationId}/projects/${projectId}`, payload);
+  return data;
+}
+
 export interface MemberOrganization {
   id: string;
   name: string;
