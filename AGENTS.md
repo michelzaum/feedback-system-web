@@ -42,6 +42,7 @@ React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + Zustand + React Router
 - Use `todowrite` for multi-step tasks
 - All copy added should be in Portuguese
 - Always add `hover:cursor-pointer` to clickable elements (buttons, links, etc.)
+- Always add a `;` at the end of lines
 
 ## Component Patterns
 - UI components receive `onSubmit` handlers from hooks/pages
