@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
-import { getOrganizationMembers } from "@/api/auth";
+import { getOrganizationMembers, updateOrganizationMember, deleteOrganizationMember } from "@/api/auth";
 import type { OrganizationMember } from "@/api/auth";
 
 export function useMembers() {
@@ -38,5 +38,27 @@ export function useMembers() {
       .finally(() => setIsLoading(false));
   };
 
-  return { members, isLoading, refetch };
+  const updateMember = async (userId: string, role: "ADMIN" | "MEMBER") => {
+    try {
+      await updateOrganizationMember(selectedOrganization!.id, userId, role);
+      toast.success("Membro atualizado com sucesso!");
+      refetch();
+    } catch (error) {
+      toast.error("Erro ao atualizar membro");
+      console.log(error);
+    }
+  };
+
+  const deleteMember = async (userId: string) => {
+    try {
+      await deleteOrganizationMember(selectedOrganization!.id, userId);
+      toast.success("Membro excluído com sucesso!");
+      refetch();
+    } catch (error) {
+      toast.error("Erro ao excluir membro");
+      console.log(error);
+    }
+  };
+
+  return { members, isLoading, refetch, updateMember, deleteMember };
 }
