@@ -4,6 +4,7 @@ import Members from "./pages/members";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import SelectOrg from "./pages/select-org";
+import NoOrganization from "./pages/no-organization";
 import { AppLayout, AuthLayout } from "./layouts";
 import { ProtectedRoute } from "./components/protected-route";
 import { PublicRoute } from "./components/public-route";
@@ -27,6 +28,7 @@ export const RoutesComponent = () => {
       {/* Authenticated app routes with sidebar */}
       <Route element={<ProtectedRoute />}>
         <Route path="/select-org" element={<SelectOrg />} />
+        <Route path="/no-organization" element={<NoOrganization />} />
         <Route element={<HasOrganization />}>
           <Route element={<AppLayout />}>
             <Route index element={<Dashboard />} />
