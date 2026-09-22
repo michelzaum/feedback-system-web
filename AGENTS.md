@@ -40,6 +40,9 @@ React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + Zustand + React Router
 - Always verify build passes (`npm run build`) after code changes
 - When the user asks you to do something, take action without asking permission
 - Use `todowrite` for multi-step tasks
+- All copy added should be in Portuguese
+- Always add `hover:cursor-pointer` to clickable elements (buttons, links, etc.)
+- Always add a `;` at the end of lines
 
 ## Component Patterns
 - UI components receive `onSubmit` handlers from hooks/pages

@@ -4,10 +4,12 @@ import Members from "./pages/members";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import SelectOrg from "./pages/select-org";
+import NoOrganization from "./pages/no-organization";
 import { AppLayout, AuthLayout } from "./layouts";
 import { ProtectedRoute } from "./components/protected-route";
 import { PublicRoute } from "./components/public-route";
 import { HasOrganization } from "./components/has-organization";
+import { NoOrganizationRoute } from "./components/no-organization-route";
 import { useAuthStore } from "./store/auth";
 
 export const RoutesComponent = () => {
@@ -27,6 +29,9 @@ export const RoutesComponent = () => {
       {/* Authenticated app routes with sidebar */}
       <Route element={<ProtectedRoute />}>
         <Route path="/select-org" element={<SelectOrg />} />
+        <Route element={<NoOrganizationRoute />}>
+          <Route path="/no-organization" element={<NoOrganization />} />
+        </Route>
         <Route element={<HasOrganization />}>
           <Route element={<AppLayout />}>
             <Route index element={<Dashboard />} />

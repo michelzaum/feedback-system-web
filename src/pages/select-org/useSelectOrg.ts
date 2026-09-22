@@ -12,6 +12,21 @@ export function useSelectOrg() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    async function fetchOrganizations() {
+      try {
+        const orgs = await getOrganizations();
+        setOrganizations(orgs);
+        if (orgs.length === 0) {
+          navigate("/no-organization", { replace: true });
+        }
+      } catch {
+        toast.error("Failed to load organizations.");
+      }
+    }
+    fetchOrganizations();
+  }, [navigate]);
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -29,18 +44,6 @@ export function useSelectOrg() {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    async function fetchOrganizations() {
-      try {
-        const orgs = await getOrganizations();
-        setOrganizations(orgs);
-      } catch {
-        toast.error("Failed to load organizations.");
-      }
-    }
-    fetchOrganizations();
-  }, []);
 
   return { organizations, isLoading, onSubmit };
 }

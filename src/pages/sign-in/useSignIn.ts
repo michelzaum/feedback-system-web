@@ -22,7 +22,12 @@ export function useSignIn() {
       await signIn({ email, password })
       const user = await me()
       const orgs = await getOrganizations()
-      if (orgs.length === 1) {
+
+      if (orgs.length === 0) {
+        login({ name: user.name, email: user.email })
+        toast.success("Signed in successfully!")
+        navigate("/no-organization", { replace: true })
+      } else if (orgs.length === 1) {
         login({ name: user.name, email: user.email }, orgs[0])
         toast.success("Signed in successfully!")
         navigate("/", { replace: true })
