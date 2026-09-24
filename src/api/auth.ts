@@ -37,22 +37,6 @@ export async function me(): Promise<UserResponse> {
   return data;
 }
 
-export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-  archivedAt: string | null;
-  organizationId: string;
-}
-
-export async function getProjects(): Promise<Project[]> {
-  const { data } = await api.get<Project[]>("/me/projects");
-  return data;
-}
-
 export interface Organization {
   id: string;
   name: string;
@@ -74,25 +58,6 @@ export interface OrganizationMember {
 
 export async function getOrganizationMembers(organizationId: string): Promise<OrganizationMember[]> {
   const { data } = await api.get<OrganizationMember[]>(`/organizations/${organizationId}/members`);
-  return data;
-}
-
-export async function getOrganizationProjects(organizationId: string): Promise<Project[]> {
-  const { data } = await api.get<Project[]>(`/organizations/${organizationId}/projects`);
-  return data;
-}
-
-export async function getProjectByOrganizationIdAndSlug(organizationId: string, projectId: string): Promise<Project> {
-  const { data } = await api.get<Project>(`/organizations/${organizationId}/projects/by-slug/${projectId}`);
-  return data;
-}
-
-export interface UpdateProjectPayload {
-  name: string;
-}
-
-export async function updateProject(organizationId: string, projectId: string, payload: UpdateProjectPayload): Promise<Project> {
-  const { data } = await api.patch<Project>(`/organizations/${organizationId}/projects/${projectId}`, payload);
   return data;
 }
 
