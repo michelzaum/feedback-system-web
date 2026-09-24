@@ -38,7 +38,7 @@ export const RoutesComponent = () => {
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/members" element={<Members />} />
-            <Route path="/projects/:id" element={<ProjectManagement />} />
+            <Route path="/projects/:slug" element={<ProjectManagement />} />
           </Route>
         </Route>
       </Route>

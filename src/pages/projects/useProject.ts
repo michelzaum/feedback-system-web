@@ -7,7 +7,7 @@ import { getProjectByOrganizationId, updateProject } from "@/api/auth";
 import type { Project } from "@/api/auth";
 
 export function useProject() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,10 +15,10 @@ export function useProject() {
 
   useEffect(() => {
     async function fetchProject() {
-      if (!id || !selectedOrganization) return;
+      if (!slug || !selectedOrganization) return;
 
       try {
-        const data = await getProjectByOrganizationId(selectedOrganization.id, id);
+        const data = await getProjectByOrganizationId(selectedOrganization.id, slug);
         setProject(data);
       } catch (error) {
         toast.error("Erro ao carregar projeto");
@@ -28,14 +28,14 @@ export function useProject() {
       }
     }
     fetchProject();
-  }, [id, selectedOrganization]);
+  }, [slug, selectedOrganization]);
 
   const onSaveName = async (newName: string) => {
-    if (!id || !selectedOrganization) return;
+    if (!slug || !selectedOrganization) return;
 
     setIsSaving(true);
     try {
-      const updated = await updateProject(selectedOrganization.id, id, { name: newName });
+      const updated = await updateProject(selectedOrganization.id, slug, { name: newName });
       setProject(updated);
       toast.success("Projeto atualizado com sucesso!");
     } catch (error) {
