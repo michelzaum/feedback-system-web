@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
-import { signOut } from "@/api/sign-in";
+import { signOut } from "@/api/sign-out";
 
 export function useNoOrganization() {
   const navigate = useNavigate();

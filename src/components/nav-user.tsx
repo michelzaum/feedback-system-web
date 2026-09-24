@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, LogOutIcon } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
-import { signOut } from "@/api/sign-in";
+import { signOut } from "@/api/sign-out";
 
 export function NavUser({
   user,

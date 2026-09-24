@@ -7,10 +7,6 @@ export interface SignInResponse {
   message: string;
 }
 
-export interface SignOutResponse {
-  message: string;
-}
-
 export interface UserResponse {
   message: string;
   name: string;
