@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, LogOutIcon } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
+import { signOut } from "@/api/sign-in";
 
 export function NavUser({
   user,
@@ -36,9 +37,13 @@ export function NavUser({
   const logout = useAuthStore((state) => state.logout);
   const authUser = useAuthStore((state) => state.user);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/sign-in");
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } finally {
+      logout();
+      navigate("/sign-in");
+    }
   };
 
   const displayName = authUser?.name || user.name;

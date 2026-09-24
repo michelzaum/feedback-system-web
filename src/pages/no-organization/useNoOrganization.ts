@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
+import { signOut } from "@/api/sign-in";
 
 export function useNoOrganization() {
   const navigate = useNavigate();
@@ -12,12 +13,13 @@ export function useNoOrganization() {
   const onLogout = async () => {
     setIsLoading(true);
     try {
-      logout();
-      navigate("/sign-in", { replace: true });
+      await signOut();
       toast.success("Logged out successfully.");
     } catch {
       toast.error("Failed to log out. Please try again.");
     } finally {
+      logout();
+      navigate("/sign-in", { replace: true });
       setIsLoading(false);
     }
   };
