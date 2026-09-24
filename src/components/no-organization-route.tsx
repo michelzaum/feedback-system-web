@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Navigate, Outlet } from "react-router";
-import { getOrganizations } from "@/api/auth";
+import { getOrganizations } from "@/api/organizations";
 import { useState, useEffect } from "react";
 
 interface NoOrganizationRouteProps {

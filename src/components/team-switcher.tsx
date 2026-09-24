@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/store/auth";
-import { getOrganizations } from "@/api/auth";
-import type { Organization } from "@/api/auth";
+import { getOrganizations } from "@/api/organizations";
+import type { Organization } from "@/api/organizations/types";
 import { toast } from "sonner";
 
 import {

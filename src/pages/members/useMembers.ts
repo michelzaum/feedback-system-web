@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
-import { getOrganizationMembers, updateOrganizationMember, deleteOrganizationMember } from "@/api/auth";
-import type { OrganizationMember } from "@/api/auth";
+import { getOrganizationMembers, updateOrganizationMember, deleteOrganizationMember } from "@/api/members";
+import type { OrganizationMember } from "@/api/members/types";
 
 export function useMembers() {
   const [members, setMembers] = useState<OrganizationMember[]>([]);

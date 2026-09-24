@@ -2,9 +2,9 @@ import { useRef, type SubmitEvent, useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { api } from "@/api/request";
-import { getOrganizations } from "@/api/auth";
-import type { Organization } from "@/api/auth";
 import type { UseCreateProjectModalProps } from "./types";
+import type { Organization } from "@/api/organizations/types";
+import { getOrganizations } from "@/api/organizations";
 
 export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCreateProjectModalProps) {
   const projectName = useRef<HTMLInputElement>({} as HTMLInputElement);

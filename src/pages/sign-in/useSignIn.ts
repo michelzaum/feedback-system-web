@@ -2,8 +2,9 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-import { signIn, me, getOrganizations } from "@/api/auth";
+import { signIn, me } from "@/api/sign-in";
 import { useAuthStore } from "@/store/auth";
+import { getOrganizations } from "@/api/organizations";
 
 export function useSignIn() {
   const navigate = useNavigate();

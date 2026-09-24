@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { type Project } from "@/api/projects/types";
 
 export interface User {
   id?: string;
@@ -16,7 +17,7 @@ interface Organization {
 }
 
 interface OrganizationWithProjects extends Organization {
-  projects: import("@/api/auth").Project[];
+  projects: Project[];
 }
 
 interface Store {

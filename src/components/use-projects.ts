@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
-import { getOrganizationProjects } from "@/api/auth";
-import type { Organization, Project } from "@/api/auth";
+import { getOrganizationProjects } from "@/api/projects";
+import type { Organization } from "@/api/organizations/types";
+import type { Project } from "@/api/projects/types";
 
 export function useProjects() {
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
@@ -25,7 +26,7 @@ export function useProjects() {
       }
     }
     fetchProjects();
-  }, [selectedOrganization]);
+  }, [selectedOrganization, setOrganizationsWithProjects]);
 
   const refetchProjects = async () => {
     if (!selectedOrganization) return;

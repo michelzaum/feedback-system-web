@@ -2,9 +2,9 @@ import { useState, type FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-import { getOrganizations } from "@/api/auth";
+import { getOrganizations } from "@/api/organizations";
 import { useAuthStore } from "@/store/auth";
-import type { Organization } from "@/api/auth";
+import type { Organization } from "@/api/organizations/types";
 
 export function useSelectOrg() {
   const navigate = useNavigate();

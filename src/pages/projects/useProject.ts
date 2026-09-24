@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { useParams } from "react-router";
 import { useAuthStore } from "@/store/auth";
-import { updateProject } from "@/api/auth";
+import { updateProject } from "@/api/projects";
 
 export function useProject() {
   const { slug } = useParams<{ slug: string }>();

@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-import { signUp } from "@/api/auth";
+import { signUp } from "@/api/sign-up";
 
 export function useSignUp() {
   const navigate = useNavigate();
