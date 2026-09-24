@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { PlusIcon } from "lucide-react"
+import { PlusIcon } from "lucide-react";
 import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 interface Project {
   id: string;
@@ -50,7 +50,7 @@ export function ListProjects({
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>
     </SidebarMenuSub>
-  )
+  );
 }
 
 export default ListProjects;

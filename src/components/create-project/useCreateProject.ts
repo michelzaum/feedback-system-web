@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { api } from "@/api/request";
 import { getOrganizations } from "@/api/auth";
 import type { Organization } from "@/api/auth";
-import type { UseCreateProjectModalProps } from "./types"
+import type { UseCreateProjectModalProps } from "./types";
 
 export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCreateProjectModalProps) {
   const projectName = useRef<HTMLInputElement>({} as HTMLInputElement);

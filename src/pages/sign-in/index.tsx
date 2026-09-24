@@ -1,8 +1,8 @@
-import { LoginForm } from "@/components/login-form"
-import { useSignIn } from "@/pages/sign-in/useSignIn"
+import { LoginForm } from "@/components/login-form";
+import { useSignIn } from "@/pages/sign-in/useSignIn";
 
 function SignIn() {
-  const { onSubmit } = useSignIn()
+  const { onSubmit } = useSignIn();
 
   return (
     <div className="min-h-svh w-full flex items-center justify-center bg-background px-4">
@@ -10,7 +10,7 @@ function SignIn() {
         <LoginForm onSubmit={onSubmit} />
       </div>
     </div>
-  )
+  );
 }
 
-export default SignIn
+export default SignIn;

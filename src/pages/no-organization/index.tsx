@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { useNoOrganization } from "@/pages/no-organization/useNoOrganization"
+} from "@/components/ui/card";
+import { useNoOrganization } from "@/pages/no-organization/useNoOrganization";
 
 function NoOrganization() {
-  const { isLoading, onLogout } = useNoOrganization()
+  const { isLoading, onLogout } = useNoOrganization();
 
   return (
     <div className="min-h-svh w-full flex items-center justify-center bg-background px-4">
@@ -31,7 +31,7 @@ function NoOrganization() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
 
-export default NoOrganization
+export default NoOrganization;

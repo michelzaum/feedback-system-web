@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 import {
   ArrowUpRight,
   ArrowDownRight,
@@ -15,9 +15,9 @@ import {
   MinusCircle,
   ArrowRight,
   Filter,
-} from "lucide-react"
-import { cn } from "cn"
-import { feedbacks, stats, categoryLabels, statusLabels, type Feedback, type FeedbackStatus } from "@/data/feedbacks"
+} from "lucide-react";
+import { cn } from "cn";
+import { feedbacks, stats, categoryLabels, statusLabels, type Feedback, type FeedbackStatus } from "@/data/feedbacks";
 
 function StatCard({
   title,
@@ -40,7 +40,7 @@ function StatCard({
     negative: "text-red-600 dark:text-red-400",
     neutral: "text-muted-foreground",
     yellow: "text-yellow-600",
-  }
+  };
 
   const variantBgColors = {
     default: "bg-muted/50",
@@ -48,7 +48,7 @@ function StatCard({
     negative: "bg-red-50 dark:bg-red-950/30",
     neutral: "bg-muted/50",
     yellow: "bg-yellow-50 dark:bg-yellow-950/30",
-  }
+  };
 
   return (
     <Card className={cn(variantBgColors[variant])}>
@@ -67,7 +67,7 @@ function StatCard({
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function StatusBadge({ status }: { status: FeedbackStatus }) {
@@ -84,7 +84,7 @@ function StatusBadge({ status }: { status: FeedbackStatus }) {
       {status === "neutral" && <MinusCircle className="mr-1 h-3 w-3" />}
       {statusLabels[status]}
     </Badge>
-  )
+  );
 }
 
 function FeedbackCard({ feedback }: { feedback: Feedback }) {
@@ -108,12 +108,12 @@ function FeedbackCard({ feedback }: { feedback: Feedback }) {
         <span className="text-xs text-muted-foreground">{feedback.createdAt}</span>
       </CardFooter>
     </Card>
-  )
+  );
 }
 
 function CategoryChart() {
-  const categories = Object.entries(categoryLabels)
-  const maxCount = Math.max(...categories.map(([, cat]) => feedbacks.filter(f => f.category === cat).length))
+  const categories = Object.entries(categoryLabels);
+  const maxCount = Math.max(...categories.map(([, cat]) => feedbacks.filter(f => f.category === cat).length));
 
   return (
     <Card>
@@ -122,8 +122,8 @@ function CategoryChart() {
       </CardHeader>
       <CardContent className="flex flex-col justify-center gap-1.5 px-4 pb-2">
         {categories.map(([key, label]) => {
-          const count = feedbacks.filter(f => f.category === key).length
-          const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0
+          const count = feedbacks.filter(f => f.category === key).length;
+          const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
           return (
             <div key={key} className="flex items-center gap-2">
               <Label className="w-16 text-xs">{label}</Label>
@@ -135,11 +135,11 @@ function CategoryChart() {
               </div>
               <span className="text-xs font-medium w-6 text-right">{count}</span>
             </div>
-          )
+          );
         })}
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function RecentFeedbacks({ items }: { items: Feedback[] }) {
@@ -161,7 +161,7 @@ function RecentFeedbacks({ items }: { items: Feedback[] }) {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
 
 export function Dashboard() {
@@ -257,7 +257,7 @@ export function Dashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Dashboard;

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -7,15 +7,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { UserCircle } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UserCircle } from "lucide-react";
 
-import { useAddMember } from "./useAddMember"
-import type { AddMemberModalProps } from "./types"
+import { useAddMember } from "./useAddMember";
+import type { AddMemberModalProps } from "./types";
 
 export function AddMemberModal({ isModalOpen, onOpenModalChange, organizationId, onMemberAdded }: AddMemberModalProps) {
   const {
