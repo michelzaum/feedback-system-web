@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, devtools } from "zustand/middleware";
 import { type Project } from "@/api/projects/types";
 
 export interface User {
@@ -36,8 +36,9 @@ interface Actions {
 }
 
 export const useAuthStore = create<Store & Actions>()(
-  persist(
-    (set) => ({
+  devtools(
+    persist(
+      (set) => ({
       isAuthenticated: false,
       user: null,
       selectedOrganization: null,
@@ -53,4 +54,5 @@ export const useAuthStore = create<Store & Actions>()(
       storage: createJSONStorage(() => localStorage),
     }
   )
+)
 );
