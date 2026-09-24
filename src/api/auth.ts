@@ -82,8 +82,8 @@ export async function getOrganizationProjects(organizationId: string): Promise<P
   return data;
 }
 
-export async function getProjectByOrganizationId(organizationId: string, projectId: string): Promise<Project> {
-  const { data } = await api.get<Project>(`/organizations/${organizationId}/projects/${projectId}`);
+export async function getProjectByOrganizationIdAndSlug(organizationId: string, projectId: string): Promise<Project> {
+  const { data } = await api.get<Project>(`/organizations/${organizationId}/projects/by-slug/${projectId}`);
   return data;
 }
 

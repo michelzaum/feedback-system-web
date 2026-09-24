@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { useParams } from "react-router";
 import { useAuthStore } from "@/store/auth";
-import { getProjectByOrganizationId, updateProject } from "@/api/auth";
+import { getProjectByOrganizationIdAndSlug, updateProject } from "@/api/auth";
 import type { Project } from "@/api/auth";
 
 export function useProject() {
@@ -18,7 +18,7 @@ export function useProject() {
       if (!slug || !selectedOrganization) return;
 
       try {
-        const data = await getProjectByOrganizationId(selectedOrganization.id, slug);
+        const data = await getProjectByOrganizationIdAndSlug(selectedOrganization.id, slug);
         setProject(data);
       } catch (error) {
         toast.error("Erro ao carregar projeto");
