@@ -29,14 +29,17 @@ export function useSelectOrg() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
     const orgId = formData.get("organization") as string;
     const org = organizations.find((o) => o.id === orgId);
+
     if (!org) return;
 
     setIsLoading(true);
     try {
       setSelectedOrganization(org);
+
       navigate("/", { replace: true });
     } catch {
       toast.error("Failed to select organization.");

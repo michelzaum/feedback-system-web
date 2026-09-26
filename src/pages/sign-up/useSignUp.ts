@@ -19,6 +19,7 @@ export function useSignUp() {
 
     try {
       await signUp({ name, email, password });
+
       toast.success("Account created successfully!");
       navigate("/sign-in");
     } catch {

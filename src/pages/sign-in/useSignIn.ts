@@ -23,6 +23,7 @@ export function useSignIn() {
 
     try {
       await signIn({ email, password });
+
       const user = await me();
       const orgs = await getOrganizations();
       const projects = await getProjects();
@@ -36,14 +37,17 @@ export function useSignIn() {
 
       if (organizationsWithProjects.length === 0) {
         login({ name: user.name, email: user.email });
+
         toast.success("Signed in successfully!");
         navigate("/no-organization", { replace: true });
       } else if (organizationsWithProjects.length === 1) {
         login({ name: user.name, email: user.email }, organizationsWithProjects[0]);
+
         toast.success("Signed in successfully!");
         navigate("/", { replace: true });
       } else {
         login({ name: user.name, email: user.email });
+
         toast.success("Signed in successfully!");
         navigate("/select-org", { replace: true });
       }
