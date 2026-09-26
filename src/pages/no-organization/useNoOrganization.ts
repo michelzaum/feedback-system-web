@@ -14,11 +14,13 @@ export function useNoOrganization() {
     setIsLoading(true);
     try {
       await signOut();
+
       toast.success("Logged out successfully.");
     } catch {
       toast.error("Failed to log out. Please try again.");
     } finally {
       logout();
+
       navigate("/sign-in", { replace: true });
       setIsLoading(false);
     }

@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { ArrowLeft, Check, Loader2, CircleHelp } from "lucide-react";
 
@@ -14,13 +12,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { useProject } from "./useProject";
 
 export function ProjectManagement() {
-  const { project, isLoading, isSaving, publicUrl, onSaveName } = useProject();
-  const navigate = useNavigate();
-  const [editingName, setEditingName] = useState(false);
-  const [nameValue, setNameValue] = useState("");
+  const {
+    project,
+    isLoading,
+    isSaving,
+    publicUrl,
+    navigate,
+    editingName,
+    nameValue,
+    setNameValue,
+    handleSaveName,
+    setEditingName,
+  } = useProject();
+
 
   if (isLoading) {
     return (
@@ -37,13 +45,6 @@ export function ProjectManagement() {
       </div>
     );
   }
-
-  const handleSaveName = async () => {
-    if (!nameValue.trim()) return;
-
-    await onSaveName(nameValue.trim());
-    setEditingName(false);
-  };
 
   return (
     <div className="flex-1 flex flex-col gap-4 bg-neutral-50 dark:bg-neutral-950 p-4 pt-0">
