@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, devtools } from "zustand/middleware";
+import { type Project } from "@/api/projects/types";
 
 export interface User {
   id?: string;
@@ -16,7 +17,7 @@ interface Organization {
 }
 
 interface OrganizationWithProjects extends Organization {
-  projects: import("@/api/auth").Project[];
+  projects: Project[];
 }
 
 interface Store {
@@ -27,7 +28,7 @@ interface Store {
 }
 
 interface Actions {
-  login: (user?: User, organization?: Organization) => void;
+  login: (user?: User, organization?: OrganizationWithProjects) => void;
   logout: () => void;
   setSelectedOrganization: (org: Organization) => void;
   setOrganizationsWithProjects: (orgs: OrganizationWithProjects[]) => void;
@@ -35,13 +36,14 @@ interface Actions {
 }
 
 export const useAuthStore = create<Store & Actions>()(
-  persist(
-    (set) => ({
+  devtools(
+    persist(
+      (set) => ({
       isAuthenticated: false,
       user: null,
       selectedOrganization: null,
       organizationsWithProjects: [],
-      login: (user?: User, organization?: Organization) =>
+      login: (user?: User, organization?: OrganizationWithProjects) =>
         set({ isAuthenticated: true, user: user ?? null, selectedOrganization: organization ?? null }),
       logout: () => set({ isAuthenticated: false, user: null, selectedOrganization: null, organizationsWithProjects: [] }),
       setSelectedOrganization: (org) => set({ selectedOrganization: org }),
@@ -52,4 +54,5 @@ export const useAuthStore = create<Store & Actions>()(
       storage: createJSONStorage(() => localStorage),
     }
   )
+)
 );

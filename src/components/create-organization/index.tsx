@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -7,13 +7,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import { useCreateOrganization } from "./useCreateOrganization";
-import type { CreateOrganizationModalProps } from "./types"
+import type { CreateOrganizationModalProps } from "./types";
 
 export function CreateOrganizationModal({ isModalOpen, onOpenModalChange }: CreateOrganizationModalProps) {
   const { organizationName, onSubmit } = useCreateOrganization({ onOpenModalChange });
@@ -47,5 +47,5 @@ export function CreateOrganizationModal({ isModalOpen, onOpenModalChange }: Crea
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

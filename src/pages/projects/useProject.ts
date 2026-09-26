@@ -1,16 +1,21 @@
 import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { useParams } from "react-router";
 import { useAuthStore } from "@/store/auth";
-import { updateProject } from "@/api/auth";
+import { updateProject } from "@/api/projects";
 
 export function useProject() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
   const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
-  const [isSaving, setIsSaving] = useState(false);
 
   const project = useMemo(() => {
     const organization = organizationsWithProjects.find((org) => org.id === selectedOrganization?.id);
@@ -24,6 +29,7 @@ export function useProject() {
     setIsSaving(true);
     try {
       const updated = await updateProject(selectedOrganization.id, project.id, { name: newName });
+
       setOrganizationsWithProjects(
         organizationsWithProjects.map((org) =>
           org.id === selectedOrganization.id
@@ -31,16 +37,37 @@ export function useProject() {
             : org
         )
       );
+
       toast.success("Projeto atualizado com sucesso!");
     } catch (error) {
       toast.error("Erro ao atualizar projeto");
+
       console.log(error);
     } finally {
       setIsSaving(false);
     }
   };
 
+  const handleSaveName = async () => {
+    if (!nameValue.trim()) return;
+
+    await onSaveName(nameValue.trim());
+    setEditingName(false);
+  };
+
   const publicUrl = `https://app.feedback.com/${project?.slug ?? ""}`;
 
-  return { project, isLoading: false, isSaving, publicUrl, onSaveName };
+  return {
+    project,
+    isLoading: false,
+    isSaving,
+    publicUrl,
+    onSaveName,
+    navigate,
+    editingName,
+    setNameValue,
+    handleSaveName,
+    nameValue,
+    setEditingName,
+  };
 }

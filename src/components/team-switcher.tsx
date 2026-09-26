@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router"
-import { useAuthStore } from "@/store/auth"
-import { getOrganizations } from "@/api/auth"
-import type { Organization } from "@/api/auth"
-import { toast } from "sonner"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useAuthStore } from "@/store/auth";
+import { getOrganizations } from "@/api/organizations";
+import type { Organization } from "@/api/organizations/types";
+import { toast } from "sonner";
 
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,35 +20,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Briefcase, ChevronsUpDown, Plus } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { Briefcase, ChevronsUpDown, Plus } from "lucide-react";
 
 export function TeamSwitcher() {
-  const navigate = useNavigate()
-  const { isMobile } = useSidebar()
-  const selectedOrganization = useAuthStore((state) => state.selectedOrganization)
-  const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization)
-  const [organizations, setOrganizations] = useState<Organization[]>([])
+  const navigate = useNavigate();
+  const { isMobile } = useSidebar();
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
 
   useEffect(() => {
     async function fetchOrgs() {
       try {
-        const orgs = await getOrganizations()
-        setOrganizations(orgs)
+        const orgs = await getOrganizations();
+        setOrganizations(orgs);
       } catch {
-        toast.error("Failed to load organizations")
+        toast.error("Failed to load organizations");
       }
     }
-    fetchOrgs()
-  }, [])
+    fetchOrgs();
+  }, []);
 
   const handleSwitch = (org: Organization) => {
-    setSelectedOrganization(org)
-    navigate("/", { replace: true })
-  }
+    setSelectedOrganization(org);
+    navigate("/", { replace: true });
+  };
 
   if (!selectedOrganization) {
-    return null
+    return null;
   }
 
   return (
@@ -107,7 +107,7 @@ export function TeamSwitcher() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }
 
-export default TeamSwitcher
+export default TeamSwitcher;

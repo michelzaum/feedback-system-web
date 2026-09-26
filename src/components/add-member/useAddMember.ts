@@ -1,9 +1,9 @@
 import { useRef, useState, type SubmitEvent } from "react";
 import { toast } from "sonner";
 
-import { findOrganizationMemberByEmail, createOrganizationMember } from "@/api/auth";
-import type { MemberInfo } from "@/api/auth";
 import type { UseAddMemberModalProps } from "./types";
+import type { MemberInfo } from "@/api/members/types";
+import { createOrganizationMember, findOrganizationMemberByEmail } from "@/api/members";
 
 type Step = "email" | "confirm" | "success";
 

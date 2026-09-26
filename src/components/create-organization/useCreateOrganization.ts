@@ -23,7 +23,7 @@ export function useCreateOrganization({ onOpenModalChange }: UseCreateOrganizati
     }
 
     onOpenModalChange(false);
-  }
+  };
 
   return {
     organizationName,

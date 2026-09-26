@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -13,8 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { FolderIcon, ArrowRightIcon, Trash2Icon } from "lucide-react"
+} from "@/components/ui/sidebar";
+import { FolderIcon, ArrowRightIcon, Trash2Icon } from "lucide-react";
 
 export function NavProjects({
   projects,
@@ -27,7 +27,7 @@ export function NavProjects({
   }[]
   activeUrl?: string
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
@@ -66,5 +66,5 @@ export function NavProjects({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

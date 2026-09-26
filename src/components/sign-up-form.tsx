@@ -1,21 +1,21 @@
-import { Link } from "react-router"
-import { cn } from "cn"
+import { Link } from "react-router";
+import { cn } from "cn";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 export function SignUpForm({
   className,
@@ -98,5 +98,5 @@ export function SignUpForm({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

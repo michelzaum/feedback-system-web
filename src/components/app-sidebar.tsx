@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
-import { CreateProjectModal } from "@/components/create-project"
-import { ListProjects } from "@/components/list-projects"
-import { useProjects } from "@/components/use-projects"
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
+import { CreateProjectModal } from "@/components/create-project";
+import { ListProjects } from "@/components/list-projects";
+import { useProjects } from "@/components/use-projects";
 import {
   Sidebar,
   SidebarContent,
@@ -19,10 +19,10 @@ import {
   SidebarMenuButton,
   SidebarRail,
   SidebarHeader,
-} from "@/components/ui/sidebar"
-import { LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react"
-import { useAuthStore } from "@/store/auth"
-import { useLocation } from "react-router"
+} from "@/components/ui/sidebar";
+import { LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react";
+import { useAuthStore } from "@/store/auth";
+import { useLocation } from "react-router";
 
 const projects = [
   {
@@ -46,16 +46,16 @@ const projects = [
       <Users />
     ),
   },
-]
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const { organizationsWithProjects, fetchProjects } = useProjects();
-  const authUser = useAuthStore((state) => state.user)
+  const authUser = useAuthStore((state) => state.user);
   const location = useLocation();
 
-  const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" }
+  const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" };
 
   const handleProjectsClick = () => {
     setIsProjectsOpen(!isProjectsOpen);
@@ -80,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <ListProjects
                   organizations={organizationsWithProjects}
                   onNewProjectClick={() => {
-                    setIsCreateProjectModalOpen(true)
+                    setIsCreateProjectModalOpen(true);
                   }}
                 />
               )}
@@ -100,5 +100,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

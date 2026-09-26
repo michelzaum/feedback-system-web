@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -7,14 +7,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectIcon, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectIcon, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { useCreateProject } from "./useCreateProject";
-import type { CreateProjectModalProps } from "./types"
+import type { CreateProjectModalProps } from "./types";
 
 export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCreated }: CreateProjectModalProps) {
   const { projectName, projectDescription, organizations, selectedOrgId, handleOrgChange, onSubmit } = useCreateProject({ onOpenModalChange, onProjectCreated });
@@ -73,5 +73,5 @@ export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCr
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

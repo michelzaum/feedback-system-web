@@ -120,7 +120,7 @@ export const feedbacks: Feedback[] = [
     createdAt: "2026-09-03",
     helpfulCount: 7,
   },
-]
+];
 
 export const stats = {
   total: feedbacks.length,
@@ -128,7 +128,7 @@ export const stats = {
   negative: feedbacks.filter(f => f.status === "negative").length,
   pending: feedbacks.filter(f => f.status === "pending").length,
   neutral: feedbacks.filter(f => f.status === "neutral").length,
-} as const
+} as const;
 
 export const categoryLabels: Record<FeedbackCategory, string> = {
   usability: "Usabilidade",
@@ -137,18 +137,18 @@ export const categoryLabels: Record<FeedbackCategory, string> = {
   content: "Conteúdo",
   bug: "Bug",
   feature: "Recurso",
-}
+};
 
 export const statusLabels: Record<FeedbackStatus, string> = {
   positive: "Positivo",
   negative: "Negativo",
   neutral: "Neutro",
   pending: "Pendente",
-}
+};
 
 export const statusColors: Record<FeedbackStatus, string> = {
   positive: "default",
   negative: "destructive",
   neutral: "secondary",
   pending: "outline",
-}
+};
