@@ -24,6 +24,7 @@ export function useProject() {
     setIsSaving(true);
     try {
       const updated = await updateProject(selectedOrganization.id, project.id, { name: newName });
+
       setOrganizationsWithProjects(
         organizationsWithProjects.map((org) =>
           org.id === selectedOrganization.id
@@ -31,9 +32,11 @@ export function useProject() {
             : org
         )
       );
+
       toast.success("Projeto atualizado com sucesso!");
     } catch (error) {
       toast.error("Erro ao atualizar projeto");
+
       console.log(error);
     } finally {
       setIsSaving(false);

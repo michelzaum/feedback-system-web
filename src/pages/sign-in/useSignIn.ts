@@ -5,10 +5,12 @@ import { toast } from "sonner";
 import { signIn, me } from "@/api/sign-in";
 import { useAuthStore } from "@/store/auth";
 import { getOrganizations } from "@/api/organizations";
+import { getProjects } from "@/api/projects";
 
 export function useSignIn() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -23,13 +25,21 @@ export function useSignIn() {
       await signIn({ email, password });
       const user = await me();
       const orgs = await getOrganizations();
+      const projects = await getProjects();
 
-      if (orgs.length === 0) {
+      const organizationsWithProjects = orgs.map((org) => ({
+        ...org,
+        projects: projects.filter((p) => p.organizationId === org.id),
+      }));
+
+      setOrganizationsWithProjects(organizationsWithProjects);
+
+      if (organizationsWithProjects.length === 0) {
         login({ name: user.name, email: user.email });
         toast.success("Signed in successfully!");
         navigate("/no-organization", { replace: true });
-      } else if (orgs.length === 1) {
-        login({ name: user.name, email: user.email }, orgs[0]);
+      } else if (organizationsWithProjects.length === 1) {
+        login({ name: user.name, email: user.email }, organizationsWithProjects[0]);
         toast.success("Signed in successfully!");
         navigate("/", { replace: true });
       } else {

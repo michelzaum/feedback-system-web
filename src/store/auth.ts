@@ -28,7 +28,7 @@ interface Store {
 }
 
 interface Actions {
-  login: (user?: User, organization?: Organization) => void;
+  login: (user?: User, organization?: OrganizationWithProjects) => void;
   logout: () => void;
   setSelectedOrganization: (org: Organization) => void;
   setOrganizationsWithProjects: (orgs: OrganizationWithProjects[]) => void;
@@ -43,7 +43,7 @@ export const useAuthStore = create<Store & Actions>()(
       user: null,
       selectedOrganization: null,
       organizationsWithProjects: [],
-      login: (user?: User, organization?: Organization) =>
+      login: (user?: User, organization?: OrganizationWithProjects) =>
         set({ isAuthenticated: true, user: user ?? null, selectedOrganization: organization ?? null }),
       logout: () => set({ isAuthenticated: false, user: null, selectedOrganization: null, organizationsWithProjects: [] }),
       setSelectedOrganization: (org) => set({ selectedOrganization: org }),

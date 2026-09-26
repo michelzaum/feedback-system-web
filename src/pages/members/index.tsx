@@ -32,49 +32,36 @@ import {
 import { Plus, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useMembers } from "./useMembers";
 import { AddMemberModal } from "@/components/add-member";
-import { useState } from "react";
-import { useAuthStore } from "@/store/auth";
 import { Field } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 
 export function Members() {
-  const { members, isLoading, refetch, updateMember, deleteMember } = useMembers();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingMember, setEditingMember] = useState<{ id: string; role: string } | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const {
+    members,
+    isLoading,
+    refetch,
+    selectedOrganization,
+    isModalOpen,
+    setIsEditDialogOpen,
+    isEditDialogOpen,
+    setEditingMember,
+    editingMember,
+    setIsDeleteDialogOpen,
+    isDeleteDialogOpen,
+    handleEdit,
+    handleDelete,
+    onUpdateRole,
+    onConfirmDelete,
+    toggleIsModalOpen,
+  } = useMembers();
 
-  const handleEdit = (member: { id: string; role: string }) => {
-    setEditingMember(member);
-    setIsEditDialogOpen(true);
-  };
-
-  const handleDelete = (memberId: string) => {
-    setEditingMember({ id: memberId, role: "" });
-    setIsDeleteDialogOpen(true);
-  };
-
-  const onUpdateRole = async () => {
-    if (!editingMember) return;
-    await updateMember(editingMember.id, editingMember.role as "ADMIN" | "MEMBER");
-    setIsEditDialogOpen(false);
-    setEditingMember(null);
-  };
-
-  const onConfirmDelete = async () => {
-    if (!editingMember) return;
-    await deleteMember(editingMember.id);
-    setIsDeleteDialogOpen(false);
-    setEditingMember(null);
-  };
 
   return (
     <div className="flex-1 flex flex-col gap-4 bg-neutral-50 dark:bg-neutral-950 p-4 pt-0">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Membros</h2>
         {selectedOrganization && (
-          <Button onClick={() => setIsModalOpen(true)} className="hover:cursor-pointer transition-all duration-300">
+          <Button onClick={toggleIsModalOpen} className="hover:cursor-pointer transition-all duration-300">
             <Plus className="mr-2 h-4 w-4" />
             Adicionar membro
           </Button>
@@ -102,10 +89,8 @@ export function Members() {
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button variant="ghost" size="icon-sm" className="hover:cursor-pointer">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                    <DropdownMenuTrigger className="hover:cursor-pointer">
+                      <MoreHorizontal className="h-4 w-4" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleEdit(member)}>
@@ -127,11 +112,11 @@ export function Members() {
       {selectedOrganization && (
         <AddMemberModal
           isModalOpen={isModalOpen}
-          onOpenModalChange={setIsModalOpen}
+          onOpenModalChange={toggleIsModalOpen}
           organizationId={selectedOrganization.id}
           onMemberAdded={() => {
             refetch();
-            setIsModalOpen(false);
+            toggleIsModalOpen();
           }}
         />
       )}
