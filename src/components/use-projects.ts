@@ -8,12 +8,13 @@ import type { Project } from "@/api/projects/types";
 
 export function useProjects() {
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
   const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
 
   useEffect(() => {
     async function fetchProjects() {
-      if (!selectedOrganization) {
+      if (!isAuthenticated || !selectedOrganization) {
         setOrganizationsWithProjects([]);
         return;
       }
@@ -26,10 +27,10 @@ export function useProjects() {
       }
     }
     fetchProjects();
-  }, [selectedOrganization, setOrganizationsWithProjects]);
+  }, [isAuthenticated, selectedOrganization, setOrganizationsWithProjects]);
 
   const refetchProjects = async () => {
-    if (!selectedOrganization) return;
+    if (!isAuthenticated || !selectedOrganization) return;
     try {
       const projects = await getOrganizationProjects(selectedOrganization.id);
       setOrganizationsWithProjects([{ ...selectedOrganization, projects } as Organization & { projects: Project[] }]);

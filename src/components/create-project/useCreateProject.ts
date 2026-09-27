@@ -1,6 +1,7 @@
 import { useRef, type SubmitEvent, useState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { useAuthStore } from "@/store/auth";
 import { api } from "@/api/request";
 import type { UseCreateProjectModalProps } from "./types";
 import type { Organization } from "@/api/organizations/types";
@@ -11,9 +12,11 @@ export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCre
   const projectDescription = useRef<HTMLInputElement>({} as HTMLInputElement);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
     async function fetchOrganizations() {
+      if (!isAuthenticated) return;
       try {
         const orgs = await getOrganizations();
         setOrganizations(orgs);
@@ -26,7 +29,7 @@ export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCre
       }
     }
     fetchOrganizations();
-  }, []);
+  }, [isAuthenticated]);
 
   const handleOrgChange = (value: unknown) => {
     setSelectedOrgId(value as string);
