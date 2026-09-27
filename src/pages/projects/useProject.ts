@@ -55,13 +55,10 @@ export function useProject() {
     setEditingName(false);
   };
 
-  const publicUrl = `https://app.feedback.com/${project?.slug ?? ""}`;
-
   return {
     project,
     isLoading: false,
     isSaving,
-    publicUrl,
     onSaveName,
     navigate,
     editingName,
