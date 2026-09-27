@@ -26,12 +26,14 @@ import { Briefcase, ChevronsUpDown, Plus } from "lucide-react";
 export function TeamSwitcher() {
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
 
   useEffect(() => {
     async function fetchOrgs() {
+      if (!isAuthenticated) return;
       try {
         const orgs = await getOrganizations();
         setOrganizations(orgs);
@@ -40,7 +42,7 @@ export function TeamSwitcher() {
       }
     }
     fetchOrgs();
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSwitch = (org: Organization) => {
     setSelectedOrganization(org);
