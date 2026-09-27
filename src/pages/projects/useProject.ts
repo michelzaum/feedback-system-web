@@ -39,6 +39,7 @@ export function useProject() {
       );
 
       toast.success("Projeto atualizado com sucesso!");
+      navigate(`/projects/${updated.slug}`);
     } catch (error) {
       toast.error("Erro ao atualizar projeto");
 
