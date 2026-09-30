@@ -22,6 +22,12 @@ export function useProject() {
     return organization?.projects.find((p) => p.slug === slug) ?? null;
   }, [organizationsWithProjects, selectedOrganization, slug]);
 
+  const publicUrl = useMemo(() => {
+    if (!project) return "";
+    const baseUrl = import.meta.env.VITE_FEEDBACK_APP_URL as string;
+    return `${baseUrl}/feedback${project.url}`;
+  }, [project]);
+
   const onSaveName = async (newName: string) => {
     if (!project) return;
     if (!selectedOrganization) return;
@@ -60,6 +66,7 @@ export function useProject() {
     project,
     isLoading: false,
     isSaving,
+    publicUrl,
     onSaveName,
     navigate,
     editingName,
