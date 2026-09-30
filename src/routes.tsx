@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import Dashboard from "./pages/dashboard";
+import Feedback from "./pages/feedback";
 import Members from "./pages/members";
 import ProjectManagement from "./pages/projects";
 import SignIn from "./pages/sign-in";
@@ -25,7 +26,11 @@ export const RoutesComponent = () => {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
         </Route>
+
       </Route>
+
+      {/* Feedback page - accessible to everyone */}
+      <Route path="/feedback/:organizationSlug/:projectSlug" element={<Feedback />} />
 
       {/* Authenticated app routes with sidebar */}
       <Route element={<ProtectedRoute />}>
