@@ -34,7 +34,7 @@ const projects = [
   },
   {
     name: "Feedbacks",
-    url: "/",
+    url: "/feedbacks",
     icon: (
       <MessageCircle />
     ),

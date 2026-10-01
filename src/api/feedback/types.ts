@@ -9,4 +9,6 @@ export interface Feedback {
   description: string;
   projectId: string;
   createdAt: string;
+  updatedAt: string;
+  status: string;
 }

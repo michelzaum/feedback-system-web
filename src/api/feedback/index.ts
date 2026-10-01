@@ -11,3 +11,8 @@ export async function createFeedback(projectId: string, payload: CreateFeedbackP
   const { data } = await api.post<Feedback>(`/projects/${projectId}/feedbacks`, payload);
   return data;
 }
+
+export async function getFeedbacks(organizationId: string, projectId: string): Promise<Feedback[]> {
+  const { data } = await api.get<Feedback[]>(`/organizations/${organizationId}/projects/${projectId}/feedbacks`);
+  return data;
+}

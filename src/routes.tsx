@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import Dashboard from "./pages/dashboard";
 import Feedback from "./pages/feedback";
+import Feedbacks from "./pages/feedbacks";
 import Members from "./pages/members";
 import ProjectManagement from "./pages/projects";
 import SignIn from "./pages/sign-in";
@@ -42,6 +43,7 @@ export const RoutesComponent = () => {
           <Route element={<AppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/feedbacks" element={<Feedbacks />} />
             <Route path="/members" element={<Members />} />
             <Route path="/projects/:slug" element={<ProjectManagement />} />
           </Route>
