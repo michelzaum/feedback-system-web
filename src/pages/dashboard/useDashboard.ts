@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
 import { getOrganizationFeedbacks } from "@/api/feedback";
 import type { Feedback } from "@/api/feedback/types";
 
-export function useFeedbacks() {
+export function useDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const navigate = useNavigate();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
 
   useEffect(() => {
@@ -31,9 +33,25 @@ export function useFeedbacks() {
     fetchFeedbacks();
   }, [selectedOrganization]);
 
+  const stats = {
+    total: feedbacks.length,
+    pending: feedbacks.filter((f) => f.status === "PENDING").length,
+    inProgress: feedbacks.filter((f) => f.status === "IN_PROGRESS").length,
+    done: feedbacks.filter((f) => f.status === "DONE").length,
+  };
+
+  const recentFeedbacks = feedbacks.slice(0, 3);
+
+  const handleViewAll = () => {
+    navigate("/feedbacks");
+  };
+
   return {
     feedbacks,
     isLoading,
+    stats,
+    recentFeedbacks,
     selectedOrganization,
+    handleViewAll,
   };
 }
