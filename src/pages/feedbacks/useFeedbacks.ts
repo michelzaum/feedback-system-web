@@ -10,6 +10,7 @@ export function useFeedbacks() {
   const [isLoading, setIsLoading] = useState(true);
 
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
 
   useEffect(() => {
     async function fetchFeedbacks() {
@@ -31,9 +32,18 @@ export function useFeedbacks() {
     fetchFeedbacks();
   }, [selectedOrganization]);
 
+  const projectNameMap = new Map<string, string>();
+  const org = organizationsWithProjects.find((organization) => organization.id === selectedOrganization?.id);
+  if (org) {
+    for (const project of org.projects) {
+      projectNameMap.set(project.id, project.name);
+    }
+  }
+
   return {
     feedbacks,
     isLoading,
     selectedOrganization,
+    projectNameMap,
   };
 }

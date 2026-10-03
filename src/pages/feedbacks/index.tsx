@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Folder } from "lucide-react";
 import { useFeedbacks } from "./useFeedbacks";
 import type { Feedback } from "@/api/feedback/types";
 
@@ -13,7 +13,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function FeedbackCard({ feedback }: { feedback: Feedback }) {
+function FeedbackCard({ feedback, projectName }: { feedback: Feedback; projectName: string }) {
   return (
     <Card className="flex flex-col">
       <CardHeader className="pb-2">
@@ -24,6 +24,10 @@ function FeedbackCard({ feedback }: { feedback: Feedback }) {
       </CardHeader>
       <CardContent className="flex-1">
         <p className="text-xs text-muted-foreground line-clamp-2">{feedback.description}</p>
+        <div className="flex items-center gap-1.5 mt-3">
+          <Folder className="h-3 w-3 text-muted-foreground" />
+          <span className="text-xs text-bol">{projectName}</span>
+        </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">
@@ -35,7 +39,7 @@ function FeedbackCard({ feedback }: { feedback: Feedback }) {
 }
 
 export function Feedbacks() {
-  const { feedbacks, isLoading } = useFeedbacks();
+  const { feedbacks, isLoading, projectNameMap } = useFeedbacks();
 
   return (
     <div className="flex-1 flex flex-col gap-4 bg-neutral-50 dark:bg-neutral-950 p-4 pt-0">
@@ -47,7 +51,11 @@ export function Feedbacks() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {feedbacks.map((feedback) => (
-            <FeedbackCard key={feedback.id} feedback={feedback} />
+            <FeedbackCard
+              key={feedback.id}
+              feedback={feedback}
+              projectName={projectNameMap.get(feedback.projectId) ?? "Projeto desconhecido"}
+            />
           ))}
         </div>
       )}
