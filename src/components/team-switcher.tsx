@@ -1,9 +1,6 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/store/auth";
-import { getOrganizations } from "@/api/organizations";
 import type { Organization } from "@/api/organizations/types";
-import { toast } from "sonner";
 
 import {
   SidebarMenu,
@@ -26,23 +23,9 @@ import { Briefcase, ChevronsUpDown, Plus } from "lucide-react";
 export function TeamSwitcher() {
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization);
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
-
-  useEffect(() => {
-    async function fetchOrgs() {
-      if (!isAuthenticated) return;
-      try {
-        const orgs = await getOrganizations();
-        setOrganizations(orgs);
-      } catch {
-        toast.error("Failed to load organizations");
-      }
-    }
-    fetchOrgs();
-  }, [isAuthenticated]);
+  const organizations: Organization[] = useAuthStore((state) => state.organizationsWithProjects);
 
   const handleSwitch = (org: Organization) => {
     setSelectedOrganization(org);
