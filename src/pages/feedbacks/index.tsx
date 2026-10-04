@@ -49,8 +49,8 @@ function FeedbackCard({
   feedback,
   onStatusChange,
 }: {
-  feedback: Feedback;
-  onStatusChange: (status: FeedbackStatus) => void;
+    feedback: Feedback;
+    onStatusChange: (status: FeedbackStatus) => void;
   }) {
   const selectedStatus = STATUS_OPTIONS.find((option) => feedback.status === option.value)?.label;
 

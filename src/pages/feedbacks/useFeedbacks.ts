@@ -66,6 +66,12 @@ export function useFeedbacks() {
   const handleUpdateStatus = async (projectId: string, feedbackId: string, status: FeedbackStatus) => {
     if (!selectedOrganization) return;
 
+    const feedback = projectFeedbacks
+      .find((group) => group.projectId === projectId)
+      ?.feedbacks.find((f) => f.id === feedbackId);
+
+    if (!feedback || feedback.status === status) return;
+
     try {
       await updateFeedback(selectedOrganization.id, projectId, feedbackId, { status });
 
