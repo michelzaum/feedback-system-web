@@ -36,8 +36,8 @@ export function useDashboard() {
   const stats = {
     total: feedbacks.length,
     pending: feedbacks.filter((f) => f.status === "PENDING").length,
-    inProgress: feedbacks.filter((f) => f.status === "IN_PROGRESS").length,
-    done: feedbacks.filter((f) => f.status === "DONE").length,
+    inProgress: feedbacks.filter((f) => f.status === "IN_REVIEW").length,
+    done: feedbacks.filter((f) => f.status === "COMPLETED").length,
   };
 
   const recentFeedbacks = feedbacks.slice(0, 3);
