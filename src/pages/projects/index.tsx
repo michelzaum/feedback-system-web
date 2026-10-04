@@ -20,6 +20,7 @@ export function ProjectManagement() {
     project,
     isLoading,
     isSaving,
+    publicUrl,
     navigate,
     editingName,
     nameValue,
@@ -141,11 +142,11 @@ export function ProjectManagement() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <Input value={project.url} readOnly className="flex-1" />
+              <Input value={publicUrl} readOnly className="flex-1" />
               <Button
                 variant="outline"
                 onClick={() => {
-                  navigator.clipboard.writeText(project.url);
+                  navigator.clipboard.writeText(publicUrl);
                   toast.success("URL copiada para a área de transferência");
                 }}
                 className="hover:cursor-pointer"

@@ -1,33 +1,15 @@
 import type { ReactNode } from "react";
 import { Navigate, Outlet } from "react-router";
-import { getOrganizations } from "@/api/organizations";
-import { useState, useEffect } from "react";
+import { useAuthStore } from "@/store/auth";
 
 interface NoOrganizationRouteProps {
   children?: ReactNode;
 }
 
 export function NoOrganizationRoute({ children }: NoOrganizationRouteProps) {
-  const [hasOrganization, setHasOrganization] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
 
-  useEffect(() => {
-    async function check() {
-      try {
-        const orgs = await getOrganizations();
-        setHasOrganization(orgs.length > 0);
-      } catch {
-        setHasOrganization(false);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    check();
-  }, []);
-
-  if (isLoading) return null;
-
-  if (hasOrganization) {
+  if (organizationsWithProjects.length > 0) {
     return <Navigate to="/dashboard" replace />;
   }
 
