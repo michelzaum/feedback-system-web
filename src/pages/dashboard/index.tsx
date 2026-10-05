@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "cn";
 import { useDashboard } from "./useDashboard";
-import type { Feedback } from "@/api/feedback/types";
+import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 function StatCard({
   title,
@@ -53,17 +53,17 @@ function StatCard({
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { label: string; className: string }> = {
+function StatusBadge({ status }: { status: FeedbackStatus }) {
+  const config: Record<FeedbackStatus, { label: string; className: string }> = {
     PENDING: {
       label: "Pendente",
       className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
     },
-    IN_PROGRESS: {
-      label: "Em Progresso",
+    IN_REVIEW: {
+      label: "Em Revisão",
       className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
     },
-    DONE: {
+    COMPLETED: {
       label: "Concluído",
       className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100",
     },
@@ -74,8 +74,8 @@ function StatusBadge({ status }: { status: string }) {
   return (
     <Badge className={className}>
       {status === "PENDING" && <Clock className="mr-1 h-3 w-3" />}
-      {status === "IN_PROGRESS" && <Loader className="mr-1 h-3 w-3" />}
-      {status === "DONE" && <CheckCircle2 className="mr-1 h-3 w-3" />}
+      {status === "IN_REVIEW" && <Loader className="mr-1 h-3 w-3" />}
+      {status === "COMPLETED" && <CheckCircle2 className="mr-1 h-3 w-3" />}
       {label}
     </Badge>
   );

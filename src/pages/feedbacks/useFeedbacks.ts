@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
-import { getOrganizationFeedbacks } from "@/api/feedback";
-import type { Feedback } from "@/api/feedback/types";
+import { getOrganizationFeedbacks, updateFeedback } from "@/api/feedback";
+import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 interface ProjectFeedbacks {
   projectId: string;
@@ -63,9 +63,42 @@ export function useFeedbacks() {
     fetchFeedbacks();
   }, [selectedOrganization]);
 
+  const handleUpdateStatus = async (projectId: string, feedbackId: string, status: FeedbackStatus) => {
+    if (!selectedOrganization) return;
+
+    const feedback = projectFeedbacks
+      .find((group) => group.projectId === projectId)
+      ?.feedbacks.find((f) => f.id === feedbackId);
+
+    if (!feedback || feedback.status === status) return;
+
+    try {
+      await updateFeedback(selectedOrganization.id, projectId, feedbackId, { status });
+
+      setProjectFeedbacks((prev) =>
+        prev.map((group) =>
+          group.projectId === projectId
+            ? {
+                ...group,
+                feedbacks: group.feedbacks.map((f) =>
+                  f.id === feedbackId ? { ...f, status } : f
+                ),
+              }
+            : group
+        )
+      );
+
+      toast.success("Status atualizado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao atualizar status");
+      console.log(error);
+    }
+  };
+
   return {
     projectFeedbacks,
     isLoading,
     selectedOrganization,
+    handleUpdateStatus,
   };
 }

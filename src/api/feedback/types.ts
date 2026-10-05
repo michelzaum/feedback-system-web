@@ -1,6 +1,12 @@
+export type FeedbackStatus = "PENDING" | "IN_REVIEW" | "COMPLETED";
+
 export interface CreateFeedbackPayload {
   title: string;
   description: string;
+}
+
+export interface UpdateFeedbackPayload {
+  status: FeedbackStatus;
 }
 
 export interface Feedback {
@@ -10,5 +16,5 @@ export interface Feedback {
   projectId: string;
   createdAt: string;
   updatedAt: string;
-  status: string;
+  status: FeedbackStatus;
 }
