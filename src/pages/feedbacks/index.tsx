@@ -4,6 +4,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -52,8 +53,6 @@ function FeedbackCard({
     feedback: Feedback;
     onStatusChange: (status: FeedbackStatus) => void;
   }) {
-  const selectedStatus = STATUS_OPTIONS.find((option) => feedback.status === option.value)?.label;
-
   return (
     <Card className="flex flex-col">
       <CardHeader className="pb-2">
@@ -69,18 +68,28 @@ function FeedbackCard({
         <span className="text-xs text-muted-foreground">
           {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
         </span>
-        <Select value={selectedStatus} onValueChange={(value) => onStatusChange(value as FeedbackStatus)}>
-          <SelectTrigger className="h-7 w-32.5 text-xs hover:cursor-pointer">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_OPTIONS.map((option) => (
-              <SelectItem key={option.value} value={option.value} className="hover:cursor-pointer">
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Select
+            value={feedback.status}
+            onValueChange={(value) => onStatusChange(value as FeedbackStatus)}
+            items={STATUS_OPTIONS}
+          >
+            <SelectTrigger
+              id={`feedback-status-${feedback.id}`}
+              className="h-8 w-36 rounded-md border-border bg-background px-3 text-xs font-medium shadow-sm hover:bg-accent hover:text-accent-foreground hover:cursor-pointer"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectLabel>Status</SelectLabel>
+              {STATUS_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value} className="hover:cursor-pointer">
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </CardFooter>
     </Card>
   );
