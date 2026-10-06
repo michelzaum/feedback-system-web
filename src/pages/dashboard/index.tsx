@@ -124,39 +124,6 @@ function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: (
   );
 }
 
-function ActivityChart({ stats }: { stats: { total: number; pending: number; inProgress: number; done: number } }) {
-  const items = [
-    { label: "Pendente", count: stats.pending, color: "bg-yellow-500", textColor: "text-yellow-600" },
-    { label: "Em Progresso", count: stats.inProgress, color: "bg-blue-500", textColor: "text-blue-600" },
-    { label: "Concluído", count: stats.done, color: "bg-green-500", textColor: "text-green-600" },
-  ];
-
-  return (
-    <Card>
-      <CardHeader className="pb-1">
-        <CardTitle className="text-xs font-medium">Status dos Feedbacks</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col justify-center gap-1.5 px-4 pb-2">
-        {items.map((item) => {
-          const percentage = stats.total > 0 ? (item.count / stats.total) * 100 : 0;
-          return (
-            <div key={item.label} className="flex items-center gap-2">
-              <span className="w-20 text-xs">{item.label}</span>
-              <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                <div
-                  className={cn("h-full rounded-full transition-all duration-500", item.color)}
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-              <span className={cn("text-xs font-medium w-6 text-right", item.textColor)}>{item.count}</span>
-            </div>
-          );
-        })}
-      </CardContent>
-    </Card>
-  );
-}
-
 export function Dashboard() {
   const { stats, isLoading, recentFeedbacks, handleViewAll } = useDashboard();
 
@@ -225,7 +192,6 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <ActivityChart stats={stats} />
         </div>
       </div>
     </div>
