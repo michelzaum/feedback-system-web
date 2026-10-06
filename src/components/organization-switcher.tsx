@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Briefcase, ChevronsUpDown, Plus } from "lucide-react";
 
-export function TeamSwitcher() {
+export function OrganizationSwitcher() {
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
@@ -86,7 +86,7 @@ export function TeamSwitcher() {
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+              <div className="font-medium text-muted-foreground">Adicionar organização</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -95,4 +95,4 @@ export function TeamSwitcher() {
   );
 }
 
-export default TeamSwitcher;
+export default OrganizationSwitcher;

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { OrganizationSwitcher } from "@/components/organization-switcher";
 import { CreateProjectModal } from "@/components/create-project";
 import { ListProjects } from "@/components/list-projects";
 import { useProjects } from "@/components/use-projects";
@@ -64,7 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher />
+        <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={projects} activeUrl={location.pathname} />
