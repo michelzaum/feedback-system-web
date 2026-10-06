@@ -15,9 +15,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/auth";
+import { useBreadcrumb } from "./useBreadcrumb";
 
 export function AppLayout() {
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const breadcrumbItems = useBreadcrumb();
 
   return (
     <SidebarProvider>
@@ -33,14 +35,24 @@ export function AppLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
+                  <BreadcrumbLink href="/">
                     {selectedOrganization?.name ?? "Acme"}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Overview</BreadcrumbPage>
-                </BreadcrumbItem>
+                {breadcrumbItems.map((item, index) => (
+                  <span key={item.href} className="hidden md:flex items-center gap-2">
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                      {index === breadcrumbItems.length - 1 ? (
+                        <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink href={item.href} className="hover:cursor-pointer">
+                          {item.label}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  </span>
+                ))}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
