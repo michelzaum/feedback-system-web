@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
@@ -11,23 +10,6 @@ export function useProjects() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
   const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
-
-  useEffect(() => {
-    async function fetchProjects() {
-      if (!isAuthenticated || !selectedOrganization) {
-        setOrganizationsWithProjects([]);
-        return;
-      }
-      try {
-        const projects = await getOrganizationProjects(selectedOrganization.id);
-        setOrganizationsWithProjects([{ ...selectedOrganization, projects } as Organization & { projects: Project[] }]);
-      } catch (error) {
-        toast.error("Erro ao carregar projetos");
-        console.log(error);
-      }
-    }
-    fetchProjects();
-  }, [isAuthenticated, selectedOrganization, setOrganizationsWithProjects]);
 
   const refetchProjects = async () => {
     if (!isAuthenticated || !selectedOrganization) return;
