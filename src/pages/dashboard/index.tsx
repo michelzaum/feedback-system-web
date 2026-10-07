@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "cn";
 import { useDashboard } from "./useDashboard";
+import { useAuthStore } from "@/store/auth";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 function StatCard({
@@ -81,7 +82,7 @@ function StatusBadge({ status }: { status: FeedbackStatus }) {
   );
 }
 
-function FeedbackCard({ feedback }: { feedback: Feedback }) {
+function FeedbackCard({ feedback, projectName }: { feedback: Feedback; projectName: string }) {
   return (
     <Card className="flex flex-col">
       <CardHeader className="pb-2">
@@ -97,12 +98,22 @@ function FeedbackCard({ feedback }: { feedback: Feedback }) {
         <span className="text-xs text-muted-foreground">
           {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
         </span>
+        <Badge variant="secondary" className="text-xs">{projectName}</Badge>
       </CardFooter>
     </Card>
   );
 }
 
 function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: () => void }) {
+  const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+
+  const getProjectName = (projectId: string) => {
+    const org = organizationsWithProjects.find((o) => o.id === selectedOrganization?.id);
+    const project = org?.projects.find((p) => p.id === projectId);
+    return project?.name ?? "Projeto desconhecido";
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -111,7 +122,7 @@ function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: (
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-3 py-4">
         {items.map((feedback) => (
-          <FeedbackCard key={feedback.id} feedback={feedback} />
+          <FeedbackCard key={feedback.id} feedback={feedback} projectName={getProjectName(feedback.projectId)} />
         ))}
       </CardContent>
       <CardFooter className="flex items-center justify-end p-4">
