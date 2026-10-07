@@ -149,14 +149,16 @@ export function Feedbacks() {
               <div className="flex items-center justify-between border-b pb-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                    <FolderKanban className="size-4" />
+                    <FolderKanban className="size-7" />
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex flex-col gap-1">
                     <h2 className="truncate text-base font-semibold">{group.projectName}</h2>
-                    <p className="text-xs text-muted-foreground">Feedbacks recebidos neste projeto</p>
+                    <div className="flex items-center gap-1">
+                      <Badge variant="secondary" className="shrink-0">{group.feedbacks.length}</Badge>
+                      <p className="text-xs text-muted-foreground">Feedbacks recebidos neste projeto</p>
+                    </div>
                   </div>
                 </div>
-                <Badge variant="secondary" className="shrink-0">{group.feedbacks.length}</Badge>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {group.feedbacks.map((feedback) => (
