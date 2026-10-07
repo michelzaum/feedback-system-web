@@ -21,8 +21,8 @@ export function CreateProjectModal({ isModalOpen, onOpenModalChange, onProjectCr
   const { projectName, projectDescription, organizations, selectedOrgId, handleOrgChange, onSubmit } = useCreateProject({ onOpenModalChange, onProjectCreated });
 
   return (
-    <Dialog open={isModalOpen}>
-      <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-lg" showCloseButton>
+    <Dialog open={isModalOpen} onOpenChange={onOpenModalChange}>
+      <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-lg" showCloseButton={false}>
         <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-12">
           <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <FolderPlus className="size-5" />
