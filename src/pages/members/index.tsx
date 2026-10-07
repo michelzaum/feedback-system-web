@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, MoreHorizontal, Pencil, Trash2, Users, UserRound, ShieldCheck } from "lucide-react";
+import { Plus, MoreHorizontal, Pencil, Trash2, Users, UserRound, ShieldCheck, TriangleAlert } from "lucide-react";
 import { useMembers } from "./useMembers";
 import { AddMemberModal } from "@/components/add-member";
 import { Field } from "@/components/ui/field";
@@ -175,12 +175,13 @@ export function Members() {
         />
       )}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-sm p-2">
-          <DialogHeader className="flex flex-col gap-2 py-8">
-            <DialogTitle>Editar role</DialogTitle>
-            <DialogDescription>
-              Altere a role do membro
-            </DialogDescription>
+        <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md">
+          <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-12">
+            <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <ShieldCheck className="size-5" />
+            </div>
+            <DialogTitle className="text-lg font-semibold">Editar permissões</DialogTitle>
+            <DialogDescription>Escolha o nível de acesso deste membro na organização.</DialogDescription>
           </DialogHeader>
           {editingMember && (
             <form
@@ -188,13 +189,19 @@ export function Members() {
                 e.preventDefault();
                 onUpdateRole();
               }}
-              className="flex flex-col gap-6"
+              className="flex flex-col gap-5 px-6 py-5"
             >
-              <div className="px-4 flex items-center gap-3">
-                <p className="text-sm font-medium">{members.find((m) => m.id === editingMember.id)?.name}</p>
+              <div className="flex items-center gap-3 rounded-lg border bg-muted/20 p-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-semibold text-primary">
+                  {members.find((member) => member.id === editingMember.id)?.name?.charAt(0).toLocaleUpperCase() ?? "?"}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{members.find((member) => member.id === editingMember.id)?.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">{members.find((member) => member.id === editingMember.id)?.email}</p>
+                </div>
               </div>
-              <Field className="px-4">
-                <Label htmlFor="member-role">Role</Label>
+              <Field>
+                <Label htmlFor="member-role">Nível de acesso</Label>
                 <Select
                   value={editingMember.role}
                   onValueChange={(value) => {
@@ -202,26 +209,27 @@ export function Members() {
                     setEditingMember((prev) => (prev ? { ...prev, role } : prev));
                   }}
                 >
-                  <SelectTrigger id="member-role">
+                  <SelectTrigger id="member-role" className="h-10 hover:cursor-pointer">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ADMIN">ADMIN</SelectItem>
-                    <SelectItem value="MEMBER">MEMBER</SelectItem>
+                    <SelectItem value="ADMIN" className="hover:cursor-pointer">Administrador</SelectItem>
+                    <SelectItem value="MEMBER" className="hover:cursor-pointer">Membro</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
-              <DialogFooter className="flex flex-row items-center py-8">
+              <DialogFooter className="flex-col-reverse gap-2 border-t px-0 pb-0 pt-4 sm:flex-row sm:justify-end">
                 <Button
                   onClick={() => setIsEditDialogOpen(false)}
-                  variant="secondary"
-                  className="flex-1 h-12 hover:cursor-pointer transition-all duration-300"
+                  variant="outline"
+                  className="w-full hover:cursor-pointer sm:w-auto"
                   type="button"
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" className="flex-1 h-12 hover:cursor-pointer transition-all duration-300">
-                  Salvar
+                <Button type="submit" className="w-full hover:cursor-pointer sm:w-auto">
+                  <Pencil className="size-4" />
+                  Salvar permissões
                 </Button>
               </DialogFooter>
             </form>
@@ -229,27 +237,41 @@ export function Members() {
         </DialogContent>
       </Dialog>
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-sm p-2">
-          <DialogHeader className="flex flex-col gap-2 py-8">
-            <DialogTitle>Excluir membro</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja excluir este membro? Essa ação não pode ser desfeita.
-            </DialogDescription>
+        <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md">
+          <DialogHeader className="border-b bg-destructive/5 px-6 py-5 pr-12">
+            <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+              <TriangleAlert className="size-5" />
+            </div>
+            <DialogTitle className="text-lg font-semibold">Remover membro</DialogTitle>
+            <DialogDescription>Esta pessoa perderá o acesso à organização e aos projetos dela.</DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex flex-row items-center py-8">
+          <div className="px-6 py-5">
+            <div className="flex items-center gap-3 rounded-lg border bg-muted/20 p-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted font-semibold text-muted-foreground">
+                {members.find((member) => member.id === editingMember?.id)?.name?.charAt(0).toLocaleUpperCase() ?? "?"}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{members.find((member) => member.id === editingMember?.id)?.name}</p>
+                <p className="truncate text-xs text-muted-foreground">{members.find((member) => member.id === editingMember?.id)?.email}</p>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">Essa ação não pode ser desfeita.</p>
+          </div>
+          <DialogFooter className="flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end">
             <Button
               onClick={() => setIsDeleteDialogOpen(false)}
-              variant="secondary"
-              className="flex-1 h-12 hover:cursor-pointer transition-all duration-300"
+              variant="outline"
+              className="w-full hover:cursor-pointer sm:w-auto"
             >
               Cancelar
             </Button>
             <Button
               onClick={onConfirmDelete}
               variant="destructive"
-              className="flex-1 h-12 hover:cursor-pointer transition-all duration-300"
+              className="w-full hover:cursor-pointer sm:w-auto"
             >
-              Excluir
+              <Trash2 className="size-4" />
+              Remover membro
             </Button>
           </DialogFooter>
         </DialogContent>

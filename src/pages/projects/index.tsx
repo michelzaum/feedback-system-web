@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -118,13 +120,24 @@ export function ProjectManagement() {
                 <Dialog>
                   <DialogTrigger render={<button aria-label="Sobre o identificador" className="hover:cursor-pointer" type="button"><CircleHelp className="h-4 w-4 text-muted-foreground" /></button>}>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-sm p-2">
-                    <DialogHeader className="flex flex-col gap-2 py-8">
-                      <DialogTitle>O que é um slug?</DialogTitle>
-                      <DialogDescription>
-                        O slug é o identificador único do projeto na URL. Ele é gerado automaticamente a partir do nome do projeto e não pode ser alterado. É usado para que os usuários possam acessar a URL pública de feedback.
-                      </DialogDescription>
+                  <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md">
+                    <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-12">
+                      <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary"><Link2 className="size-5" /></div>
+                      <DialogTitle className="text-lg font-semibold">O que é um slug?</DialogTitle>
+                      <DialogDescription>O slug é o identificador único que aparece no endereço do projeto.</DialogDescription>
                     </DialogHeader>
+                    <div className="space-y-4 px-6 py-5">
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        Ele é criado automaticamente a partir do nome do projeto e não pode ser alterado. Esse identificador ajuda a compor o link público que as pessoas usam para enviar feedback.
+                      </p>
+                      <div className="rounded-lg border bg-muted/30 p-3">
+                        <p className="mb-1 text-xs font-medium text-muted-foreground">Exemplo de identificador</p>
+                        <code className="break-all text-sm font-medium text-foreground">meu-novo-projeto</code>
+                      </div>
+                    </div>
+                    <DialogFooter className="border-t px-6 py-4">
+                      <DialogClose render={<Button variant="outline" className="w-full hover:cursor-pointer sm:w-auto">Entendi</Button>} />
+                    </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </div>
