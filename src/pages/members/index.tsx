@@ -117,49 +117,49 @@ export function Members() {
             <CardDescription>Consulte e atualize as permissões da equipe.</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/30 hover:bg-muted/30">
-              <TableHead className="pl-5">Membro</TableHead>
-              <TableHead>E-mail</TableHead>
-              <TableHead>Permissão</TableHead>
-              <TableHead className="w-12 pr-5"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {members.map((member) => (
-              <TableRow key={member.id} className="group">
-                <TableCell className="pl-5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">{member.name?.charAt(0).toLocaleUpperCase() ?? "?"}</div>
-                    <span className="font-medium">{member.name}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-muted-foreground">{member.email}</TableCell>
-                <TableCell>
-                  <Badge variant={member.role === "ADMIN" ? "default" : "secondary"}>{member.role === "ADMIN" ? "Administrador" : "Membro"}</Badge>
-                </TableCell>
-                <TableCell className="pr-5">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground hover:cursor-pointer" aria-label={`Ações para ${member.name}`}>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleEdit(member)} className="hover:cursor-pointer">
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Editar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDelete(member.id)} className="hover:cursor-pointer">
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Excluir
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/30 hover:bg-muted/30">
+                  <TableHead className="pl-5">Membro</TableHead>
+                  <TableHead>E-mail</TableHead>
+                  <TableHead>Permissão</TableHead>
+                  <TableHead className="w-12 pr-5"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {members.map((member) => (
+                  <TableRow key={member.id} className="group">
+                    <TableCell className="pl-5">
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">{member.name?.charAt(0).toLocaleUpperCase() ?? "?"}</div>
+                        <span className="font-medium">{member.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{member.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={member.role === "ADMIN" ? "default" : "secondary"}>{member.role === "ADMIN" ? "Administrador" : "Membro"}</Badge>
+                    </TableCell>
+                    <TableCell className="pr-5">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground hover:cursor-pointer" aria-label={`Ações para ${member.name}`}>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleEdit(member)} className="hover:cursor-pointer">
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleDelete(member.id)} className="hover:cursor-pointer">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Excluir
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
       )}
