@@ -92,7 +92,7 @@ export function AddMemberModal({ isModalOpen, onOpenModalChange, organizationId,
             </div>
             <Field>
               <Label htmlFor="member-role">Nível de acesso</Label>
-              <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as "ADMIN" | "MEMBER")}>
+              <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as "ADMIN" | "MEMBER")} itemToStringLabel={(value) => (value === "ADMIN" ? "Administrador" : "Membro")}>
                 <SelectTrigger id="member-role" className="h-10 hover:cursor-pointer">
                   <SelectValue />
                 </SelectTrigger>

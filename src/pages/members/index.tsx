@@ -208,6 +208,7 @@ export function Members() {
                     const role = value as string;
                     setEditingMember((prev) => (prev ? { ...prev, role } : prev));
                   }}
+                  itemToStringLabel={(value) => (value === "ADMIN" ? "Administrador" : "Membro")}
                 >
                   <SelectTrigger id="member-role" className="h-10 hover:cursor-pointer">
                     <SelectValue />
