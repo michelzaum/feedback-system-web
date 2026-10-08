@@ -32,7 +32,7 @@ export function useDashboard() {
       }
     }
     fetchFeedbacks();
-  }, [selectedOrganization]);
+  }, [selectedOrganization, isAuthenticated]);
 
   const stats = {
     total: feedbacks.length,
