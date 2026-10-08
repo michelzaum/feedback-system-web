@@ -175,7 +175,7 @@ export function Members() {
         />
       )}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md">
+        <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md" showCloseButton={false}>
           <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-12">
             <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <ShieldCheck className="size-5" />
