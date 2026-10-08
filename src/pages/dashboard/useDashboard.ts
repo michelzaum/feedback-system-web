@@ -12,10 +12,11 @@ export function useDashboard() {
 
   const navigate = useNavigate();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
     async function fetchFeedbacks() {
-      if (!selectedOrganization) return;
+      if (!selectedOrganization || !isAuthenticated) return;
 
       try {
         const data = await getOrganizationFeedbacks(selectedOrganization.id);

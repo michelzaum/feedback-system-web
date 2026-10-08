@@ -11,6 +11,7 @@ export function useSignIn() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
+  const setOrganizations = useAuthStore((state) => state.setOrganizations);
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -33,6 +34,7 @@ export function useSignIn() {
         projects: projects.filter((p) => p.organizationId === org.id),
       }));
 
+      setOrganizations(orgs);
       setOrganizationsWithProjects(organizationsWithProjects);
 
       if (organizationsWithProjects.length === 0) {
