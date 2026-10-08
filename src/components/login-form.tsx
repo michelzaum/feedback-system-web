@@ -16,6 +16,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ArrowRight, KeyRound } from "lucide-react";
 
 export function LoginForm({
   className,
@@ -24,18 +25,24 @@ export function LoginForm({
 }: Omit<React.ComponentProps<"div">, "onSubmit"> & { onSubmit?: React.FormEventHandler<HTMLFormElement> }) {
   return (
     <div className={cn("flex w-full flex-col gap-6", className)} {...props}>
-      <Card className="w-full shadow-sm">
-        <CardHeader className="text-center sm:text-left">
-          <CardTitle className="text-xl sm:text-2xl">Login to your account</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">
-            Enter your email below to login to your account
-          </CardDescription>
+      <Card className="w-full overflow-hidden border-border/70 shadow-xl shadow-primary/5">
+        <div className="h-1.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
+        <CardHeader className="gap-4 px-6 pt-7 sm:px-8">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
+            <KeyRound className="size-6" />
+          </div>
+          <div className="space-y-2">
+            <CardTitle className="text-2xl tracking-tight sm:text-3xl">Acesse sua conta</CardTitle>
+            <CardDescription className="text-sm leading-relaxed">
+              Entre para acompanhar seus projetos e feedbacks.
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-6 pb-7 sm:px-8">
           <form onSubmit={onSubmit}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email">E-mail</FieldLabel>
                 <Input
                   id="email"
                   type="email"
@@ -43,12 +50,12 @@ export function LoginForm({
                   placeholder="m@example.com"
                   autoComplete="email"
                   required
-                  className="h-9"
+                  className="h-11"
                 />
               </Field>
               <Field>
                 <div className="flex items-center justify-between gap-2">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <FieldLabel htmlFor="password">Senha</FieldLabel>
                 </div>
                 <Input
                   id="password"
@@ -56,20 +63,22 @@ export function LoginForm({
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="h-9"
+                  className="h-11"
+                  placeholder="********"
                 />
               </Field>
               <Field className="gap-2">
                 <Button type="submit" size="lg" className="w-full hover:cursor-pointer">
-                  Login
+                  Entrar
+                  <ArrowRight className="size-4" />
                 </Button>
                 <FieldDescription className="text-center text-xs sm:text-sm mt-2">
-                  Don&apos;t have an account?{" "}
+                  Ainda não tem uma conta?{" "}
                   <Link
                     to="/sign-up"
-                    className="font-medium underline underline-offset-4 hover:text-primary"
+                    className="font-medium text-primary underline underline-offset-4 hover:cursor-pointer hover:text-primary/80"
                   >
-                    Sign up
+                    Criar conta
                   </Link>
                 </FieldDescription>
               </Field>

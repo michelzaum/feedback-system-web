@@ -5,10 +5,8 @@ function SignIn() {
   const { onSubmit } = useSignIn();
 
   return (
-    <div className="min-h-svh w-full flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm">
-        <LoginForm onSubmit={onSubmit} />
-      </div>
+    <div className="relative flex min-h-svh w-full items-center justify-center overflow-hidden px-4 py-10">
+      <LoginForm onSubmit={onSubmit} />
     </div>
   );
 }
