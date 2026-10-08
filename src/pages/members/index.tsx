@@ -145,11 +145,11 @@ export function Members() {
                       <MoreHorizontal className="h-4 w-4" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleEdit(member)}>
+                      <DropdownMenuItem onClick={() => handleEdit(member)} className="hover:cursor-pointer">
                         <Pencil className="mr-2 h-4 w-4" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDelete(member.id)}>
+                      <DropdownMenuItem onClick={() => handleDelete(member.id)} className="hover:cursor-pointer">
                         <Trash2 className="mr-2 h-4 w-4" />
                         Excluir
                       </DropdownMenuItem>
