@@ -45,7 +45,7 @@ export function OrganizationSelectForm({
             <Building2 className="size-6" />
           </div>
           <div className="space-y-2">
-            <CardTitle className="text-2xl tracking-tight sm:text-3xl">Escolha uma organização</CardTitle>
+            <CardTitle className="text-lg tracking-tight sm:text-2xl">Escolha uma organização</CardTitle>
             <CardDescription className="text-sm leading-relaxed">
               Selecione o espaço de trabalho que deseja acessar.
             </CardDescription>

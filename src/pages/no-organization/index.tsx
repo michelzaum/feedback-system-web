@@ -27,7 +27,7 @@ function NoOrganization() {
               </span>
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-2xl tracking-tight sm:text-3xl">Você ainda não faz parte de uma organização</CardTitle>
+              <CardTitle className="text-lg tracking-tight sm:text-2xl">Você ainda não faz parte de uma organização</CardTitle>
               <CardDescription className="mx-auto max-w-sm text-sm leading-relaxed">
                 Peça ao administrador da sua organização para convidar você. Quando receber o convite, seus projetos estarão disponíveis aqui.
               </CardDescription>
