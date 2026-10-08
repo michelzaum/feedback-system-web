@@ -35,8 +35,11 @@ import { AddMemberModal } from "@/components/add-member";
 import { Field } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuthStore } from "@/store/auth";
 
 export function Members() {
+  const authUser = useAuthStore((state) => state.user);
+  const authOrganization = useAuthStore((state) => state.selectedOrganization);
   const {
     members,
     isLoading,
@@ -140,21 +143,23 @@ export function Members() {
                       <Badge variant={member.role === "ADMIN" ? "default" : "secondary"}>{member.role === "ADMIN" ? "Administrador" : "Membro"}</Badge>
                     </TableCell>
                     <TableCell className="pr-5">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground hover:cursor-pointer" aria-label={`Ações para ${member.name}`}>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleEdit(member)} className="hover:cursor-pointer">
-                            <Pencil className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDelete(member.id)} className="hover:cursor-pointer">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      {authOrganization?.role === "ADMIN" && member.email !== authUser?.email && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground hover:cursor-pointer" aria-label={`Ações para ${member.name}`}>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleEdit(member)} className="hover:cursor-pointer">
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDelete(member.id)} className="hover:cursor-pointer">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Excluir
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
