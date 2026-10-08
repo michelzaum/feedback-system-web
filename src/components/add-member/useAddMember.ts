@@ -5,7 +5,7 @@ import type { UseAddMemberModalProps } from "./types";
 import type { MemberInfo } from "@/api/members/types";
 import { createOrganizationMember, findOrganizationMemberByEmail } from "@/api/members";
 
-type Step = "email" | "confirm" | "success";
+type Step = "email" | "confirm";
 
 export function useAddMember({ organizationId, onMemberAdded }: UseAddMemberModalProps) {
   const emailRef = useRef<HTMLInputElement>({} as HTMLInputElement);
@@ -42,7 +42,6 @@ export function useAddMember({ organizationId, onMemberAdded }: UseAddMemberModa
         role: selectedRole,
       });
       toast.success("Membro adicionado com sucesso!");
-      setStep("success");
       onMemberAdded();
     } catch (error) {
       toast.error("Erro ao adicionar membro");

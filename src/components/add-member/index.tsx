@@ -12,7 +12,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check, Mail, ShieldCheck, UserPlus, UserRound } from "lucide-react";
+import { Mail, ShieldCheck, UserPlus, UserRound } from "lucide-react";
 
 import { useAddMember } from "./useAddMember";
 import type { AddMemberModalProps } from "./types";
@@ -42,7 +42,7 @@ export function AddMemberModal({ isModalOpen, onOpenModalChange, organizationId,
       <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md" showCloseButton={false}>
         <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-12">
           <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            {step === "success" ? <Check className="size-5" /> : <UserPlus className="size-5" />}
+            <UserPlus className="size-5" />
           </div>
           {step === "email" && (
             <>
@@ -56,12 +56,7 @@ export function AddMemberModal({ isModalOpen, onOpenModalChange, organizationId,
               <DialogDescription>Revise os dados e escolha o nível de acesso.</DialogDescription>
             </>
           )}
-          {step === "success" && (
-            <>
-              <DialogTitle className="text-lg font-semibold">Membro adicionado</DialogTitle>
-              <DialogDescription>A pessoa já pode colaborar nesta organização.</DialogDescription>
-            </>
-          )}
+
         </DialogHeader>
 
         {step === "email" && (
@@ -119,14 +114,7 @@ export function AddMemberModal({ isModalOpen, onOpenModalChange, organizationId,
           </form>
         )}
 
-        {step === "success" && (
-          <DialogFooter className="px-6 pb-5 pt-4">
-            <Button onClick={handleClose} className="w-full hover:cursor-pointer">
-              <Check className="size-4" />
-              Concluído
-            </Button>
-          </DialogFooter>
-        )}
+
       </DialogContent>
     </Dialog>
   );
