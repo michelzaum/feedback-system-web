@@ -256,7 +256,7 @@ export function Members() {
                 <p className="truncate text-xs text-muted-foreground">{members.find((member) => member.id === editingMember?.id)?.email}</p>
               </div>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">Essa ação não pode ser desfeita.</p>
+            <p className="mt-3 text-xs text-muted-foreground">Se preciso, você poderá adicionar esse usuário novamente no futuro.</p>
           </div>
           <DialogFooter className="flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end">
             <Button
