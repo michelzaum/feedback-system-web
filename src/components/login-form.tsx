@@ -49,12 +49,6 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center justify-between gap-2">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="text-xs sm:text-sm underline-offset-4 hover:underline text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Forgot your password?
-                  </a>
                 </div>
                 <Input
                   id="password"
@@ -66,11 +60,8 @@ export function LoginForm({
                 />
               </Field>
               <Field className="gap-2">
-                <Button type="submit" size="lg" className="w-full">
+                <Button type="submit" size="lg" className="w-full hover:cursor-pointer">
                   Login
-                </Button>
-                <Button variant="outline" type="button" size="lg" className="w-full">
-                  Login with Google
                 </Button>
                 <FieldDescription className="text-center text-xs sm:text-sm mt-2">
                   Don&apos;t have an account?{" "}
