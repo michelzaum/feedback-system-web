@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from "react-router";
-import Dashboard from "./pages/dashboard";
+import Overview from "./pages/overview";
 import Feedback from "./pages/feedback";
 import Feedbacks from "./pages/feedbacks";
 import Members from "./pages/members";
@@ -41,7 +41,7 @@ export const RoutesComponent = () => {
         </Route>
         <Route element={<HasOrganization />}>
           <Route element={<AppLayout />}>
-            <Route path="/overview" element={<Dashboard />} />
+            <Route path="/overview" element={<Overview />} />
             <Route path="/feedbacks" element={<Feedbacks />} />
             <Route path="/members" element={<Members />} />
             <Route path="/projects/:slug" element={<ProjectManagement />} />

@@ -20,7 +20,7 @@ import {
   SidebarRail,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react";
+import { LayoutGrid, Users, MessageCircle, AppWindow } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { useLocation } from "react-router";
 
@@ -29,7 +29,7 @@ const projects = [
     name: "Overview",
     url: "/overview",
     icon: (
-      <LayoutDashboard />
+      <LayoutGrid />
     ),
   },
   {

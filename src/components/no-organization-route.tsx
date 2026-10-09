@@ -10,7 +10,7 @@ export function NoOrganizationRoute({ children }: NoOrganizationRouteProps) {
   const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
 
   if (organizationsWithProjects.length > 0) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/overview" replace />;
   }
 
   return children ? <>{children}</> : <Outlet />;

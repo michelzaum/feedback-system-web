@@ -12,7 +12,7 @@ import {
   Activity,
 } from "lucide-react";
 import { cn } from "cn";
-import { useDashboard } from "./useDashboard";
+import { useOverview } from "./useOverview";
 import { useAuthStore } from "@/store/auth";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
@@ -135,8 +135,8 @@ function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: (
   );
 }
 
-export function Dashboard() {
-  const { stats, isLoading, recentFeedbacks, handleViewAll } = useDashboard();
+export function Overview() {
+  const { stats, isLoading, recentFeedbacks, handleViewAll } = useOverview();
 
   if (isLoading) {
     return (
@@ -209,4 +209,4 @@ export function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Overview;

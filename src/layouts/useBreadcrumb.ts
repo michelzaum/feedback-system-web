@@ -8,12 +8,12 @@ interface BreadcrumbItem {
 export function useBreadcrumb() {
   const { pathname } = useLocation();
 
-  const segments = pathname.split("/overview").filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
 
   const items: BreadcrumbItem[] = [];
 
-  if (segments[0] === "dashboard") {
-    items.push({ label: "Dashboard", href: "/dashboard" });
+  if (segments[0] === "overview") {
+    items.push({ label: "Overview", href: "/overview" });
   } else if (segments[0] === "feedbacks") {
     items.push({ label: "Feedbacks", href: "/feedbacks" });
   } else if (segments[0] === "members") {

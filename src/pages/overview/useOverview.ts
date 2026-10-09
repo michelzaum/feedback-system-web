@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/auth";
 import { getOrganizationFeedbacks } from "@/api/feedback";
 import type { Feedback } from "@/api/feedback/types";
 
-export function useDashboard() {
+export function useOverview() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
