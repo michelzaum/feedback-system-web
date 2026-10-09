@@ -36,7 +36,7 @@ export function AppLayout() {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="/overview">
-                    {selectedOrganization?.name ?? "Acme"}
+                    {selectedOrganization?.name ?? "Sua organização"}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 {breadcrumbItems.map((item, index) => (

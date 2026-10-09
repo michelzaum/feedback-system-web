@@ -13,7 +13,7 @@ export function useBreadcrumb() {
   const items: BreadcrumbItem[] = [];
 
   if (segments[0] === "overview") {
-    items.push({ label: "Overview", href: "/overview" });
+    items.push({ label: "Visão geral", href: "/overview" });
   } else if (segments[0] === "feedbacks") {
     items.push({ label: "Feedbacks", href: "/feedbacks" });
   } else if (segments[0] === "members") {

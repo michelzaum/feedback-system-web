@@ -40,21 +40,21 @@ export function useSignIn() {
       if (organizationsWithProjects.length === 0) {
         login({ name: user.name, email: user.email });
 
-        toast.success("Signed in successfully!");
+        toast.success("Login realizado com sucesso!");
         navigate("/no-organization", { replace: true });
       } else if (organizationsWithProjects.length === 1) {
         login({ name: user.name, email: user.email }, organizationsWithProjects[0]);
 
-        toast.success("Signed in successfully!");
+        toast.success("Login realizado com sucesso!");
         navigate("/overview", { replace: true });
       } else {
         login({ name: user.name, email: user.email });
 
-        toast.success("Signed in successfully!");
+        toast.success("Login realizado com sucesso!");
         navigate("/select-org", { replace: true });
       }
     } catch {
-      toast.error("Failed to sign in. Please try again.");
+      toast.error("Falha ao fazer login. Tente novamente.");
     } finally {
       setIsLoading(false);
     }

@@ -20,10 +20,10 @@ export function useSignUp() {
     try {
       await signUp({ name, email, password });
 
-      toast.success("Account created successfully!");
+      toast.success("Conta criada com sucesso!");
       navigate("/sign-in");
     } catch {
-      toast.error("Failed to create account. Please try again.");
+      toast.error("Falha ao criar conta. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
