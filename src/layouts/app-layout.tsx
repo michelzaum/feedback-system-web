@@ -35,7 +35,7 @@ export function AppLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">
+                  <BreadcrumbLink href="/overview">
                     {selectedOrganization?.name ?? "Acme"}
                   </BreadcrumbLink>
                 </BreadcrumbItem>

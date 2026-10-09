@@ -40,7 +40,7 @@ export function useSelectOrg() {
     try {
       setSelectedOrganization(org);
 
-      navigate("/", { replace: true });
+      navigate("/overview", { replace: true });
     } catch {
       toast.error("Failed to select organization.");
     } finally {

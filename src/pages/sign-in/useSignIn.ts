@@ -46,7 +46,7 @@ export function useSignIn() {
         login({ name: user.name, email: user.email }, organizationsWithProjects[0]);
 
         toast.success("Signed in successfully!");
-        navigate("/", { replace: true });
+        navigate("/overview", { replace: true });
       } else {
         login({ name: user.name, email: user.email });
 

@@ -8,7 +8,7 @@ interface BreadcrumbItem {
 export function useBreadcrumb() {
   const { pathname } = useLocation();
 
-  const segments = pathname.split("/").filter(Boolean);
+  const segments = pathname.split("/overview").filter(Boolean);
 
   const items: BreadcrumbItem[] = [];
 

@@ -24,7 +24,7 @@ export const RoutesComponent = () => {
       {/* Public routes without sidebar */}
       <Route element={<PublicRoute />}>
         <Route element={<AuthLayout />}>
-          <Route path="/sign-in" element={<SignIn />} />
+          <Route index path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
         </Route>
 
@@ -41,8 +41,7 @@ export const RoutesComponent = () => {
         </Route>
         <Route element={<HasOrganization />}>
           <Route element={<AppLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/overview" element={<Dashboard />} />
             <Route path="/feedbacks" element={<Feedbacks />} />
             <Route path="/members" element={<Members />} />
             <Route path="/projects/:slug" element={<ProjectManagement />} />
@@ -55,7 +54,7 @@ export const RoutesComponent = () => {
         path="*"
         element={
           <Navigate
-            to={isAuthenticated ? "/" : "/sign-in"}
+            to={isAuthenticated ? "/overview" : "/sign-in"}
             replace
             state={!isAuthenticated ? { from: location } : undefined}
           />

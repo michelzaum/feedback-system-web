@@ -29,7 +29,7 @@ export function OrganizationSwitcher() {
 
   const handleSwitch = (org: Organization) => {
     setSelectedOrganization(org);
-    navigate("/", { replace: true });
+    navigate("/overview", { replace: true });
   };
 
   if (!selectedOrganization) {

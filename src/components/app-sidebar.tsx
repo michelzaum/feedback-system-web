@@ -27,7 +27,7 @@ import { useLocation } from "react-router";
 const projects = [
   {
     name: "Overview",
-    url: "/",
+    url: "/overview",
     icon: (
       <LayoutDashboard />
     ),
