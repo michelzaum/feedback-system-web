@@ -136,6 +136,7 @@ export function Members() {
                       <div className="flex items-center gap-3">
                         <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">{member.name?.charAt(0).toLocaleUpperCase() ?? "?"}</div>
                         <span className="font-medium">{member.name}</span>
+                        {member.email === authUser?.email && <Badge variant="outline">Você</Badge>}
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">{member.email}</TableCell>
