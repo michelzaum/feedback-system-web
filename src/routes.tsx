@@ -8,11 +8,13 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import SelectOrg from "./pages/select-org";
 import NoOrganization from "./pages/no-organization";
+import NoAccess from "./pages/no-access";
 import { AppLayout, AuthLayout } from "./layouts";
 import { ProtectedRoute } from "./components/protected-route";
 import { PublicRoute } from "./components/public-route";
 import { HasOrganization } from "./components/has-organization";
 import { NoOrganizationRoute } from "./components/no-organization-route";
+import { AdminRoute } from "./components/admin-route";
 import { useAuthStore } from "./store/auth";
 
 export const RoutesComponent = () => {
@@ -43,11 +45,15 @@ export const RoutesComponent = () => {
           <Route element={<AppLayout />}>
             <Route path="/overview" element={<Overview />} />
             <Route path="/feedbacks" element={<Feedbacks />} />
-            <Route path="/members" element={<Members />} />
+            <Route element={<AdminRoute />}>
+              <Route path="/members" element={<Members />} />
+            </Route>
             <Route path="/projects/:slug" element={<ProjectManagement />} />
           </Route>
         </Route>
       </Route>
+
+      <Route path="/no-access" element={<NoAccess />} />
 
       {/* Catch-all: non-public resources redirect to /sign-in if unauthenticated, or / if authenticated */}
       <Route
