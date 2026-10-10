@@ -53,7 +53,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const { organizationsWithProjects, fetchProjects } = useProjects();
   const authUser = useAuthStore((state) => state.user);
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const location = useLocation();
+
+  const isAdmin = selectedOrganization?.role === "ADMIN";
+  const navItems = projects.filter((item) => item.name !== "Membros" || isAdmin);
 
   const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" };
 
@@ -67,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={projects} activeUrl={location.pathname} />
+        <NavProjects projects={navItems} activeUrl={location.pathname} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>
