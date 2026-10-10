@@ -51,7 +51,7 @@ const projects = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
-  const { organizationsWithProjects, fetchProjects } = useProjects();
+  const { projects: organizationProjects, fetchProjects } = useProjects();
   const authUser = useAuthStore((state) => state.user);
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const location = useLocation();
@@ -82,7 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
               {isProjectsOpen && (
                 <ListProjects
-                  organizations={organizationsWithProjects}
+                  projects={organizationProjects}
                   onNewProjectClick={() => {
                     setIsCreateProjectModalOpen(true);
                   }}

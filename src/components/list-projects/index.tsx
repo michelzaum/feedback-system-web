@@ -6,31 +6,15 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
-
-interface Project {
-  id: string;
-  name: string;
-  slug: string;
-  organizationId: string;
-}
-
-interface OrganizationWithProjects {
-  id: string;
-  name: string;
-  slug: string;
-  role: string;
-  projects: Project[];
-}
+import type { Project } from "@/api/projects/types";
 
 export function ListProjects({
-  organizations,
+  projects,
   onNewProjectClick,
 }: {
-  organizations: OrganizationWithProjects[]
+  projects: Project[]
   onNewProjectClick: () => void
 }) {
-  const projects = organizations[0]?.projects ?? [];
-
   return (
     <SidebarMenuSub>
       {projects.map((project) => (
