@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
@@ -14,7 +14,7 @@ export function useOverview() {
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     async function fetchFeedbacks() {
       if (!selectedOrganization || !isAuthenticated) return;
 
