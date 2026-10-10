@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { useProject } from "./useProject";
+import { useAuthStore } from "@/store/auth";
 
 export function ProjectManagement() {
   const {
@@ -29,6 +30,8 @@ export function ProjectManagement() {
     handleSaveName,
     setEditingName,
   } = useProject();
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const isAdmin = selectedOrganization?.role === "ADMIN";
 
 
   if (isLoading) {
@@ -96,17 +99,19 @@ export function ProjectManagement() {
             ) : (
               <div className="flex items-center justify-between">
                 <span className="text-sm">{project.name}</span>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setNameValue(project.name);
-                    setEditingName(true);
-                  }}
-                  className="hover:cursor-pointer"
-                >
-                  <Pencil className="size-4" />
-                  Editar nome
-                </Button>
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setNameValue(project.name);
+                      setEditingName(true);
+                    }}
+                    className="hover:cursor-pointer"
+                  >
+                    <Pencil className="size-4" />
+                    Editar nome
+                  </Button>
+                )}
               </div>
             )}
           </CardContent>
