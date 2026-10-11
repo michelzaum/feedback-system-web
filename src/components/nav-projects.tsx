@@ -17,10 +17,10 @@ import {
 import { FolderIcon, ArrowRightIcon, Trash2Icon } from "lucide-react";
 
 export function NavProjects({
-  projects,
+  organizationMenuItems,
   activeUrl,
 }: {
-  projects: {
+  organizationMenuItems: {
     name: string
     url: string
     icon: React.ReactNode
@@ -30,9 +30,9 @@ export function NavProjects({
   const { isMobile } = useSidebar();
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projetos</SidebarGroupLabel>
+      <SidebarGroupLabel>Organização</SidebarGroupLabel>
       <SidebarMenu>
-        {projects.map((item) => (
+        {organizationMenuItems.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton render={<a href={item.url} />} isActive={activeUrl === item.url}>
               {item.icon}
