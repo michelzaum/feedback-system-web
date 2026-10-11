@@ -10,6 +10,7 @@ import {
   ArrowRight,
   TrendingUp,
   Activity,
+  Inbox,
 } from "lucide-react";
 import { cn } from "cn";
 import { useOverview } from "./useOverview";
@@ -121,16 +122,28 @@ function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: (
         <CardDescription>Últimos feedbacks do público</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-3 py-4">
-        {items.map((feedback) => (
-          <FeedbackCard key={feedback.id} feedback={feedback} projectName={getProjectName(feedback.projectId)} />
-        ))}
+        {items.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+            <div className="mb-2 flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
+              <Inbox className="size-6" />
+            </div>
+            <p className="text-base font-semibold">Nenhum feedback por enquanto</p>
+            <p className="max-w-sm text-sm text-muted-foreground">Quando alguém enviar uma sugestão ou relatar um problema, os feedbacks aparecerão aqui.</p>
+          </div>
+        ) : (
+          items.map((feedback) => (
+            <FeedbackCard key={feedback.id} feedback={feedback} projectName={getProjectName(feedback.projectId)} />
+          ))
+        )}
       </CardContent>
-      <CardFooter className="flex items-center justify-end p-4">
-        <Button variant="outline" size="sm" onClick={onViewAll} className="hover:cursor-pointer">
-          Ver todos feedbacks
-          <ArrowRight className="ml-1 h-3 w-3" />
-        </Button>
-      </CardFooter>
+      {items.length > 0 && (
+        <CardFooter className="flex items-center justify-end p-4">
+          <Button variant="outline" size="sm" onClick={onViewAll} className="hover:cursor-pointer">
+            Ver todos feedbacks
+            <ArrowRight className="ml-1 h-3 w-3" />
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }
