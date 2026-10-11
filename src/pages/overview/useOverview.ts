@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
@@ -6,16 +6,17 @@ import { useAuthStore } from "@/store/auth";
 import { getOrganizationFeedbacks } from "@/api/feedback";
 import type { Feedback } from "@/api/feedback/types";
 
-export function useDashboard() {
+export function useOverview() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     async function fetchFeedbacks() {
-      if (!selectedOrganization) return;
+      if (!selectedOrganization || !isAuthenticated) return;
 
       try {
         const data = await getOrganizationFeedbacks(selectedOrganization.id);
@@ -30,8 +31,9 @@ export function useDashboard() {
         setIsLoading(false);
       }
     }
+
     fetchFeedbacks();
-  }, [selectedOrganization]);
+  }, [selectedOrganization, isAuthenticated]);
 
   const stats = {
     total: feedbacks.length,

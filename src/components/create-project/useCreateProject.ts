@@ -1,35 +1,15 @@
-import { useRef, type SubmitEvent, useState, useEffect } from "react";
+import { useRef, type SubmitEvent, useState } from "react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
 import { api } from "@/api/request";
 import type { UseCreateProjectModalProps } from "./types";
-import type { Organization } from "@/api/organizations/types";
-import { getOrganizations } from "@/api/organizations";
 
 export function useCreateProject({ onOpenModalChange, onProjectCreated }: UseCreateProjectModalProps) {
   const projectName = useRef<HTMLInputElement>({} as HTMLInputElement);
   const projectDescription = useRef<HTMLInputElement>({} as HTMLInputElement);
-  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-  useEffect(() => {
-    async function fetchOrganizations() {
-      if (!isAuthenticated) return;
-      try {
-        const orgs = await getOrganizations();
-        setOrganizations(orgs);
-        if (orgs.length > 0) {
-          setSelectedOrgId(orgs[0].id);
-        }
-      } catch (error) {
-        toast.error("Erro ao carregar organizações");
-        console.log(error);
-      }
-    }
-    fetchOrganizations();
-  }, [isAuthenticated]);
+  const organizations = useAuthStore((state) => state.organizations);
 
   const handleOrgChange = (value: unknown) => {
     setSelectedOrgId(value as string);

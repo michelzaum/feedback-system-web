@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { OrganizationSwitcher } from "@/components/organization-switcher";
 import { CreateProjectModal } from "@/components/create-project";
 import { ListProjects } from "@/components/list-projects";
 import { useProjects } from "@/components/use-projects";
@@ -20,16 +20,16 @@ import {
   SidebarRail,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, MessageCircle, AppWindow } from "lucide-react";
+import { LayoutGrid, Users, MessageCircle, AppWindow } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { useLocation } from "react-router";
 
 const projects = [
   {
-    name: "Overview",
-    url: "/",
+    name: "Visão geral",
+    url: "/overview",
     icon: (
-      <LayoutDashboard />
+      <LayoutGrid />
     ),
   },
   {
@@ -51,9 +51,13 @@ const projects = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
-  const { organizationsWithProjects, fetchProjects } = useProjects();
+  const { projects: organizationProjects, fetchProjects } = useProjects();
   const authUser = useAuthStore((state) => state.user);
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const location = useLocation();
+
+  const isAdmin = selectedOrganization?.role === "ADMIN";
+  const navItems = projects.filter((item) => item.name !== "Membros" || isAdmin);
 
   const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" };
 
@@ -64,10 +68,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher />
+        <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={projects} activeUrl={location.pathname} />
+        <NavProjects projects={navItems} activeUrl={location.pathname} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>
@@ -78,7 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
               {isProjectsOpen && (
                 <ListProjects
-                  organizations={organizationsWithProjects}
+                  projects={organizationProjects}
                   onNewProjectClick={() => {
                     setIsCreateProjectModalOpen(true);
                   }}

@@ -30,7 +30,7 @@ export function NavProjects({
   const { isMobile } = useSidebar();
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>Projetos</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
@@ -47,18 +47,18 @@ export function NavProjects({
                 <DropdownMenuItem>
                   <FolderIcon
                   />
-                  <span>View Project</span>
+                  <span>Ver projeto</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <ArrowRightIcon
                   />
-                  <span>Share Project</span>
+                  <span>Compartilhar projeto</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive">
                   <Trash2Icon
                   />
-                  <span>Delete Project</span>
+                  <span>Excluir projeto</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

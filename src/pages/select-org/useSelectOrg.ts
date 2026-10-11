@@ -21,7 +21,7 @@ export function useSelectOrg() {
           navigate("/no-organization", { replace: true });
         }
       } catch {
-        toast.error("Failed to load organizations.");
+        toast.error("Falha ao carregar organizações.");
       }
     }
     fetchOrganizations();
@@ -40,9 +40,9 @@ export function useSelectOrg() {
     try {
       setSelectedOrganization(org);
 
-      navigate("/", { replace: true });
+      navigate("/overview", { replace: true });
     } catch {
-      toast.error("Failed to select organization.");
+      toast.error("Falha ao selecionar organização.");
     } finally {
       setIsLoading(false);
     }

@@ -11,6 +11,7 @@ export function useSignIn() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
+  const setOrganizations = useAuthStore((state) => state.setOrganizations);
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -33,26 +34,27 @@ export function useSignIn() {
         projects: projects.filter((p) => p.organizationId === org.id),
       }));
 
+      setOrganizations(orgs);
       setOrganizationsWithProjects(organizationsWithProjects);
 
       if (organizationsWithProjects.length === 0) {
         login({ name: user.name, email: user.email });
 
-        toast.success("Signed in successfully!");
+        toast.success("Login realizado com sucesso!");
         navigate("/no-organization", { replace: true });
       } else if (organizationsWithProjects.length === 1) {
         login({ name: user.name, email: user.email }, organizationsWithProjects[0]);
 
-        toast.success("Signed in successfully!");
-        navigate("/", { replace: true });
+        toast.success("Login realizado com sucesso!");
+        navigate("/overview", { replace: true });
       } else {
         login({ name: user.name, email: user.email });
 
-        toast.success("Signed in successfully!");
+        toast.success("Login realizado com sucesso!");
         navigate("/select-org", { replace: true });
       }
     } catch {
-      toast.error("Failed to sign in. Please try again.");
+      toast.error("Falha ao fazer login. Tente novamente.");
     } finally {
       setIsLoading(false);
     }

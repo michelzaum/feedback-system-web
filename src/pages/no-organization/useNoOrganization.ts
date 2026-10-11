@@ -15,9 +15,9 @@ export function useNoOrganization() {
     try {
       await signOut();
 
-      toast.success("Logged out successfully.");
+      toast.success("Logout realizado com sucesso.");
     } catch {
-      toast.error("Failed to log out. Please try again.");
+      toast.error("Falha ao fazer logout. Tente novamente.");
     } finally {
       logout();
 

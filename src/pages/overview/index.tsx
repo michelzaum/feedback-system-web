@@ -10,9 +10,11 @@ import {
   ArrowRight,
   TrendingUp,
   Activity,
+  Inbox,
 } from "lucide-react";
 import { cn } from "cn";
-import { useDashboard } from "./useDashboard";
+import { useOverview } from "./useOverview";
+import { useAuthStore } from "@/store/auth";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 function StatCard({
@@ -81,7 +83,7 @@ function StatusBadge({ status }: { status: FeedbackStatus }) {
   );
 }
 
-function FeedbackCard({ feedback }: { feedback: Feedback }) {
+function FeedbackCard({ feedback, projectName }: { feedback: Feedback; projectName: string }) {
   return (
     <Card className="flex flex-col">
       <CardHeader className="pb-2">
@@ -97,12 +99,22 @@ function FeedbackCard({ feedback }: { feedback: Feedback }) {
         <span className="text-xs text-muted-foreground">
           {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
         </span>
+        <Badge variant="secondary" className="text-xs">{projectName}</Badge>
       </CardFooter>
     </Card>
   );
 }
 
 function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: () => void }) {
+  const organizationsWithProjects = useAuthStore((state) => state.organizationsWithProjects);
+  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+
+  const getProjectName = (projectId: string) => {
+    const org = organizationsWithProjects.find((o) => o.id === selectedOrganization?.id);
+    const project = org?.projects.find((p) => p.id === projectId);
+    return project?.name ?? "Projeto desconhecido";
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -110,55 +122,34 @@ function RecentFeedbacks({ items, onViewAll }: { items: Feedback[]; onViewAll: (
         <CardDescription>Últimos feedbacks do público</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-3 py-4">
-        {items.map((feedback) => (
-          <FeedbackCard key={feedback.id} feedback={feedback} />
-        ))}
-      </CardContent>
-      <CardFooter className="flex items-center justify-end p-4">
-        <Button variant="outline" size="sm" onClick={onViewAll} className="hover:cursor-pointer">
-          Ver todos feedbacks
-          <ArrowRight className="ml-1 h-3 w-3" />
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function ActivityChart({ stats }: { stats: { total: number; pending: number; inProgress: number; done: number } }) {
-  const items = [
-    { label: "Pendente", count: stats.pending, color: "bg-yellow-500", textColor: "text-yellow-600" },
-    { label: "Em Progresso", count: stats.inProgress, color: "bg-blue-500", textColor: "text-blue-600" },
-    { label: "Concluído", count: stats.done, color: "bg-green-500", textColor: "text-green-600" },
-  ];
-
-  return (
-    <Card>
-      <CardHeader className="pb-1">
-        <CardTitle className="text-xs font-medium">Status dos Feedbacks</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col justify-center gap-1.5 px-4 pb-2">
-        {items.map((item) => {
-          const percentage = stats.total > 0 ? (item.count / stats.total) * 100 : 0;
-          return (
-            <div key={item.label} className="flex items-center gap-2">
-              <span className="w-20 text-xs">{item.label}</span>
-              <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                <div
-                  className={cn("h-full rounded-full transition-all duration-500", item.color)}
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-              <span className={cn("text-xs font-medium w-6 text-right", item.textColor)}>{item.count}</span>
+        {items.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+            <div className="mb-2 flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
+              <Inbox className="size-6" />
             </div>
-          );
-        })}
+            <p className="text-base font-semibold">Nenhum feedback por enquanto</p>
+            <p className="max-w-sm text-sm text-muted-foreground">Quando alguém enviar uma sugestão ou relatar um problema, os feedbacks aparecerão aqui.</p>
+          </div>
+        ) : (
+          items.map((feedback) => (
+            <FeedbackCard key={feedback.id} feedback={feedback} projectName={getProjectName(feedback.projectId)} />
+          ))
+        )}
       </CardContent>
+      {items.length > 0 && (
+        <CardFooter className="flex items-center justify-end p-4">
+          <Button variant="outline" size="sm" onClick={onViewAll} className="hover:cursor-pointer">
+            Ver todos feedbacks
+            <ArrowRight className="ml-1 h-3 w-3" />
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }
 
-export function Dashboard() {
-  const { stats, isLoading, recentFeedbacks, handleViewAll } = useDashboard();
+export function Overview() {
+  const { stats, isLoading, recentFeedbacks, handleViewAll } = useOverview();
 
   if (isLoading) {
     return (
@@ -225,11 +216,10 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
-          <ActivityChart stats={stats} />
         </div>
       </div>
     </div>
   );
 }
 
-export default Dashboard;
+export default Overview;

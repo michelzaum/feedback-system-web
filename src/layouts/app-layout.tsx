@@ -15,9 +15,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/auth";
+import { useBreadcrumb } from "./useBreadcrumb";
 
 export function AppLayout() {
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const breadcrumbItems = useBreadcrumb();
 
   return (
     <SidebarProvider>
@@ -28,19 +30,29 @@ export function AppLayout() {
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
+              className="mr-2 self-center data-[orientation=vertical]:h-4"
             />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    {selectedOrganization?.name ?? "Acme"}
+                  <BreadcrumbLink href="/overview">
+                    {selectedOrganization?.name ?? "Sua organização"}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Overview</BreadcrumbPage>
-                </BreadcrumbItem>
+                {breadcrumbItems.map((item, index) => (
+                  <span key={item.href} className="hidden md:flex items-center gap-2">
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                      {index === breadcrumbItems.length - 1 ? (
+                        <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink href={item.href} className="hover:cursor-pointer">
+                          {item.label}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  </span>
+                ))}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
