@@ -83,7 +83,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="hover:cursor-pointer">
+              <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:cursor-pointer">
                 <BadgeCheckIcon
                 />
                 Meu perfil

@@ -8,6 +8,7 @@ export interface SignInResponse {
 }
 
 export interface UserResponse {
+  id: string;
   message: string;
   name: string;
   email: string;
