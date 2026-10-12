@@ -38,17 +38,17 @@ export function useSignIn() {
       setOrganizationsWithProjects(organizationsWithProjects);
 
       if (organizationsWithProjects.length === 0) {
-        login({ name: user.name, email: user.email });
+        login({ id: user.id, name: user.name, email: user.email });
 
         toast.success("Login realizado com sucesso!");
         navigate("/no-organization", { replace: true });
       } else if (organizationsWithProjects.length === 1) {
-        login({ name: user.name, email: user.email }, organizationsWithProjects[0]);
+        login({ id: user.id, name: user.name, email: user.email }, organizationsWithProjects[0]);
 
         toast.success("Login realizado com sucesso!");
         navigate("/overview", { replace: true });
       } else {
-        login({ name: user.name, email: user.email });
+        login({ id: user.id, name: user.name, email: user.email });
 
         toast.success("Login realizado com sucesso!");
         navigate("/select-org", { replace: true });

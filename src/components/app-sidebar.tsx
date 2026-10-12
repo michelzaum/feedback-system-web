@@ -24,7 +24,7 @@ import { LayoutGrid, Users, MessageCircle, AppWindow } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { useLocation } from "react-router";
 
-const projects = [
+const organizationMenuItems = [
   {
     name: "Visão geral",
     url: "/overview",
@@ -57,7 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
 
   const isAdmin = selectedOrganization?.role === "ADMIN";
-  const navItems = projects.filter((item) => item.name !== "Membros" || isAdmin);
+  const navItems = organizationMenuItems.filter((item) => item.name !== "Membros" || isAdmin);
 
   const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" };
 
@@ -71,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <OrganizationSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={navItems} activeUrl={location.pathname} />
+        <NavProjects organizationMenuItems={navItems} activeUrl={location.pathname} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden hover:cursor-pointer">
           <SidebarGroupLabel>Projetos</SidebarGroupLabel>
           <SidebarMenu>

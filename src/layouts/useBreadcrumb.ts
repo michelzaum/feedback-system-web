@@ -18,6 +18,8 @@ export function useBreadcrumb() {
     items.push({ label: "Feedbacks", href: "/feedbacks" });
   } else if (segments[0] === "members") {
     items.push({ label: "Membros", href: "/members" });
+  } else if (segments[0] === "profile") {
+    items.push({ label: "Perfil", href: "/profile" });
   } else if (segments[0] === "projects" && segments[1]) {
     items.push({ label: "Projetos", href: "/projects" });
     items.push({ label: segments[1], href: `/projects/${segments[1]}` });

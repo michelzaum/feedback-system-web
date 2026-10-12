@@ -6,6 +6,7 @@ import Members from "./pages/members";
 import ProjectManagement from "./pages/projects";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
+import Profile from "./pages/profile";
 import SelectOrg from "./pages/select-org";
 import NoOrganization from "./pages/no-organization";
 import NoAccess from "./pages/no-access";
@@ -45,6 +46,7 @@ export const RoutesComponent = () => {
           <Route element={<AppLayout />}>
             <Route path="/overview" element={<Overview />} />
             <Route path="/feedbacks" element={<Feedbacks />} />
+            <Route path="/profile" element={<Profile />} />
             <Route element={<AdminRoute />}>
               <Route path="/members" element={<Members />} />
             </Route>
