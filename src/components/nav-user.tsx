@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, LogOutIcon } from "lucide-react";
+import { ChevronsUpDownIcon, BadgeCheckIcon, LogOutIcon } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { signOut } from "@/api/sign-out";
 
@@ -75,23 +75,10 @@ export function NavUser({
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <SparklesIcon
-                />
-                Assinar plano Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => navigate("/profile")} className="hover:cursor-pointer">
                 <BadgeCheckIcon
                 />
                 Meu perfil
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <CreditCardIcon
-                />
-                Cobranças
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
