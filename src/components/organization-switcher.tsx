@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/store/auth";
 import type { Organization } from "@/api/organizations/types";
@@ -20,12 +21,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Briefcase, ChevronsUpDown, Plus } from "lucide-react";
 
+import { CreateOrganizationModal } from "@/components/create-organization";
+
 export function OrganizationSwitcher() {
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization);
   const organizations: Organization[] = useAuthStore((state) => state.organizationsWithProjects);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSwitch = (org: Organization) => {
     setSelectedOrganization(org);
@@ -82,7 +86,7 @@ export function OrganizationSwitcher() {
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2 hover:cursor-pointer">
+            <DropdownMenuItem className="gap-2 p-2 hover:cursor-pointer" onClick={() => setIsModalOpen(true)}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
@@ -90,6 +94,7 @@ export function OrganizationSwitcher() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <CreateOrganizationModal isModalOpen={isModalOpen} onOpenModalChange={setIsModalOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   );
