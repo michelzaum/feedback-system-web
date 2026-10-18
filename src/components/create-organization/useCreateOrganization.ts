@@ -1,7 +1,7 @@
 import { useRef, type SubmitEvent } from "react";
 import { toast } from "sonner";
 
-import { api } from "@/api/request";
+import { createOrganization } from "@/api/organizations";
 import type { UseCreateOrganizationModalProps } from "./types";
 
 export function useCreateOrganization({ onOpenModalChange }: UseCreateOrganizationModalProps) {
@@ -15,7 +15,7 @@ export function useCreateOrganization({ onOpenModalChange }: UseCreateOrganizati
     if (!newOrganizationName) return;
 
     try {
-      await api.post("/organizations", { name: newOrganizationName });
+      await createOrganization({ name: newOrganizationName });
       toast.success("Organização criada com sucesso!");
     } catch (error) {
       toast.error("Erro ao criar organização");
