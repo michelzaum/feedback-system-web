@@ -2,7 +2,7 @@ import { OrganizationSelectForm } from "@/components/organization-select-form";
 import { useSelectOrg } from "@/pages/select-org/useSelectOrg";
 
 function SelectOrg() {
-  const { organizations, isLoading, onSubmit } = useSelectOrg();
+  const { organizations, isLoading, selectedOrgId, handleOrgChange, onSubmit } = useSelectOrg();
 
   return (
     <div className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-muted/30 px-4 py-10">
@@ -12,6 +12,8 @@ function SelectOrg() {
         <OrganizationSelectForm
           organizations={organizations}
           isLoading={isLoading}
+          selectedOrgId={selectedOrgId}
+          onSelectOrganization={handleOrgChange}
           onSubmit={onSubmit}
         />
       </div>

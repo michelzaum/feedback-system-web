@@ -24,12 +24,16 @@ interface Organization {
 interface OrganizationSelectFormProps {
   organizations: Organization[];
   isLoading: boolean;
+  selectedOrgId: string;
+  onSelectOrganization: (value: unknown) => void;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
 }
 
 export function OrganizationSelectForm({
   organizations,
   isLoading,
+  selectedOrgId,
+  onSelectOrganization,
   onSubmit,
 }: OrganizationSelectFormProps) {
   return (
@@ -56,7 +60,7 @@ export function OrganizationSelectForm({
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="organization">Organização</FieldLabel>
-                <Select name="organization" required>
+                <Select name="organization" required value={selectedOrgId} onValueChange={onSelectOrganization}>
                   <SelectTrigger id="organization" className="h-12 hover:cursor-pointer">
                     <SelectValue placeholder="Selecione uma organização">
                       {(value) => {
@@ -75,7 +79,7 @@ export function OrganizationSelectForm({
                 </Select>
               </Field>
               <Field className="gap-2">
-                <Button type="submit" size="lg" className="mt-2 w-full gap-2 hover:cursor-pointer" disabled={isLoading}>
+                <Button type="submit" size="lg" className="mt-2 w-full gap-2 hover:cursor-pointer" disabled={isLoading || !selectedOrgId}>
                   {isLoading ? "Aguarde..." : "Continuar"}
                   {!isLoading && <ArrowRight className="size-4" />}
                 </Button>

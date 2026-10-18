@@ -17,6 +17,7 @@ export function useNoOrganization() {
   const [isCheckingOrganizations, setIsCheckingOrganizations] = useState(true);
   const [checkRequestId, setCheckRequestId] = useState(0);
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [organizationName, setOrganizationName] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -135,5 +136,5 @@ export function useNoOrganization() {
     }
   };
 
-  return { isCheckingOrganizations, isCreateFormOpen, setIsCreateFormOpen, isSubmitting, isLoggingOut, onCheckOrganizations, onSubmit, onLogout };
+  return { isCheckingOrganizations, isCreateFormOpen, setIsCreateFormOpen, organizationName, setOrganizationName, isSubmitting, isLoggingOut, onCheckOrganizations, onSubmit, onLogout };
 }
