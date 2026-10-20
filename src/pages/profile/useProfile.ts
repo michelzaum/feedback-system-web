@@ -1,19 +1,24 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
 import { me } from "@/api/sign-in";
-import { updateProfile } from "@/api/profile";
+import { updateProfile, deleteAccount } from "@/api/profile";
 import type { Profile } from "@/api/profile/types";
 
 export function useProfile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const authUser = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  const logout = useAuthStore((state) => state.logout);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -104,12 +109,38 @@ export function useProfile() {
     }
   };
 
+  const onConfirmDeleteAccount = async () => {
+    if (!profile || isDeletingAccount) return;
+
+    setIsDeletingAccount(true);
+    try {
+      await deleteAccount(profile.id);
+
+      logout();
+
+      toast.success("Conta excluída com sucesso!");
+
+      navigate("/sign-in", { replace: true });
+    } catch (error) {
+      toast.error("Erro ao excluir sua conta");
+
+      console.log(error);
+    } finally {
+      setIsDeletingAccount(false);
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
   return {
     profile,
     isLoading,
     isSavingName,
     isSavingPassword,
+    isDeleteDialogOpen,
+    isDeletingAccount,
     onSubmitName,
     onSubmitPassword,
+    setIsDeleteDialogOpen,
+    onConfirmDeleteAccount,
   };
 }

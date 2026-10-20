@@ -16,6 +16,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { ArrowRight, UserRound } from "lucide-react";
 
 export function SignUpForm({
@@ -68,10 +69,9 @@ export function SignUpForm({
                 <div className="flex items-center justify-between gap-2">
                   <FieldLabel htmlFor="password">Senha</FieldLabel>
                 </div>
-                <Input
+                <PasswordInput
                   id="password"
                   name="password"
-                  type="password"
                   autoComplete="new-password"
                   required
                   className="h-11"

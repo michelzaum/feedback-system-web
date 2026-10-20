@@ -13,6 +13,11 @@ export function useSelectOrg() {
   const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+
+  const handleOrgChange = (value: unknown) => {
+    setSelectedOrgId(value as string);
+  };
 
   useEffect(() => {
     async function fetchOrganizations() {
@@ -53,5 +58,5 @@ export function useSelectOrg() {
     }
   };
 
-  return { organizations, isLoading, onSubmit };
+  return { organizations, isLoading, selectedOrgId, handleOrgChange, onSubmit };
 }

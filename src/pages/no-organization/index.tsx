@@ -19,6 +19,8 @@ function NoOrganization() {
     isCheckingOrganizations,
     isCreateFormOpen,
     setIsCreateFormOpen,
+    organizationName,
+    setOrganizationName,
     isSubmitting,
     isLoggingOut,
     onCheckOrganizations,
@@ -90,14 +92,22 @@ function NoOrganization() {
                       <FieldGroup>
                         <Field>
                           <FieldLabel htmlFor="name">Nome da organização</FieldLabel>
-                          <Input id="name" name="name" placeholder="Ex.: Minha Empresa" required className="h-11" />
+                          <Input
+                            id="name"
+                            name="name"
+                            placeholder="Ex.: Minha Empresa"
+                            required
+                            className="h-11"
+                            value={organizationName}
+                            onChange={(e) => setOrganizationName(e.target.value)}
+                          />
                         </Field>
                         <Field>
                           <Button
                             type="submit"
                             size="lg"
                             className="w-full gap-2 hover:cursor-pointer"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || !organizationName.trim()}
                           >
                             {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
                             {isSubmitting ? "Criando..." : "Criar organização"}
