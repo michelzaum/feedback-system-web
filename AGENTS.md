@@ -58,8 +58,15 @@ React + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + Zustand + React Router
 - `useAuthStore` is imported from `@/store/auth`
 - Sidebar uses `Sidebar`, `SidebarFooter`, `SidebarHeader`, etc. from `@/components/ui/sidebar`
 
+## Git Workflow
+- When the user asks for an implementation, first check the current branch (`git branch --show-current`)
+- If the current branch is `dev` or `main`, create a feature branch before writing any code
+- The branch name must relate to the user's request and follow the existing naming pattern (`feat/...`, `fix/...`, `refactor/...`, `chore/...`)
+- **NEVER implement work or commit directly on `dev` or `main`**
+
 ## Important
 - **NEVER commit changes unless explicitly asked by the user. ALWAYS wait for explicit permission before committing.**
+- **NEVER implement work or commit directly on `dev` or `main` — always create a feature branch first**
 - The `/me` endpoint returns `{ message, name, email, avatar? }` and must be called after sign-in to get user name
 - Sign-up does not return a token, so it does not authenticate the user
 - Sign-in calls `signIn` then `me()` sequentially, not in parallel

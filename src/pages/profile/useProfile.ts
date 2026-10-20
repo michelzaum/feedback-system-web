@@ -1,19 +1,33 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
 import { me } from "@/api/sign-in";
-import { updateProfile } from "@/api/profile";
+import { updateProfile, deleteAccount } from "@/api/profile";
 import type { Profile } from "@/api/profile/types";
+import { getAccountDeletionError, type BlockedOrganization } from "./accountDeletionError";
+
+interface DeleteAccountError {
+  message: string;
+  blockedOrganizations: (BlockedOrganization & { canManageMembers: boolean })[];
+}
 
 export function useProfile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpenState] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteAccountError, setDeleteAccountError] = useState<DeleteAccountError | null>(null);
 
   const authUser = useAuthStore((state) => state.user);
+  const organizations = useAuthStore((state) => state.organizations);
   const setUser = useAuthStore((state) => state.setUser);
+  const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization);
+  const logout = useAuthStore((state) => state.logout);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -104,11 +118,70 @@ export function useProfile() {
     }
   };
 
+  const setIsDeleteDialogOpen = (open: boolean) => {
+    setIsDeleteDialogOpenState(open);
+
+    if (!open) {
+      setDeleteAccountError(null);
+    }
+  };
+
+  const onConfirmDeleteAccount = async () => {
+    if (!profile || isDeletingAccount) return;
+
+    setIsDeletingAccount(true);
+    setDeleteAccountError(null);
+
+    try {
+      await deleteAccount(profile.id);
+
+      setIsDeleteDialogOpen(false);
+      logout();
+
+      toast.success("Conta excluída com sucesso!");
+
+      navigate("/sign-in", { replace: true });
+    } catch (error) {
+      console.log(error);
+
+      const { message, blockedOrganizations } = getAccountDeletionError(error);
+
+      setDeleteAccountError({
+        message,
+        blockedOrganizations: blockedOrganizations.map((organization) => ({
+          ...organization,
+          canManageMembers: organizations.some(
+            (org) => org.id === organization.id && org.role === "ADMIN",
+          ),
+        })),
+      });
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
+  const onManageBlockedOrganizationMembers = (organizationId: string) => {
+    const organization = organizations.find((org) => org.id === organizationId && org.role === "ADMIN");
+
+    if (!organization) return;
+
+    setSelectedOrganization(organization);
+    setIsDeleteDialogOpen(false);
+
+    navigate("/members");
+  };
+
   return {
     profile,
     isLoading,
     isSavingName,
     isSavingPassword,
+    isDeleteDialogOpen,
+    isDeletingAccount,
+    deleteAccountError,
+    setIsDeleteDialogOpen,
+    onConfirmDeleteAccount,
+    onManageBlockedOrganizationMembers,
     onSubmitName,
     onSubmitPassword,
   };

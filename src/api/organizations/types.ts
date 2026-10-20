@@ -4,3 +4,7 @@ export interface Organization {
   slug: string;
   role: string;
 }
+
+export interface CreateOrganizationPayload {
+  name: string;
+}

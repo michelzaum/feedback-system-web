@@ -9,8 +9,15 @@ import type { Organization } from "@/api/organizations/types";
 export function useSelectOrg() {
   const navigate = useNavigate();
   const setSelectedOrganization = useAuthStore((state) => state.setSelectedOrganization);
+  const setOrganizationsInStore = useAuthStore((state) => state.setOrganizations);
+  const setOrganizationsWithProjects = useAuthStore((state) => state.setOrganizationsWithProjects);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+
+  const handleOrgChange = (value: unknown) => {
+    setSelectedOrgId(value as string);
+  };
 
   useEffect(() => {
     async function fetchOrganizations() {
@@ -18,6 +25,9 @@ export function useSelectOrg() {
         const orgs = await getOrganizations();
         setOrganizations(orgs);
         if (orgs.length === 0) {
+          setOrganizationsInStore([]);
+          setOrganizationsWithProjects([]);
+
           navigate("/no-organization", { replace: true });
         }
       } catch {
@@ -25,7 +35,7 @@ export function useSelectOrg() {
       }
     }
     fetchOrganizations();
-  }, [navigate]);
+  }, [navigate, setOrganizationsInStore, setOrganizationsWithProjects]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,5 +58,5 @@ export function useSelectOrg() {
     }
   };
 
-  return { organizations, isLoading, onSubmit };
+  return { organizations, isLoading, selectedOrgId, handleOrgChange, onSubmit };
 }
