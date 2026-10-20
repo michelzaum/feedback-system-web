@@ -11,7 +11,7 @@ import {
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyRound, Loader2, Save, Trash2, TriangleAlert, UserRound } from "lucide-react";
+import { ArrowRight, KeyRound, Loader2, Save, Trash2, TriangleAlert, UserRound } from "lucide-react";
 import { useProfile } from "./useProfile";
 
 export function Profile() {
@@ -22,10 +22,12 @@ export function Profile() {
     isSavingPassword,
     isDeleteDialogOpen,
     isDeletingAccount,
+    deleteAccountError,
     onSubmitName,
     onSubmitPassword,
     setIsDeleteDialogOpen,
     onConfirmDeleteAccount,
+    onManageBlockedOrganizationMembers,
   } = useProfile();
 
   return (
@@ -198,6 +200,47 @@ export function Profile() {
                 <p className="truncate text-xs text-muted-foreground">{profile?.email}</p>
               </div>
             </div>
+
+            {deleteAccountError && (
+              <div
+                role="alert"
+                className="mt-4 space-y-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4"
+              >
+                <div className="flex gap-3">
+                  <TriangleAlert className="mt-0.5 size-4 shrink-0 text-destructive" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-destructive">Não foi possível excluir sua conta</p>
+                    <p className="text-sm text-muted-foreground">{deleteAccountError.message}</p>
+                  </div>
+                </div>
+
+                {deleteAccountError.blockedOrganizations.length > 0 && (
+                  <div className="space-y-1.5 pl-7">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Organizações afetadas
+                    </p>
+                    <ul className="space-y-1.5">
+                      {deleteAccountError.blockedOrganizations.map((organization) => (
+                        <li key={organization.id} className="flex items-center justify-between gap-3 text-sm">
+                          <span className="min-w-0 truncate font-medium">{organization.name}</span>
+
+                          {organization.canManageMembers && (
+                            <button
+                              type="button"
+                              onClick={() => onManageBlockedOrganizationMembers(organization.id)}
+                              className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary underline-offset-4 hover:cursor-pointer hover:underline"
+                            >
+                              Gerenciar membros
+                              <ArrowRight className="size-3" />
+                            </button>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter className="flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end">
             <Button
