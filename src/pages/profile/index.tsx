@@ -1,13 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyRound, Loader2, Save, UserRound } from "lucide-react";
+import { KeyRound, Loader2, Save, Trash2, TriangleAlert, UserRound } from "lucide-react";
 import { useProfile } from "./useProfile";
 
 export function Profile() {
-  const { profile, isLoading, isSavingName, isSavingPassword, onSubmitName, onSubmitPassword } = useProfile();
+  const {
+    profile,
+    isLoading,
+    isSavingName,
+    isSavingPassword,
+    isDeleteDialogOpen,
+    isDeletingAccount,
+    onSubmitName,
+    onSubmitPassword,
+    setIsDeleteDialogOpen,
+    onConfirmDeleteAccount,
+  } = useProfile();
 
   return (
     <div className="flex flex-1 flex-col gap-6 bg-neutral-50 p-4 pt-0 dark:bg-neutral-950 md:p-6 md:pt-2">
@@ -133,8 +152,73 @@ export function Profile() {
               </form>
             </CardContent>
           </Card>
+
+          <Card className="gap-0 border-destructive/30 py-0">
+            <CardHeader className="border-b bg-destructive/5 px-6 pt-5 pb-5">
+              <CardTitle className="flex items-center gap-2 text-base text-destructive">
+                <TriangleAlert className="size-4" />
+                Zona de perigo
+              </CardTitle>
+              <CardDescription>
+                A exclusão da sua conta é permanente e não pode ser desfeita. Você perderá o acesso a todas as organizações das quais faz parte.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-6 py-5">
+              <Button
+                variant="destructive"
+                onClick={() => setIsDeleteDialogOpen(true)}
+                className="w-full hover:cursor-pointer sm:w-auto"
+              >
+                <Trash2 className="size-4" />
+                Excluir minha conta
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="w-[calc(100%-2rem)] overflow-hidden rounded-2xl p-0 sm:max-w-md">
+          <DialogHeader className="border-b bg-destructive/5 px-6 py-5 pr-12">
+            <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+              <TriangleAlert className="size-5" />
+            </div>
+            <DialogTitle className="text-lg font-semibold">Excluir conta</DialogTitle>
+            <DialogDescription>
+              Esta ação é permanente e não pode ser desfeita. Todos os seus dados serão removidos definitivamente.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="px-6 py-5">
+            <div className="flex items-center gap-3 rounded-lg border bg-muted/20 p-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                <UserRound className="size-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{profile?.name}</p>
+                <p className="truncate text-xs text-muted-foreground">{profile?.email}</p>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end">
+            <Button
+              onClick={() => setIsDeleteDialogOpen(false)}
+              variant="outline"
+              className="w-full hover:cursor-pointer sm:w-auto"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={onConfirmDeleteAccount}
+              variant="destructive"
+              className="w-full hover:cursor-pointer sm:w-auto"
+              disabled={isDeletingAccount}
+            >
+              {isDeletingAccount ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+              {isDeletingAccount ? "Excluindo..." : "Excluir conta"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
