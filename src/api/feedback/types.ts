@@ -1,4 +1,4 @@
-export type FeedbackStatus = "PENDING" | "IN_REVIEW" | "COMPLETED";
+export type FeedbackStatus = "NEW" | "IN_PROGRESS" | "COMPLETED";
 
 export interface CreateFeedbackPayload {
   title: string;

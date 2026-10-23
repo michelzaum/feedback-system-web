@@ -4,6 +4,7 @@ import Feedback from "./pages/feedback";
 import Feedbacks from "./pages/feedbacks";
 import Members from "./pages/members";
 import ProjectManagement from "./pages/projects";
+import ProjectFeedbacks from "./pages/project-feedbacks";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import Profile from "./pages/profile";
@@ -51,6 +52,7 @@ export const RoutesComponent = () => {
               <Route path="/members" element={<Members />} />
             </Route>
             <Route path="/projects/:slug" element={<ProjectManagement />} />
+            <Route path="/projects/:slug/feedbacks" element={<ProjectFeedbacks />} />
           </Route>
         </Route>
       </Route>

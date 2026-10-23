@@ -23,6 +23,10 @@ export function useBreadcrumb() {
   } else if (segments[0] === "projects" && segments[1]) {
     items.push({ label: "Projetos", href: "/projects" });
     items.push({ label: segments[1], href: `/projects/${segments[1]}` });
+
+    if (segments[2] === "feedbacks") {
+      items.push({ label: "Feedbacks", href: `/projects/${segments[1]}/feedbacks` });
+    }
   }
 
   return items;

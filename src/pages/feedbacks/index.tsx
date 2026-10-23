@@ -1,4 +1,10 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -8,38 +14,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Clock, Loader, CheckCircle2, MessageSquareText, FolderKanban, Inbox } from "lucide-react";
+import {
+  Clock,
+  Loader,
+  CheckCircle2,
+  MessageSquareText,
+  FolderKanban,
+  Inbox,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useFeedbacks } from "./useFeedbacks";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 const STATUS_OPTIONS: { value: FeedbackStatus; label: string }[] = [
-  { value: "PENDING", label: "Pendente" },
-  { value: "IN_REVIEW", label: "Em Revisão" },
+  { value: "NEW", label: "Novo" },
+  { value: "IN_PROGRESS", label: "Em Progresso" },
   { value: "COMPLETED", label: "Concluído" },
 ];
 
 function StatusBadge({ status }: { status: FeedbackStatus }) {
   const config: Record<FeedbackStatus, { label: string; className: string }> = {
-    PENDING: {
-      label: "Pendente",
-      className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
+    NEW: {
+      label: "Novo",
+      className:
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
     },
-    IN_REVIEW: {
-      label: "Em Revisão",
-      className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
+    IN_PROGRESS: {
+      label: "Em Progresso",
+      className:
+        "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
     },
     COMPLETED: {
       label: "Concluído",
-      className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100",
+      className:
+        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100",
     },
   };
 
-  const { label, className } = config[status] ?? { label: status, className: "bg-muted text-muted-foreground" };
+  const { label, className } = config[status] ?? {
+    label: status,
+    className: "bg-muted text-muted-foreground",
+  };
 
   return (
     <Badge className={className}>
-      {status === "PENDING" && <Clock className="mr-1 h-3 w-3" />}
-      {status === "IN_REVIEW" && <Loader className="mr-1 h-3 w-3" />}
+      {status === "NEW" && <Clock className="mr-1 h-3 w-3" />}
+      {status === "IN_PROGRESS" && <Loader className="mr-1 h-3 w-3" />}
       {status === "COMPLETED" && <CheckCircle2 className="mr-1 h-3 w-3" />}
       {label}
     </Badge>
@@ -50,19 +71,23 @@ function FeedbackCard({
   feedback,
   onStatusChange,
 }: {
-    feedback: Feedback;
-    onStatusChange: (status: FeedbackStatus) => void;
-  }) {
+  feedback: Feedback;
+  onStatusChange: (status: FeedbackStatus) => void;
+}) {
   return (
     <Card className="group flex flex-col overflow-hidden border-border/70 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
-          <CardTitle className="text-sm font-semibold leading-5">{feedback.title}</CardTitle>
+          <CardTitle className="text-sm font-semibold leading-5">
+            {feedback.title}
+          </CardTitle>
           <StatusBadge status={feedback.status} />
         </div>
       </CardHeader>
       <CardContent className="flex-1">
-        <p className="line-clamp-3 text-sm leading-6 text-muted-foreground">{feedback.description}</p>
+        <p className="line-clamp-3 text-sm leading-6 text-muted-foreground">
+          {feedback.description}
+        </p>
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-3 border-t bg-muted/20 px-4 py-3">
         <span className="text-xs text-muted-foreground">
@@ -83,7 +108,11 @@ function FeedbackCard({
             <SelectContent>
               <SelectLabel>Status</SelectLabel>
               {STATUS_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value} className="hover:cursor-pointer">
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="hover:cursor-pointer"
+                >
                   {option.label}
                 </SelectItem>
               ))}
@@ -96,10 +125,15 @@ function FeedbackCard({
 }
 
 export function Feedbacks() {
-  const { projectFeedbacks, isLoading, handleUpdateStatus } = useFeedbacks();
-  const feedbackCount = projectFeedbacks.reduce((total, group) => total + group.feedbacks.length, 0);
-  const pendingCount = projectFeedbacks.reduce(
-    (total, group) => total + group.feedbacks.filter((feedback) => feedback.status === "PENDING").length,
+  const { projectFeedbacks, isLoading, handleUpdateStatus, handleViewAll } = useFeedbacks();
+  const feedbackCount = projectFeedbacks.reduce(
+    (total, group) => total + group.feedbacks.length,
+    0,
+  );
+  const newFeedbacksCount = projectFeedbacks.reduce(
+    (total, group) =>
+      total +
+      group.feedbacks.filter((feedback) => feedback.status === "NEW").length,
     0,
   );
 
@@ -111,19 +145,31 @@ export function Feedbacks() {
             <MessageSquareText className="size-5" />
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Central de feedback</p>
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              Central de feedback
+            </p>
             <h1 className="text-2xl font-semibold tracking-tight">Feedbacks</h1>
-            <p className="text-sm text-muted-foreground">Acompanhe e atualize as solicitações recebidas nos seus projetos.</p>
+            <p className="text-sm text-muted-foreground">
+              Acompanhe e atualize as solicitações recebidas nos seus projetos.
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 md:min-w-64">
           <div className="rounded-lg border bg-background px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground"><MessageSquareText className="size-3.5" /> Total</div>
-            <p className="mt-1 text-2xl font-semibold">{isLoading ? "—" : feedbackCount}</p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <MessageSquareText className="size-3.5" /> Total
+            </div>
+            <p className="mt-1 text-2xl font-semibold">
+              {isLoading ? "—" : feedbackCount}
+            </p>
           </div>
           <div className="rounded-lg border bg-background px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground"><Clock className="size-3.5" /> Pendentes</div>
-            <p className="mt-1 text-2xl font-semibold">{isLoading ? "—" : pendingCount}</p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Clock className="size-3.5" /> Novos
+            </div>
+            <p className="mt-1 text-2xl font-semibold">
+              {isLoading ? "—" : newFeedbacksCount}
+            </p>
           </div>
         </div>
       </header>
@@ -131,7 +177,10 @@ export function Feedbacks() {
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[0, 1, 2].map((item) => (
-            <Card key={item} className="h-44 animate-pulse border-border/60 bg-card/70" />
+            <Card
+              key={item}
+              className="h-44 animate-pulse border-border/60 bg-card/70"
+            />
           ))}
         </div>
       ) : projectFeedbacks.length === 0 ? (
@@ -139,33 +188,57 @@ export function Feedbacks() {
           <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
             <Inbox className="size-6" />
           </div>
-          <CardTitle className="text-base">Nenhum feedback por enquanto</CardTitle>
-          <p className="mt-2 max-w-sm text-sm text-muted-foreground">Quando alguém enviar uma sugestão ou relatar um problema, os feedbacks aparecerão aqui.</p>
+          <CardTitle className="text-base">
+            Nenhum feedback por enquanto
+          </CardTitle>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Quando alguém enviar uma sugestão ou relatar um problema, os
+            feedbacks aparecerão aqui.
+          </p>
         </Card>
       ) : (
         <div className="flex flex-col gap-8">
           {projectFeedbacks.map((group) => (
             <section key={group.projectId} className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex items-center justify-between gap-3 border-b pb-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                     <FolderKanban className="size-7" />
                   </div>
                   <div className="min-w-0 flex flex-col gap-1">
-                    <h2 className="truncate text-base font-semibold">{group.projectName}</h2>
+                    <h2 className="truncate text-base font-semibold">
+                      {group.projectName}
+                    </h2>
                     <div className="flex items-center gap-1">
-                      <Badge variant="secondary" className="shrink-0">{group.feedbacks.length}</Badge>
-                      <p className="text-xs text-muted-foreground">Feedbacks recebidos neste projeto</p>
+                      <Badge variant="secondary" className="shrink-0">
+                        {group.feedbacks.length}
+                      </Badge>
+                      <p className="text-xs text-muted-foreground">
+                        Feedbacks recebidos neste projeto
+                      </p>
                     </div>
                   </div>
                 </div>
+                {group.projectSlug && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="shrink-0 hover:cursor-pointer"
+                    onClick={() => handleViewAll(group.projectSlug)}
+                  >
+                    Ver todos
+                    <ArrowRight className="size-3.5" />
+                  </Button>
+                )}
               </div>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {group.feedbacks.map((feedback) => (
                   <FeedbackCard
                     key={feedback.id}
                     feedback={feedback}
-                    onStatusChange={(status) => handleUpdateStatus(group.projectId, feedback.id, status)}
+                    onStatusChange={(status) =>
+                      handleUpdateStatus(group.projectId, feedback.id, status)
+                    }
                   />
                 ))}
               </div>
