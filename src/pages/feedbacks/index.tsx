@@ -21,7 +21,9 @@ import {
   MessageSquareText,
   FolderKanban,
   Inbox,
+  ArrowRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useFeedbacks } from "./useFeedbacks";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
@@ -123,7 +125,7 @@ function FeedbackCard({
 }
 
 export function Feedbacks() {
-  const { projectFeedbacks, isLoading, handleUpdateStatus } = useFeedbacks();
+  const { projectFeedbacks, isLoading, handleUpdateStatus, handleViewAll } = useFeedbacks();
   const feedbackCount = projectFeedbacks.reduce(
     (total, group) => total + group.feedbacks.length,
     0,
@@ -198,7 +200,7 @@ export function Feedbacks() {
         <div className="flex flex-col gap-8">
           {projectFeedbacks.map((group) => (
             <section key={group.projectId} className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex items-center justify-between gap-3 border-b pb-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                     <FolderKanban className="size-7" />
@@ -217,6 +219,17 @@ export function Feedbacks() {
                     </div>
                   </div>
                 </div>
+                {group.projectSlug && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="shrink-0 hover:cursor-pointer"
+                    onClick={() => handleViewAll(group.projectSlug)}
+                  >
+                    Ver todos
+                    <ArrowRight className="size-3.5" />
+                  </Button>
+                )}
               </div>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {group.feedbacks.map((feedback) => (

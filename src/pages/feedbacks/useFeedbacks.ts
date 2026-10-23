@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/store/auth";
@@ -8,12 +9,14 @@ import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 interface ProjectFeedbacks {
   projectId: string;
   projectName: string;
+  projectSlug: string;
   feedbacks: Feedback[];
 }
 
 export function useFeedbacks() {
   const [projectFeedbacks, setProjectFeedbacks] = useState<ProjectFeedbacks[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
 
@@ -28,11 +31,11 @@ export function useFeedbacks() {
         );
 
         const organizationsWithProjects = useAuthStore.getState().organizationsWithProjects;
-        const projectNameMap = new Map<string, string>();
+        const projectInfoMap = new Map<string, { name: string; slug: string }>();
         const org = organizationsWithProjects.find((organization) => organization.id === selectedOrganization.id);
         if (org) {
           for (const project of org.projects) {
-            projectNameMap.set(project.id, project.name);
+            projectInfoMap.set(project.id, { name: project.name, slug: project.slug });
           }
         }
 
@@ -45,9 +48,12 @@ export function useFeedbacks() {
 
         const result: ProjectFeedbacks[] = [];
         for (const [projectId, feedbacks] of grouped) {
+          const projectInfo = projectInfoMap.get(projectId);
+
           result.push({
             projectId,
-            projectName: projectNameMap.get(projectId) ?? "Projeto desconhecido",
+            projectName: projectInfo?.name ?? "Projeto desconhecido",
+            projectSlug: projectInfo?.slug ?? "",
             feedbacks,
           });
         }
@@ -95,10 +101,15 @@ export function useFeedbacks() {
     }
   };
 
+  const handleViewAll = (projectSlug: string) => {
+    navigate(`/projects/${projectSlug}/feedbacks`);
+  };
+
   return {
     projectFeedbacks,
     isLoading,
     selectedOrganization,
     handleUpdateStatus,
+    handleViewAll,
   };
 }
