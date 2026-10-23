@@ -57,12 +57,12 @@ function StatCard({
 
 function StatusBadge({ status }: { status: FeedbackStatus }) {
   const config: Record<FeedbackStatus, { label: string; className: string }> = {
-    PENDING: {
-      label: "Pendente",
+    NEW: {
+      label: "Novo",
       className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
     },
-    IN_REVIEW: {
-      label: "Em Revisão",
+    IN_PROGRESS: {
+      label: "Em Progresso",
       className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
     },
     COMPLETED: {
@@ -75,8 +75,8 @@ function StatusBadge({ status }: { status: FeedbackStatus }) {
 
   return (
     <Badge className={className}>
-      {status === "PENDING" && <Clock className="mr-1 h-3 w-3" />}
-      {status === "IN_REVIEW" && <Loader className="mr-1 h-3 w-3" />}
+      {status === "NEW" && <Clock className="mr-1 h-3 w-3" />}
+      {status === "IN_PROGRESS" && <Loader className="mr-1 h-3 w-3" />}
       {status === "COMPLETED" && <CheckCircle2 className="mr-1 h-3 w-3" />}
       {label}
     </Badge>
@@ -163,7 +163,7 @@ export function Overview() {
     <div className="flex flex-1 flex-col gap-4 bg-neutral-50 dark:bg-neutral-950 p-4 pt-0">
       <div className="grid auto-rows-min gap-4 md:grid-cols-4">
         <StatCard title="Total de Feedbacks" value={stats.total} icon={MessageCircle} variant="default" />
-        <StatCard title="Pendentes" value={stats.pending} icon={Clock} variant="yellow" />
+        <StatCard title="Novos" value={stats.pending} icon={Clock} variant="yellow" />
         <StatCard title="Em Progresso" value={stats.inProgress} icon={Loader} variant="blue" />
         <StatCard title="Concluídos" value={stats.done} icon={CheckCircle2} variant="green" />
       </div>
@@ -186,7 +186,7 @@ export function Overview() {
               <div className="flex items-center gap-4">
                 <div className="flex-1 space-y-3">
                   {[
-                    { label: "Pendente", percentage: stats.total > 0 ? (stats.pending / stats.total) * 100 : 0, color: "bg-yellow-500", iconColor: "text-yellow-600" },
+                    { label: "Novo", percentage: stats.total > 0 ? (stats.pending / stats.total) * 100 : 0, color: "bg-yellow-500", iconColor: "text-yellow-600" },
                     { label: "Em Progresso", percentage: stats.total > 0 ? (stats.inProgress / stats.total) * 100 : 0, color: "bg-blue-500", iconColor: "text-blue-600" },
                     { label: "Concluído", percentage: stats.total > 0 ? (stats.done / stats.total) * 100 : 0, color: "bg-green-500", iconColor: "text-green-600" },
                   ].map((item) => (
