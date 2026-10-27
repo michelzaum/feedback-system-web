@@ -27,6 +27,8 @@ import { Button } from "@/components/ui/button";
 import { useFeedbacks } from "./useFeedbacks";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
+const MAX_FEEDBACKS_PER_PROJECT = 3;
+
 const STATUS_OPTIONS: { value: FeedbackStatus; label: string }[] = [
   { value: "NEW", label: "Novo" },
   { value: "IN_PROGRESS", label: "Em Progresso" },
@@ -232,7 +234,7 @@ export function Feedbacks() {
                 )}
               </div>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {group.feedbacks.map((feedback) => (
+                {group.feedbacks.slice(0, MAX_FEEDBACKS_PER_PROJECT).map((feedback) => (
                   <FeedbackCard
                     key={feedback.id}
                     feedback={feedback}
