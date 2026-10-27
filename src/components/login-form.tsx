@@ -71,7 +71,7 @@ export function LoginForm({
             type="submit"
             size="lg"
             disabled={isLoading}
-            className="mt-2 h-10 w-full bg-brand text-brand-foreground hover:bg-brand/85"
+            className="mt-2 h-10 w-full bg-brand text-brand-foreground hover:cursor-pointer hover:bg-brand/85"
           >
             {isLoading ? (
               <>
