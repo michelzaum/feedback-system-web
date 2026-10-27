@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -24,119 +17,262 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useFeedbacks } from "./useFeedbacks";
+import { cn } from "cn";
+import { useFeedbacks, type ProjectFeedbacks } from "./useFeedbacks";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 const MAX_FEEDBACKS_PER_PROJECT = 3;
 
-const STATUS_OPTIONS: { value: FeedbackStatus; label: string }[] = [
-  { value: "NEW", label: "Novo" },
-  { value: "IN_PROGRESS", label: "Em Progresso" },
-  { value: "COMPLETED", label: "Concluído" },
+const STATUS_OPTIONS: {
+  value: FeedbackStatus;
+  label: string;
+  shortSingular: string;
+  shortPlural: string;
+}[] = [
+  {
+    value: "NEW",
+    label: "Novo",
+    shortSingular: "novo",
+    shortPlural: "novos",
+  },
+  {
+    value: "IN_PROGRESS",
+    label: "Em Progresso",
+    shortSingular: "em progresso",
+    shortPlural: "em progresso",
+  },
+  {
+    value: "COMPLETED",
+    label: "Concluído",
+    shortSingular: "concluído",
+    shortPlural: "concluídos",
+  },
 ];
 
-function StatusBadge({ status }: { status: FeedbackStatus }) {
-  const config: Record<FeedbackStatus, { label: string; className: string }> = {
-    NEW: {
-      label: "Novo",
-      className:
-        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100",
-    },
-    IN_PROGRESS: {
-      label: "Em Progresso",
-      className:
-        "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100",
-    },
-    COMPLETED: {
-      label: "Concluído",
-      className:
-        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100",
-    },
-  };
+const STATUS_CONFIG: Record<
+  FeedbackStatus,
+  { label: string; icon: React.ElementType; pill: string; bar: string; dot: string }
+> = {
+  NEW: {
+    label: "Novo",
+    icon: Clock,
+    pill: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900 dark:text-yellow-100 dark:hover:bg-yellow-800",
+    bar: "bg-yellow-500",
+    dot: "bg-yellow-500",
+  },
+  IN_PROGRESS: {
+    label: "Em Progresso",
+    icon: Loader,
+    pill: "bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800",
+    bar: "bg-blue-500",
+    dot: "bg-blue-500",
+  },
+  COMPLETED: {
+    label: "Concluído",
+    icon: CheckCircle2,
+    pill: "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-100 dark:hover:bg-green-800",
+    bar: "bg-green-500",
+    dot: "bg-green-500",
+  },
+};
 
-  const { label, className } = config[status] ?? {
-    label: status,
-    className: "bg-muted text-muted-foreground",
-  };
+const FALLBACK_STATUS_CONFIG = {
+  label: "Desconhecido",
+  icon: MessageSquareText,
+  pill: "bg-muted text-muted-foreground",
+  bar: "bg-muted-foreground/40",
+  dot: "bg-muted-foreground/40",
+};
 
-  return (
-    <Badge className={className}>
-      {status === "NEW" && <Clock className="mr-1 h-3 w-3" />}
-      {status === "IN_PROGRESS" && <Loader className="mr-1 h-3 w-3" />}
-      {status === "COMPLETED" && <CheckCircle2 className="mr-1 h-3 w-3" />}
-      {label}
-    </Badge>
-  );
-}
-
-function FeedbackCard({
+function StatusPill({
   feedback,
   onStatusChange,
 }: {
   feedback: Feedback;
   onStatusChange: (status: FeedbackStatus) => void;
 }) {
+  const config = STATUS_CONFIG[feedback.status] ?? FALLBACK_STATUS_CONFIG;
+  const Icon = config.icon;
+
   return (
-    <Card className="group flex flex-col overflow-hidden border-border/70 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <CardTitle className="text-sm font-semibold leading-5">
-            {feedback.title}
-          </CardTitle>
-          <StatusBadge status={feedback.status} />
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <p className="line-clamp-3 text-sm leading-6 text-muted-foreground">
-          {feedback.description}
-        </p>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between gap-3 border-t bg-muted/20 px-4 py-3">
-        <span className="text-xs text-muted-foreground">
-          {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
-        </span>
-        <div className="flex items-center gap-2">
-          <Select
-            value={feedback.status}
-            onValueChange={(value) => onStatusChange(value as FeedbackStatus)}
-            items={STATUS_OPTIONS}
+    <Select
+      value={feedback.status}
+      onValueChange={(value) => onStatusChange(value as FeedbackStatus)}
+      items={STATUS_OPTIONS}
+    >
+      <SelectTrigger
+        id={`feedback-status-${feedback.id}`}
+        className={cn(
+          "h-7 w-fit gap-1 rounded-full border-0 px-2.5 text-xs font-medium shadow-none hover:cursor-pointer [&_svg]:size-3",
+          config.pill
+        )}
+      >
+        <Icon />
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectLabel>Status</SelectLabel>
+        {STATUS_OPTIONS.map((option) => (
+          <SelectItem
+            key={option.value}
+            value={option.value}
+            className="hover:cursor-pointer"
           >
-            <SelectTrigger
-              id={`feedback-status-${feedback.id}`}
-              className="h-8 w-36 rounded-md border-border bg-background px-3 text-xs font-medium shadow-none hover:bg-accent hover:text-accent-foreground hover:cursor-pointer"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectLabel>Status</SelectLabel>
-              {STATUS_OPTIONS.map((option) => (
-                <SelectItem
-                  key={option.value}
-                  value={option.value}
-                  className="hover:cursor-pointer"
-                >
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function ProjectPanel({
+  group,
+  onUpdateStatus,
+  onViewAll,
+}: {
+  group: ProjectFeedbacks;
+  onUpdateStatus: (
+    projectId: string,
+    feedbackId: string,
+    status: FeedbackStatus
+  ) => void;
+  onViewAll: (projectSlug: string) => void;
+}) {
+  const total = group.feedbacks.length;
+  const counts = group.feedbacks.reduce(
+    (acc, feedback) => {
+      acc[feedback.status] += 1;
+
+      return acc;
+    },
+    { NEW: 0, IN_PROGRESS: 0, COMPLETED: 0 } as Record<FeedbackStatus, number>
+  );
+
+  return (
+    <Card className="gap-0 py-0">
+      <div className="flex flex-col gap-4 p-5">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+            <FolderKanban className="size-5" />
+          </div>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <h2 className="truncate text-sm font-semibold leading-none">
+              {group.projectName}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {total === 0
+                ? "Nenhum feedback ainda"
+                : `${total} ${total === 1 ? "feedback" : "feedbacks"}`}
+            </p>
+          </div>
         </div>
-      </CardFooter>
+
+        {total > 0 && (
+          <div className="flex flex-col gap-2">
+            <div className="flex h-1.5 w-full gap-0.5">
+              {STATUS_OPTIONS.map((option) =>
+                counts[option.value] > 0 ? (
+                  <div
+                    key={option.value}
+                    className={cn(
+                      "h-full rounded-full",
+                      (STATUS_CONFIG[option.value] ?? FALLBACK_STATUS_CONFIG).bar
+                    )}
+                    style={{
+                      width: `${(counts[option.value] / total) * 100}%`,
+                    }}
+                  />
+                ) : null
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+              {STATUS_OPTIONS.map((option) => (
+                <span
+                  key={option.value}
+                  className={cn(
+                    "flex items-center gap-1.5",
+                    counts[option.value] === 0 && "opacity-40"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "size-1.5 rounded-full",
+                      (STATUS_CONFIG[option.value] ?? FALLBACK_STATUS_CONFIG).dot
+                    )}
+                  />
+                  <span className="font-medium tabular-nums text-foreground">
+                    {counts[option.value]}
+                  </span>
+                  {counts[option.value] === 1
+                    ? option.shortSingular
+                    : option.shortPlural}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {total > 0 ? (
+        <ul className="flex flex-1 flex-col divide-y divide-border/70 border-t border-border/70">
+          {group.feedbacks.slice(0, MAX_FEEDBACKS_PER_PROJECT).map((feedback) => (
+            <li
+              key={feedback.id}
+              className="flex items-center gap-3 px-5 py-2.5"
+            >
+              <p className="min-w-0 flex-1 truncate text-sm font-medium">
+                {feedback.title}
+              </p>
+              <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
+              </span>
+              <StatusPill
+                feedback={feedback}
+                onStatusChange={(status) =>
+                  onUpdateStatus(group.projectId, feedback.id, status)
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="flex flex-1 items-center justify-center border-t border-border/70 px-5 py-8">
+          <p className="text-xs text-muted-foreground">
+            Nenhum feedback recebido ainda
+          </p>
+        </div>
+      )}
+
+      {group.projectSlug && (
+        <div className="border-t border-border/70 p-1.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full text-muted-foreground hover:cursor-pointer hover:text-foreground"
+            onClick={() => onViewAll(group.projectSlug)}
+          >
+            Ver todos
+            <ArrowRight className="size-3.5" />
+          </Button>
+        </div>
+      )}
     </Card>
   );
 }
 
 export function Feedbacks() {
-  const { projectFeedbacks, isLoading, handleUpdateStatus, handleViewAll } = useFeedbacks();
+  const { projectFeedbacks, isLoading, handleUpdateStatus, handleViewAll } =
+    useFeedbacks();
   const feedbackCount = projectFeedbacks.reduce(
     (total, group) => total + group.feedbacks.length,
-    0,
+    0
   );
   const newFeedbacksCount = projectFeedbacks.reduce(
     (total, group) =>
       total +
       group.feedbacks.filter((feedback) => feedback.status === "NEW").length,
-    0,
+    0
   );
 
   return (
@@ -177,11 +313,11 @@ export function Feedbacks() {
       </header>
 
       {isLoading ? (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {[0, 1, 2].map((item) => (
             <Card
               key={item}
-              className="h-44 animate-pulse border-border/60 bg-card/70"
+              className="h-80 animate-pulse gap-0 py-0 ring-foreground/10"
             />
           ))}
         </div>
@@ -199,52 +335,14 @@ export function Feedbacks() {
           </p>
         </Card>
       ) : (
-        <div className="flex flex-col gap-8">
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {projectFeedbacks.map((group) => (
-            <section key={group.projectId} className="flex flex-col gap-4">
-              <div className="flex items-center justify-between gap-3 border-b pb-3">
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                    <FolderKanban className="size-7" />
-                  </div>
-                  <div className="min-w-0 flex flex-col gap-1">
-                    <h2 className="truncate text-base font-semibold">
-                      {group.projectName}
-                    </h2>
-                    <div className="flex items-center gap-1">
-                      <Badge variant="secondary" className="shrink-0">
-                        {group.feedbacks.length}
-                      </Badge>
-                      <p className="text-xs text-muted-foreground">
-                        Feedbacks recebidos neste projeto
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {group.projectSlug && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="shrink-0 hover:cursor-pointer"
-                    onClick={() => handleViewAll(group.projectSlug)}
-                  >
-                    Ver todos
-                    <ArrowRight className="size-3.5" />
-                  </Button>
-                )}
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {group.feedbacks.slice(0, MAX_FEEDBACKS_PER_PROJECT).map((feedback) => (
-                  <FeedbackCard
-                    key={feedback.id}
-                    feedback={feedback}
-                    onStatusChange={(status) =>
-                      handleUpdateStatus(group.projectId, feedback.id, status)
-                    }
-                  />
-                ))}
-              </div>
-            </section>
+            <ProjectPanel
+              key={group.projectId}
+              group={group}
+              onUpdateStatus={handleUpdateStatus}
+              onViewAll={handleViewAll}
+            />
           ))}
         </div>
       )}

@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/auth";
 import { getOrganizationFeedbacks, updateFeedback } from "@/api/feedback";
 import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
-interface ProjectFeedbacks {
+export interface ProjectFeedbacks {
   projectId: string;
   projectName: string;
   projectSlug: string;
@@ -31,13 +31,7 @@ export function useFeedbacks() {
         );
 
         const organizationsWithProjects = useAuthStore.getState().organizationsWithProjects;
-        const projectInfoMap = new Map<string, { name: string; slug: string }>();
         const org = organizationsWithProjects.find((organization) => organization.id === selectedOrganization.id);
-        if (org) {
-          for (const project of org.projects) {
-            projectInfoMap.set(project.id, { name: project.name, slug: project.slug });
-          }
-        }
 
         const grouped = new Map<string, Feedback[]>();
         for (const feedback of sorted) {
@@ -47,16 +41,42 @@ export function useFeedbacks() {
         }
 
         const result: ProjectFeedbacks[] = [];
+        const knownProjectIds = new Set<string>();
+
+        if (org) {
+          for (const project of org.projects) {
+            knownProjectIds.add(project.id);
+
+            result.push({
+              projectId: project.id,
+              projectName: project.name,
+              projectSlug: project.slug,
+              feedbacks: grouped.get(project.id) ?? [],
+            });
+          }
+        }
+
         for (const [projectId, feedbacks] of grouped) {
-          const projectInfo = projectInfoMap.get(projectId);
+          if (knownProjectIds.has(projectId)) continue;
 
           result.push({
             projectId,
-            projectName: projectInfo?.name ?? "Projeto desconhecido",
-            projectSlug: projectInfo?.slug ?? "",
+            projectName: "Projeto desconhecido",
+            projectSlug: "",
             feedbacks,
           });
         }
+
+        result.sort((a, b) => {
+          const aTime = a.feedbacks[0]
+            ? new Date(a.feedbacks[0].createdAt).getTime()
+            : 0;
+          const bTime = b.feedbacks[0]
+            ? new Date(b.feedbacks[0].createdAt).getTime()
+            : 0;
+
+          return bTime - aTime;
+        });
 
         setProjectFeedbacks(result);
       } catch (error) {
