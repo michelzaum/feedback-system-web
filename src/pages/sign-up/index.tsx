@@ -2,13 +2,9 @@ import { SignUpForm } from "@/components/sign-up-form";
 import { useSignUp } from "@/pages/sign-up/useSignUp";
 
 function SignUp() {
-  const { onSubmit } = useSignUp();
+  const { onSubmit, isLoading } = useSignUp();
 
-  return (
-    <div className="relative flex min-h-svh w-full items-center justify-center overflow-hidden px-4 py-10">
-      <SignUpForm onSubmit={onSubmit} />
-    </div>
-  );
+  return <SignUpForm onSubmit={onSubmit} isLoading={isLoading} />;
 }
 
 export default SignUp;
