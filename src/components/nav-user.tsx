@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router";
 import {
+  useShallow,
+} from "zustand/react/shallow";
+import {
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -34,7 +37,9 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
-  const authUser = useAuthStore((state) => state.user);
+  const authUser = useAuthStore(
+      useShallow((state) => state.user),
+    );
 
   const handleLogout = async () => {
     try {
