@@ -16,24 +16,30 @@ export function useOverview() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function fetchFeedbacks() {
       if (!selectedOrganization || !isAuthenticated) return;
 
       try {
-        const data = await getOrganizationFeedbacks(selectedOrganization.id);
+        const data = await getOrganizationFeedbacks(selectedOrganization.id, abortController.signal as any);
         const sorted = data.sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setFeedbacks(sorted);
       } catch (error) {
-        toast.error(TOAST_MESSAGES.FEEDBACKS_LOAD_ERROR);
-        console.log(error);
+        if (error instanceof Error && error.name !== "AbortError") {
+          toast.error(TOAST_MESSAGES.FEEDBACKS_LOAD_ERROR);
+          console.log(error);
+        }
       } finally {
         setIsLoading(false);
       }
     }
 
     fetchFeedbacks();
+
+    return () => abortController.abort();
   }, [selectedOrganization, isAuthenticated]);
 
   const stats = {

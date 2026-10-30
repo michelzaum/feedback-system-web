@@ -17,8 +17,8 @@ export async function getFeedbacks(organizationId: string, projectId: string): P
   return data;
 }
 
-export async function getOrganizationFeedbacks(organizationId: string): Promise<Feedback[]> {
-  const { data } = await api.get<Feedback[]>(`/organizations/${organizationId}/feedbacks`);
+export async function getOrganizationFeedbacks(organizationId: string, signal?: AbortSignal): Promise<Feedback[]> {
+  const { data } = await api.get<Feedback[]>(`/organizations/${organizationId}/feedbacks`, { signal });
   return data;
 }
 
