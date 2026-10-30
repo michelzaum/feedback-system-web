@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants/toasts";
@@ -14,9 +14,11 @@ export function useOverview() {
   const navigate = useNavigate();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    const abortController = new AbortController();
+    const abortController = new AbortController;
+    abortRef.current = abortController;
 
     async function fetchFeedbacks() {
       if (!selectedOrganization || !isAuthenticated) return;
@@ -39,7 +41,11 @@ export function useOverview() {
 
     fetchFeedbacks();
 
-    return () => abortController.abort();
+    return () => {
+      if (abortRef.current === abortController) {
+        abortController.abort();
+      }
+    };
   }, [selectedOrganization, isAuthenticated]);
 
   const stats = {
