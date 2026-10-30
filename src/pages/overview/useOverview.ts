@@ -1,6 +1,7 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { TOAST_MESSAGES } from "@/constants/toasts";
 
 import { useAuthStore } from "@/store/auth";
 import { getOrganizationFeedbacks } from "@/api/feedback";
@@ -14,25 +15,34 @@ export function useOverview() {
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    let isMounted = true;
+
     async function fetchFeedbacks() {
-      if (!selectedOrganization || !isAuthenticated) return;
+      if (!isMounted || !selectedOrganization || !isAuthenticated) return;
 
       try {
         const data = await getOrganizationFeedbacks(selectedOrganization.id);
+        if (!isMounted) return;
         const sorted = data.sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setFeedbacks(sorted);
       } catch (error) {
-        toast.error("Erro ao carregar feedbacks");
-        console.log(error);
+        if (error instanceof Error && error.name !== "AbortError") {
+          toast.error(TOAST_MESSAGES.FEEDBACKS_LOAD_ERROR);
+          console.log(error);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     }
 
     fetchFeedbacks();
+
+    return () => {
+      isMounted = false;
+    };
   }, [selectedOrganization, isAuthenticated]);
 
   const stats = {
