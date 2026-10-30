@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants/toasts";
@@ -14,17 +14,16 @@ export function useOverview() {
   const navigate = useNavigate();
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    const abortController = new AbortController;
-    abortRef.current = abortController;
+    let isMounted = true;
 
     async function fetchFeedbacks() {
-      if (!selectedOrganization || !isAuthenticated) return;
+      if (!isMounted || !selectedOrganization || !isAuthenticated) return;
 
       try {
-        const data = await getOrganizationFeedbacks(selectedOrganization.id, abortController.signal as any);
+        const data = await getOrganizationFeedbacks(selectedOrganization.id);
+        if (!isMounted) return;
         const sorted = data.sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
@@ -35,16 +34,14 @@ export function useOverview() {
           console.log(error);
         }
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     }
 
     fetchFeedbacks();
 
     return () => {
-      if (abortRef.current === abortController) {
-        abortController.abort();
-      }
+      isMounted = false;
     };
   }, [selectedOrganization, isAuthenticated]);
 
