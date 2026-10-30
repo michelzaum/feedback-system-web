@@ -10,19 +10,19 @@ export function useMembers() {
   const [members, setMembers] = useState<OrganizationMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingMember, setEditingMember] = useState<{ id: string; role: string } | null>(null);
+  const [editingMember, setEditingMember] = useState<{ id: string; role: "ADMIN" | "MEMBER" } | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
 
-  const handleEdit = (member: { id: string; role: string }) => {
+  const handleEdit = (member: { id: string; role: "ADMIN" | "MEMBER" }) => {
     setEditingMember(member);
     setIsEditDialogOpen(true);
   };
 
   const handleDelete = (memberId: string) => {
-    setEditingMember({ id: memberId, role: "" });
+    setEditingMember({ id: memberId, role: "MEMBER" });
     setIsDeleteDialogOpen(true);
   };
 

@@ -20,8 +20,14 @@ export function useSignIn() {
     setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const email = formData.get("email") as string | null;
+    const password = formData.get("password") as string | null;
+
+    if (!email || !password) {
+      toast.error("E-mail e senha são obrigatórios.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       await signIn({ email, password });

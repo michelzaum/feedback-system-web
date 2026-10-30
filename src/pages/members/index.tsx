@@ -150,7 +150,7 @@ export function Members() {
                             <MoreHorizontal className="h-4 w-4" />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(member)} className="hover:cursor-pointer">
+                            <DropdownMenuItem onClick={() => handleEdit({ ...member, role: member.role as "ADMIN" | "MEMBER" })} className="hover:cursor-pointer">
                               <Pencil className="mr-2 h-4 w-4" />
                               Editar
                             </DropdownMenuItem>
@@ -211,7 +211,7 @@ export function Members() {
                 <Select
                   value={editingMember.role}
                   onValueChange={(value) => {
-                    const role = value as string;
+                    const role = value as "ADMIN" | "MEMBER";
                     setEditingMember((prev) => (prev ? { ...prev, role } : prev));
                   }}
                   itemToStringLabel={(value) => (value === "ADMIN" ? "Administrador" : "Membro")}
