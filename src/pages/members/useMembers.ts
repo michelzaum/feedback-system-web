@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { TOAST_MESSAGES } from "@/constants/toasts";
 
 import { useAuthStore } from "@/store/auth";
 import { getOrganizationMembers, updateOrganizationMember, deleteOrganizationMember } from "@/api/members";
@@ -50,7 +51,7 @@ export function useMembers() {
         const data = await getOrganizationMembers(selectedOrganization.id);
         setMembers(data);
       } catch (error) {
-        toast.error("Erro ao carregar membros");
+        toast.error(TOAST_MESSAGES.MEMBERS_LOAD_ERROR);
         console.log(error);
       } finally {
         setIsLoading(false);
@@ -65,7 +66,7 @@ export function useMembers() {
     getOrganizationMembers(selectedOrganization.id)
       .then((data) => setMembers(data))
       .catch((error) => {
-        toast.error("Erro ao carregar membros");
+        toast.error(TOAST_MESSAGES.MEMBERS_LOAD_ERROR);
         console.log(error);
       })
       .finally(() => setIsLoading(false));
@@ -77,7 +78,7 @@ export function useMembers() {
       toast.success("Membro atualizado com sucesso!");
       refetch();
     } catch (error) {
-      toast.error("Erro ao atualizar membro");
+      toast.error(TOAST_MESSAGES.MEMBER_UPDATE_ERROR);
       console.log(error);
     }
   };
@@ -85,10 +86,10 @@ export function useMembers() {
   const deleteMember = async (userId: string) => {
     try {
       await deleteOrganizationMember(selectedOrganization!.id, userId);
-      toast.success("Membro excluído com sucesso!");
+      toast.success(TOAST_MESSAGES.MEMBER_DELETE_SUCCESS);
       refetch();
     } catch (error) {
-      toast.error("Erro ao excluir membro");
+      toast.error(TOAST_MESSAGES.MEMBER_DELETE_ERROR);
       console.log(error);
     }
   };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { TOAST_MESSAGES } from "@/constants/toasts";
 
 import { useAuthStore } from "@/store/auth";
 import { getOrganizationFeedbacks } from "@/api/feedback";
@@ -25,7 +26,7 @@ export function useOverview() {
         );
         setFeedbacks(sorted);
       } catch (error) {
-        toast.error("Erro ao carregar feedbacks");
+        toast.error(TOAST_MESSAGES.FEEDBACKS_LOAD_ERROR);
         console.log(error);
       } finally {
         setIsLoading(false);
