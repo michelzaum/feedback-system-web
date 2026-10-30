@@ -6,6 +6,7 @@ import { signIn, me } from "@/api/sign-in";
 import { useAuthStore } from "@/store/auth";
 import { getOrganizations } from "@/api/organizations";
 import { getProjects } from "@/api/projects";
+import { mapOrganizationsWithProjects } from "@/utils/organizations";
 
 export function useSignIn() {
   const navigate = useNavigate();
@@ -29,10 +30,7 @@ export function useSignIn() {
       const orgs = await getOrganizations();
       const projects = await getProjects();
 
-      const organizationsWithProjects = orgs.map((org) => ({
-        ...org,
-        projects: projects.filter((p) => p.organizationId === org.id),
-      }));
+      const organizationsWithProjects = mapOrganizationsWithProjects(orgs, projects);
 
       setOrganizations(orgs);
       setOrganizationsWithProjects(organizationsWithProjects);

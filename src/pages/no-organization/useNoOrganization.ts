@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/auth";
 import { signOut } from "@/api/sign-out";
 import { createOrganization, getOrganizations } from "@/api/organizations";
 import { getProjects } from "@/api/projects";
+import { mapOrganizationsWithProjects } from "@/utils/organizations";
 
 export function useNoOrganization() {
   const navigate = useNavigate();
@@ -27,10 +28,7 @@ export function useNoOrganization() {
         const organizations = await getOrganizations();
         const projects = await getProjects();
 
-        const organizationsWithProjects = organizations.map((organization) => ({
-          ...organization,
-          projects: projects.filter((project) => project.organizationId === organization.id),
-        }));
+        const organizationsWithProjects = mapOrganizationsWithProjects(organizations, projects);
 
         if (organizationsWithProjects.length === 1) {
           setOrganizations(organizations);
@@ -90,10 +88,7 @@ export function useNoOrganization() {
       const organizations = await getOrganizations();
       const projects = await getProjects();
 
-      const organizationsWithProjects = organizations.map((organization) => ({
-        ...organization,
-        projects: projects.filter((project) => project.organizationId === organization.id),
-      }));
+      const organizationsWithProjects = mapOrganizationsWithProjects(organizations, projects);
 
       const newOrganization = organizationsWithProjects.find(
         (organization) => organization.name.toLowerCase() === name.toLowerCase(),
