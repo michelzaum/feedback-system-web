@@ -8,6 +8,7 @@ import { OrganizationSwitcher } from "@/components/organization-switcher";
 import { CreateProjectModal } from "@/components/create-project";
 import { ListProjects } from "@/components/list-projects";
 import { useProjects } from "@/components/use-projects";
+import { useShallow } from "zustand/react/shallow";
 import {
   Sidebar,
   SidebarContent,
@@ -52,14 +53,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const { projects: organizationProjects, fetchProjects } = useProjects();
-  const authUser = useAuthStore((state) => state.user);
-  const selectedOrganization = useAuthStore((state) => state.selectedOrganization);
+  const { user: storeUser, selectedOrganization } = useAuthStore(
+      useShallow((state) => ({
+        user: state.user,
+        selectedOrganization: state.selectedOrganization,
+      })),
+    );
   const location = useLocation();
 
   const isAdmin = selectedOrganization?.role === "ADMIN";
   const navItems = organizationMenuItems.filter((item) => item.name !== "Membros" || isAdmin);
 
-  const user = authUser ? { name: authUser.name ?? "", email: authUser.email, avatar: authUser.avatar ?? "" } : { name: "", email: "", avatar: "" };
+  const user = storeUser ? { name: storeUser.name ?? "", email: storeUser.email, avatar: storeUser.avatar ?? "" } : { name: "", email: "", avatar: "" };
 
   const handleProjectsClick = () => {
     setIsProjectsOpen(!isProjectsOpen);

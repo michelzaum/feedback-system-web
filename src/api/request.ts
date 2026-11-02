@@ -17,16 +17,20 @@ declare module "axios" {
 const AUTH_ENDPOINTS = ["/sign-in", "/sign-up", "/refresh-token"];
 const SESSION_EXPIRED_MESSAGE = "Sua sessão expirou. Faça login novamente.";
 
-let refreshPromise: Promise<unknown> | null = null;
+// Track in-flight refresh requests to prevent multiple concurrent refreshes
+const refreshRequests = new Map<string, Promise<unknown>>();
 
-async function refreshTokens(): Promise<unknown> {
-  if (!refreshPromise) {
-    refreshPromise = refreshToken().finally(() => {
-      refreshPromise = null;
-    });
+async function refreshTokens(requestId: string): Promise<unknown> {
+  if (refreshRequests.has(requestId)) {
+    return refreshRequests.get(requestId)!;
   }
 
-  return refreshPromise;
+  const promise = refreshToken().finally(() => {
+    refreshRequests.delete(requestId);
+  });
+
+  refreshRequests.set(requestId, promise);
+  return promise;
 }
 
 api.interceptors.response.use(
@@ -51,7 +55,8 @@ api.interceptors.response.use(
     }
 
     try {
-      await refreshTokens();
+      const requestId = crypto.randomUUID();
+      await refreshTokens(requestId);
 
       config._retried = true;
 

@@ -244,7 +244,7 @@ function ProjectPanel({
         </div>
       )}
 
-      {group.projectSlug && (
+      {group.projectSlug && total > 0 && (
         <div className="border-t border-border/70 p-1.5">
           <Button
             variant="ghost"
