@@ -17,20 +17,28 @@ declare module "axios" {
 const AUTH_ENDPOINTS = ["/sign-in", "/sign-up", "/refresh-token"];
 const SESSION_EXPIRED_MESSAGE = "Sua sessão expirou. Faça login novamente.";
 
-// Track in-flight refresh requests to prevent multiple concurrent refreshes
-const refreshRequests = new Map<string, Promise<unknown>>();
+// Share one refresh request across all concurrent 401 responses.
+let refreshRequest: Promise<void> | null = null;
 
-async function refreshTokens(requestId: string): Promise<unknown> {
-  if (refreshRequests.has(requestId)) {
-    return refreshRequests.get(requestId)!;
+function refreshTokens(): Promise<void> {
+  if (!refreshRequest) {
+    refreshRequest = refreshToken()
+      .catch((error) => {
+        const authStore = useAuthStore.getState();
+
+        if (authStore.isAuthenticated) {
+          authStore.logout();
+          toast.error(SESSION_EXPIRED_MESSAGE);
+        }
+
+        throw error;
+      })
+      .finally(() => {
+        refreshRequest = null;
+      });
   }
 
-  const promise = refreshToken().finally(() => {
-    refreshRequests.delete(requestId);
-  });
-
-  refreshRequests.set(requestId, promise);
-  return promise;
+  return refreshRequest;
 }
 
 api.interceptors.response.use(
@@ -45,26 +53,32 @@ api.interceptors.response.use(
 
     const isAuthEndpoint = AUTH_ENDPOINTS.some((endpoint) => config.url?.includes(endpoint));
 
-    if (isAuthEndpoint || config._retried) {
-      if (!isAuthEndpoint) {
-        useAuthStore.getState().logout();
+    if (isAuthEndpoint) {
+      return Promise.reject(error);
+    }
+
+    if (config._retried) {
+      const authStore = useAuthStore.getState();
+
+      if (authStore.isAuthenticated) {
+        authStore.logout();
         toast.error(SESSION_EXPIRED_MESSAGE);
       }
 
       return Promise.reject(error);
     }
 
+    if (!useAuthStore.getState().isAuthenticated) {
+      return Promise.reject(error);
+    }
+
     try {
-      const requestId = crypto.randomUUID();
-      await refreshTokens(requestId);
+      await refreshTokens();
 
       config._retried = true;
 
       return api.request(config);
     } catch {
-      useAuthStore.getState().logout();
-      toast.error(SESSION_EXPIRED_MESSAGE);
-
       return Promise.reject(error);
     }
   }
