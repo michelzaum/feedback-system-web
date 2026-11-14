@@ -1,6 +1,6 @@
 import { api } from "../request";
 import type { Project } from "@/api/projects/types";
-import type { CreateFeedbackPayload, Feedback, UpdateFeedbackPayload } from "./types";
+import type { CreateFeedbackPayload, Feedback, FeedbackNote, UpdateFeedbackPayload } from "./types";
 
 export async function getProjectBySlugs(organizationSlug: string, projectSlug: string): Promise<Project> {
   const { data } = await api.get<Project>(`/organizations/${organizationSlug}/projects/${projectSlug}`);
@@ -31,6 +31,30 @@ export async function updateFeedback(
   const { data } = await api.patch<Feedback>(
     `/organizations/${organizationId}/projects/${projectId}/feedbacks/${feedbackId}`,
     payload
+  );
+  return data;
+}
+
+export async function getFeedbackNotes(
+  organizationId: string,
+  projectId: string,
+  feedbackId: string,
+): Promise<FeedbackNote[]> {
+  const { data } = await api.get<FeedbackNote[]>(
+    `/organizations/${organizationId}/projects/${projectId}/feedbacks/${feedbackId}/notes`,
+  );
+  return data;
+}
+
+export async function createFeedbackNote(
+  organizationId: string,
+  projectId: string,
+  feedbackId: string,
+  content: string,
+): Promise<FeedbackNote> {
+  const { data } = await api.post<FeedbackNote>(
+    `/organizations/${organizationId}/projects/${projectId}/feedbacks/${feedbackId}/notes`,
+    { content },
   );
   return data;
 }

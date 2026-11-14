@@ -18,3 +18,13 @@ export interface Feedback {
   updatedAt: string;
   status: FeedbackStatus;
 }
+
+export interface FeedbackNote {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: {
+    id: string;
+    name: string;
+  };
+}

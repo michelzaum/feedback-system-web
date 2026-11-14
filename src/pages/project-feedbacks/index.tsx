@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 
 import { FeedbackBoard } from "./board";
+import { FeedbackDetailsDialog } from "./feedback-details-dialog";
 import { useProjectFeedbacks } from "./useProjectFeedbacks";
 
 function BoardSkeleton() {
@@ -54,6 +55,18 @@ export function ProjectFeedbacks() {
     handleDragOver,
     handleDragEnd,
     handleBack,
+    selectedFeedback,
+    isDetailsOpen,
+    feedbackNotes,
+    isNotesLoading,
+    noteContent,
+    isSavingNote,
+    isUpdatingStatus,
+    handleOpenDetails,
+    handleDetailsOpenChange,
+    handleStatusChange,
+    handleCreateNote,
+    setNoteContent,
   } = useProjectFeedbacks();
 
   if (!isLoading && !project) {
@@ -143,9 +156,25 @@ export function ProjectFeedbacks() {
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
+            onOpenFeedback={handleOpenDetails}
           />
         )}
       </div>
+
+      <FeedbackDetailsDialog
+        feedback={selectedFeedback}
+        project={project}
+        open={isDetailsOpen}
+        notes={feedbackNotes}
+        isNotesLoading={isNotesLoading}
+        noteContent={noteContent}
+        isSavingNote={isSavingNote}
+        isUpdatingStatus={isUpdatingStatus}
+        onOpenChange={handleDetailsOpenChange}
+        onNoteContentChange={setNoteContent}
+        onCreateNote={handleCreateNote}
+        onStatusChange={handleStatusChange}
+      />
     </div>
   );
 }

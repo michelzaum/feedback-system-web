@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
@@ -6,8 +7,8 @@ import { move } from "@dnd-kit/helpers";
 import type { DragEndEvent, DragOverEvent } from "@dnd-kit/react";
 
 import { useAuthStore } from "@/store/auth";
-import { getFeedbacks, updateFeedback } from "@/api/feedback";
-import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
+import { createFeedbackNote, getFeedbackNotes, getFeedbacks, updateFeedback } from "@/api/feedback";
+import type { Feedback, FeedbackNote, FeedbackStatus } from "@/api/feedback/types";
 
 export type FeedbackColumns = Record<FeedbackStatus, Feedback[]>;
 
@@ -47,6 +48,13 @@ export function useProjectFeedbacks() {
 
   const [columns, setColumns] = useState<FeedbackColumns>(EMPTY_COLUMNS);
   const [isFetching, setIsFetching] = useState(true);
+  const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [feedbackNotes, setFeedbackNotes] = useState<FeedbackNote[]>([]);
+  const [isNotesLoading, setIsNotesLoading] = useState(false);
+  const [noteContent, setNoteContent] = useState("");
+  const [isSavingNote, setIsSavingNote] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const columnsRef = useRef<FeedbackColumns>(EMPTY_COLUMNS);
   const snapshotRef = useRef<FeedbackColumns>(EMPTY_COLUMNS);
@@ -111,6 +119,48 @@ export function useProjectFeedbacks() {
     };
   }, [selectedOrganization, project, applyColumns]);
 
+  useEffect(() => {
+    if (!isDetailsOpen || !selectedFeedback || !selectedOrganization || !project) {
+      return;
+    }
+
+    const organizationId = selectedOrganization.id;
+    const projectId = project.id;
+    const feedbackId = selectedFeedback.id;
+    let isCancelled = false;
+
+    async function fetchNotes() {
+      setIsNotesLoading(true);
+
+      try {
+        const notes = await getFeedbackNotes(
+          organizationId,
+          projectId,
+          feedbackId,
+        );
+
+        if (!isCancelled) {
+          setFeedbackNotes(notes);
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          toast.error("Erro ao carregar notas internas");
+          console.log(error);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsNotesLoading(false);
+        }
+      }
+    }
+
+    fetchNotes();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isDetailsOpen, selectedFeedback, selectedOrganization, project]);
+
   const handleDragStart = () => {
     snapshotRef.current = columnsRef.current;
   };
@@ -152,6 +202,82 @@ export function useProjectFeedbacks() {
     navigate("/feedbacks");
   };
 
+  const handleOpenDetails = (feedback: Feedback) => {
+    setSelectedFeedback(feedback);
+    setFeedbackNotes([]);
+    setNoteContent("");
+    setIsDetailsOpen(true);
+  };
+
+  const handleDetailsOpenChange = (open: boolean) => {
+    setIsDetailsOpen(open);
+
+    if (!open) {
+      setSelectedFeedback(null);
+      setFeedbackNotes([]);
+      setNoteContent("");
+    }
+  };
+
+  const handleStatusChange = async (status: FeedbackStatus) => {
+    if (!selectedFeedback || !selectedOrganization || !project || status === selectedFeedback.status) {
+      return;
+    }
+
+    setIsUpdatingStatus(true);
+
+    try {
+      await updateFeedback(selectedOrganization.id, project.id, selectedFeedback.id, { status });
+
+      const nextColumns = { ...columnsRef.current };
+      const updatedFeedback = { ...selectedFeedback, status };
+
+      for (const columnStatus of Object.keys(nextColumns) as FeedbackStatus[]) {
+        nextColumns[columnStatus] = nextColumns[columnStatus].filter(
+          (feedback) => feedback.id !== selectedFeedback.id,
+        );
+      }
+
+      nextColumns[status] = [updatedFeedback, ...nextColumns[status]];
+      applyColumns(nextColumns);
+      setSelectedFeedback(updatedFeedback);
+    } catch (error) {
+      toast.error("Erro ao atualizar status");
+      console.log(error);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const handleCreateNote = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const content = noteContent.trim();
+
+    if (!content || !selectedFeedback || !selectedOrganization || !project) {
+      return;
+    }
+
+    setIsSavingNote(true);
+
+    try {
+      const note = await createFeedbackNote(
+        selectedOrganization.id,
+        project.id,
+        selectedFeedback.id,
+        content,
+      );
+
+      setFeedbackNotes((currentNotes) => [...currentNotes, note]);
+      setNoteContent("");
+    } catch (error) {
+      toast.error("Erro ao salvar nota interna");
+      console.log(error);
+    } finally {
+      setIsSavingNote(false);
+    }
+  };
+
   const feedbackCount =
     columns.NEW.length + columns.IN_PROGRESS.length + columns.COMPLETED.length;
 
@@ -164,5 +290,17 @@ export function useProjectFeedbacks() {
     handleDragOver,
     handleDragEnd,
     handleBack,
+    selectedFeedback,
+    isDetailsOpen,
+    feedbackNotes,
+    isNotesLoading,
+    noteContent,
+    isSavingNote,
+    isUpdatingStatus,
+    handleOpenDetails,
+    handleDetailsOpenChange,
+    handleStatusChange,
+    handleCreateNote,
+    setNoteContent,
   };
 }
