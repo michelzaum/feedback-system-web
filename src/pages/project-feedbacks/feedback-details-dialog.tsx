@@ -187,12 +187,9 @@ export function FeedbackDetailsDialog({
                     ))}
                   </div>
                 ) : notes.length === 0 ? (
-                  <div className="flex items-center gap-3 rounded-xl bg-muted/25 px-4 py-4">
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand">
-                      <ShieldCheck className="size-4" />
-                    </span>
+                  <div className="flex items-center justify-center gap-3 rounded-xl bg-muted/25 px-4 py-4">
                     <div>
-                      <p className="text-sm font-medium">Nenhum comentário por enquanto</p>
+                      <p className="text-sm text-center font-medium">Nenhum comentário por enquanto</p>
                       <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
                         Adicione contexto para ajudar sua equipe a acompanhar este feedback.
                       </p>
