@@ -165,7 +165,7 @@ export function FeedbackDetailsDialog({
                       <MessageSquareText className="size-4" />
                     </span>
                     <div>
-                      <h3 className="text-sm font-semibold">Notas internas</h3>
+                      <h3 className="text-sm font-semibold">Comentários internos</h3>
                       <p className="text-xs text-muted-foreground">Compartilhadas com a equipe</p>
                     </div>
                   </div>
@@ -175,7 +175,7 @@ export function FeedbackDetailsDialog({
                 </div>
 
                 {isNotesLoading ? (
-                  <div className="space-y-4 py-1" aria-label="Carregando notas">
+                  <div className="space-y-4 py-1" aria-label="Carregando comentários">
                     {[0, 1].map((item) => (
                       <div key={item} className="flex gap-3">
                         <div className="size-8 animate-pulse rounded-full bg-muted" />
@@ -192,9 +192,9 @@ export function FeedbackDetailsDialog({
                       <ShieldCheck className="size-4" />
                     </span>
                     <div>
-                      <p className="text-sm font-medium">Nenhuma nota por enquanto</p>
+                      <p className="text-sm font-medium">Nenhum comentário por enquanto</p>
                       <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
-                        Adicione contexto interno para ajudar sua equipe a acompanhar este feedback.
+                        Adicione contexto para ajudar sua equipe a acompanhar este feedback.
                       </p>
                     </div>
                   </div>
@@ -235,8 +235,8 @@ export function FeedbackDetailsDialog({
               <Textarea
                 value={noteContent}
                 onChange={(event) => onNoteContentChange(event.currentTarget.value)}
-                placeholder="Escreva uma nota para a equipe..."
-                aria-label="Nova nota interna"
+                placeholder="Escreva um comentário para a equipe..."
+                aria-label="Novo comentário interno"
                 disabled={isSavingNote}
                 required
                 className="min-h-20 resize-y bg-muted/30 text-sm leading-5 placeholder:text-muted-foreground/80"
@@ -252,7 +252,7 @@ export function FeedbackDetailsDialog({
                   className="hover:cursor-pointer"
                 >
                   {isSavingNote ? <LoaderCircle className="animate-spin" /> : <Send />}
-                  Adicionar nota
+                  Adicionar comentário
                 </Button>
               </div>
             </form>

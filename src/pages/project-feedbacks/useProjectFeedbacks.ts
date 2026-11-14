@@ -144,7 +144,7 @@ export function useProjectFeedbacks() {
         }
       } catch (error) {
         if (!isCancelled) {
-          toast.error("Erro ao carregar notas internas");
+          toast.error("Erro ao carregar comentários internos");
           console.log(error);
         }
       } finally {
@@ -271,7 +271,7 @@ export function useProjectFeedbacks() {
       setFeedbackNotes((currentNotes) => [...currentNotes, note]);
       setNoteContent("");
     } catch (error) {
-      toast.error("Erro ao salvar nota interna");
+      toast.error("Erro ao salvar comentário interno");
       console.log(error);
     } finally {
       setIsSavingNote(false);
