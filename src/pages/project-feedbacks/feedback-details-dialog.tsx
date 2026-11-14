@@ -190,7 +190,7 @@ export function FeedbackDetailsDialog({
                   <div className="flex items-center justify-center gap-3 rounded-xl bg-muted/25 px-4 py-4">
                     <div>
                       <p className="text-sm text-center font-medium">Nenhum comentário por enquanto</p>
-                      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
+                      <p className="mt-0.5 text-xs text-center leading-5 text-muted-foreground">
                         Adicione contexto para ajudar sua equipe a acompanhar este feedback.
                       </p>
                     </div>
