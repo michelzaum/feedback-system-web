@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   CalendarDays,
   FolderKanban,
@@ -5,6 +6,7 @@ import {
   MessageSquareText,
   Send,
   ShieldCheck,
+  Trash2,
   X,
 } from "lucide-react";
 
@@ -14,6 +16,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -45,14 +48,17 @@ interface FeedbackDetailsDialogProps {
   project: Project | null;
   open: boolean;
   notes: FeedbackNote[];
+  currentUserId: string | undefined;
   isNotesLoading: boolean;
   noteContent: string;
   isSavingNote: boolean;
+  deletingNoteId: string | null;
   isUpdatingStatus: boolean;
   onOpenChange: (open: boolean) => void;
   onNoteContentChange: (content: string) => void;
   onCreateNote: (event: React.FormEvent<HTMLFormElement>) => void;
-  onStatusChange: (status: FeedbackStatus) => void;
+  onDeleteNote: (noteId: string) => Promise<boolean>;
+  onStatusChange: (status: FeedbackStatus) => Promise<boolean>;
 }
 
 function formatDate(value: string, options: Intl.DateTimeFormatOptions) {
@@ -64,16 +70,60 @@ export function FeedbackDetailsDialog({
   project,
   open,
   notes,
+  currentUserId,
   isNotesLoading,
   noteContent,
   isSavingNote,
+  deletingNoteId,
   isUpdatingStatus,
   onOpenChange,
   onNoteContentChange,
   onCreateNote,
+  onDeleteNote,
   onStatusChange,
 }: FeedbackDetailsDialogProps) {
+  const [commentToDelete, setCommentToDelete] = useState<FeedbackNote | null>(null);
+  const [pendingStatus, setPendingStatus] = useState<{
+    feedbackId: string;
+    previous: FeedbackStatus;
+    next: FeedbackStatus;
+  } | null>(null);
+
+  const status = feedback
+    ? pendingStatus?.feedbackId === feedback.id && feedback.status === pendingStatus.previous
+      ? pendingStatus.next
+      : feedback.status
+    : "NEW";
+
+  const handleStatusSelection = async (nextStatus: FeedbackStatus) => {
+    if (!feedback) return;
+
+    const previousStatus = status;
+    setPendingStatus({
+      feedbackId: feedback.id,
+      previous: previousStatus,
+      next: nextStatus,
+    });
+
+    const saved = await onStatusChange(nextStatus);
+
+    if (!saved) {
+      setPendingStatus(null);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!commentToDelete) return;
+
+    const deleted = await onDeleteNote(commentToDelete.id);
+
+    if (deleted) {
+      setCommentToDelete(null);
+    }
+  };
+
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className="flex h-[min(88dvh,760px)] w-[calc(100%-1.5rem)] flex-col overflow-hidden rounded-2xl p-0 sm:max-w-2xl"
@@ -112,9 +162,9 @@ export function FeedbackDetailsDialog({
                 </div>
                 <div className="flex shrink-0 items-center gap-1.5 self-end sm:self-start">
                   <Select
-                    value={feedback.status}
+                    value={status}
                     onValueChange={(value) => {
-                      if (value) onStatusChange(value as FeedbackStatus);
+                      if (value) void handleStatusSelection(value as FeedbackStatus);
                     }}
                     disabled={isUpdatingStatus}
                   >
@@ -123,9 +173,15 @@ export function FeedbackDetailsDialog({
                       className="h-9 min-w-32 bg-muted/30 px-2.5 focus-visible:outline-none focus-visible:ring-2 sm:min-w-36 cursor-pointer"
                     >
                       <SelectValue>
-                        <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[feedback.status]}`}>
-                          {STATUS_LABELS[feedback.status]}
-                        </span>
+                        {(value) => {
+                          const selectedStatus = value as FeedbackStatus;
+
+                          return (
+                            <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[selectedStatus]}`}>
+                              {STATUS_LABELS[selectedStatus]}
+                            </span>
+                          );
+                        }}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -198,21 +254,41 @@ export function FeedbackDetailsDialog({
                 ) : (
                   <div className="relative space-y-4 before:absolute before:bottom-4 before:left-4 before:top-4 before:w-px before:bg-brand/20">
                     {notes.map((note) => (
-                      <article key={note.id} className="relative flex gap-3">
+                      <article key={note.id} className="group relative flex gap-3">
                         <span className="z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand ring-4 ring-background">
                           {note.author.name.trim().charAt(0).toLocaleUpperCase() || "?"}
                         </span>
                         <div className="min-w-0 flex-1 space-y-1.5">
-                          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                             <span className="text-xs font-semibold">{note.author.name}</span>
-                            <time className="text-[11px] tabular-nums text-muted-foreground" dateTime={note.createdAt}>
-                              {formatDate(note.createdAt, {
-                                day: "2-digit",
-                                month: "short",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </time>
+                            <div className="flex items-center gap-1">
+                              <time className="text-[11px] tabular-nums text-muted-foreground" dateTime={note.createdAt}>
+                                {formatDate(note.createdAt, {
+                                  day: "2-digit",
+                                  month: "short",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </time>
+                              {note.author.id === currentUserId && (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label="Excluir comentário"
+                                  title="Excluir comentário"
+                                  disabled={deletingNoteId !== null}
+                                  onClick={() => setCommentToDelete(note)}
+                                  className="size-9 text-muted-foreground hover:cursor-pointer hover:text-destructive sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                                >
+                                  {deletingNoteId === note.id ? (
+                                    <LoaderCircle className="animate-spin" />
+                                  ) : (
+                                    <Trash2 className="size-4" />
+                                  )}
+                                </Button>
+                              )}
+                            </div>
                           </div>
                           <p className="whitespace-pre-wrap rounded-xl bg-card px-3.5 py-3 text-sm leading-6 ring-1 ring-border/70">
                             {note.content}
@@ -257,5 +333,48 @@ export function FeedbackDetailsDialog({
         )}
       </DialogContent>
     </Dialog>
+      <Dialog
+        open={commentToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open && deletingNoteId === null) {
+            setCommentToDelete(null);
+          }
+        }}
+      >
+        <DialogContent className="w-[calc(100%-2rem)] rounded-2xl p-0 sm:max-w-md">
+          <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-12">
+            <DialogTitle className="text-lg font-semibold">Excluir comentário?</DialogTitle>
+            <DialogDescription>
+              Este comentário será removido da conversa e não poderá ser recuperado.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col-reverse gap-2 px-6 py-4 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={deletingNoteId !== null}
+              onClick={() => setCommentToDelete(null)}
+              className="hover:cursor-pointer"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deletingNoteId !== null}
+              onClick={() => void handleConfirmDelete()}
+              className="hover:cursor-pointer"
+            >
+              {deletingNoteId === commentToDelete?.id ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <Trash2 />
+              )}
+              Excluir comentário
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

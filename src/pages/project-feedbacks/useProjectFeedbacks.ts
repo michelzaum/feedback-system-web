@@ -7,7 +7,7 @@ import { move } from "@dnd-kit/helpers";
 import type { DragEndEvent, DragOverEvent } from "@dnd-kit/react";
 
 import { useAuthStore } from "@/store/auth";
-import { createFeedbackNote, getFeedbackNotes, getFeedbacks, updateFeedback } from "@/api/feedback";
+import { createFeedbackNote, deleteFeedbackNote, getFeedbackNotes, getFeedbacks, updateFeedback } from "@/api/feedback";
 import type { Feedback, FeedbackNote, FeedbackStatus } from "@/api/feedback/types";
 
 export type FeedbackColumns = Record<FeedbackStatus, Feedback[]>;
@@ -34,6 +34,7 @@ export function useProjectFeedbacks() {
   const selectedOrganization = useAuthStore(
     (state) => state.selectedOrganization,
   );
+  const currentUserId = useAuthStore((state) => state.user?.id);
   const organizationsWithProjects = useAuthStore(
     (state) => state.organizationsWithProjects,
   );
@@ -54,6 +55,7 @@ export function useProjectFeedbacks() {
   const [isNotesLoading, setIsNotesLoading] = useState(false);
   const [noteContent, setNoteContent] = useState("");
   const [isSavingNote, setIsSavingNote] = useState(false);
+  const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const columnsRef = useRef<FeedbackColumns>(EMPTY_COLUMNS);
@@ -219,31 +221,51 @@ export function useProjectFeedbacks() {
     }
   };
 
-  const handleStatusChange = async (status: FeedbackStatus) => {
+  const handleStatusChange = async (status: FeedbackStatus): Promise<boolean> => {
     if (!selectedFeedback || !selectedOrganization || !project || status === selectedFeedback.status) {
-      return;
+      return status === selectedFeedback?.status;
     }
 
+    const previousFeedback = selectedFeedback;
+    const previousColumns = columnsRef.current;
+    const optimisticFeedback = { ...selectedFeedback, status };
+    const optimisticColumns = { ...previousColumns };
+
+    for (const columnStatus of Object.keys(optimisticColumns) as FeedbackStatus[]) {
+      optimisticColumns[columnStatus] = optimisticColumns[columnStatus].filter(
+        (feedback) => feedback.id !== selectedFeedback.id,
+      );
+    }
+
+    optimisticColumns[status] = [optimisticFeedback, ...optimisticColumns[status]];
+    applyColumns(optimisticColumns);
+    setSelectedFeedback(optimisticFeedback);
     setIsUpdatingStatus(true);
 
     try {
-      await updateFeedback(selectedOrganization.id, project.id, selectedFeedback.id, { status });
+      const savedFeedback = await updateFeedback(
+        selectedOrganization.id,
+        project.id,
+        selectedFeedback.id,
+        { status },
+      );
+      const confirmedFeedback = { ...optimisticFeedback, ...savedFeedback };
+      const confirmedColumns = { ...columnsRef.current };
 
-      const nextColumns = { ...columnsRef.current };
-      const updatedFeedback = { ...selectedFeedback, status };
+      confirmedColumns[status] = confirmedColumns[status].map((feedback) =>
+        feedback.id === confirmedFeedback.id ? confirmedFeedback : feedback,
+      );
 
-      for (const columnStatus of Object.keys(nextColumns) as FeedbackStatus[]) {
-        nextColumns[columnStatus] = nextColumns[columnStatus].filter(
-          (feedback) => feedback.id !== selectedFeedback.id,
-        );
-      }
-
-      nextColumns[status] = [updatedFeedback, ...nextColumns[status]];
-      applyColumns(nextColumns);
-      setSelectedFeedback(updatedFeedback);
+      applyColumns(confirmedColumns);
+      setSelectedFeedback(confirmedFeedback);
+      return true;
     } catch (error) {
       toast.error("Erro ao atualizar status");
       console.log(error);
+
+      applyColumns(previousColumns);
+      setSelectedFeedback(previousFeedback);
+      return false;
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -278,6 +300,32 @@ export function useProjectFeedbacks() {
     }
   };
 
+  const handleDeleteNote = async (noteId: string): Promise<boolean> => {
+    if (!selectedFeedback || !selectedOrganization || !project || !currentUserId) {
+      return false;
+    }
+
+    setDeletingNoteId(noteId);
+
+    try {
+      await deleteFeedbackNote(
+        selectedOrganization.id,
+        project.id,
+        selectedFeedback.id,
+        noteId,
+      );
+
+      setFeedbackNotes((currentNotes) => currentNotes.filter((note) => note.id !== noteId));
+      return true;
+    } catch (error) {
+      toast.error("Erro ao excluir comentário");
+      console.log(error);
+      return false;
+    } finally {
+      setDeletingNoteId(null);
+    }
+  };
+
   const feedbackCount =
     columns.NEW.length + columns.IN_PROGRESS.length + columns.COMPLETED.length;
 
@@ -293,14 +341,17 @@ export function useProjectFeedbacks() {
     selectedFeedback,
     isDetailsOpen,
     feedbackNotes,
+    currentUserId,
     isNotesLoading,
     noteContent,
     isSavingNote,
+    deletingNoteId,
     isUpdatingStatus,
     handleOpenDetails,
     handleDetailsOpenChange,
     handleStatusChange,
     handleCreateNote,
+    handleDeleteNote,
     setNoteContent,
   };
 }

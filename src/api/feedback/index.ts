@@ -58,3 +58,14 @@ export async function createFeedbackNote(
   );
   return data;
 }
+
+export async function deleteFeedbackNote(
+  organizationId: string,
+  projectId: string,
+  feedbackId: string,
+  noteId: string,
+): Promise<void> {
+  await api.delete(
+    `/organizations/${organizationId}/projects/${projectId}/feedbacks/${feedbackId}/notes/${noteId}`,
+  );
+}

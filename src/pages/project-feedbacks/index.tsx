@@ -58,14 +58,17 @@ export function ProjectFeedbacks() {
     selectedFeedback,
     isDetailsOpen,
     feedbackNotes,
+    currentUserId,
     isNotesLoading,
     noteContent,
     isSavingNote,
+    deletingNoteId,
     isUpdatingStatus,
     handleOpenDetails,
     handleDetailsOpenChange,
     handleStatusChange,
     handleCreateNote,
+    handleDeleteNote,
     setNoteContent,
   } = useProjectFeedbacks();
 
@@ -166,13 +169,16 @@ export function ProjectFeedbacks() {
         project={project}
         open={isDetailsOpen}
         notes={feedbackNotes}
+        currentUserId={currentUserId}
         isNotesLoading={isNotesLoading}
         noteContent={noteContent}
         isSavingNote={isSavingNote}
+        deletingNoteId={deletingNoteId}
         isUpdatingStatus={isUpdatingStatus}
         onOpenChange={handleDetailsOpenChange}
         onNoteContentChange={setNoteContent}
         onCreateNote={handleCreateNote}
+        onDeleteNote={handleDeleteNote}
         onStatusChange={handleStatusChange}
       />
     </div>
