@@ -120,7 +120,7 @@ export function FeedbackDetailsDialog({
                   >
                     <SelectTrigger
                       aria-label="Status do feedback"
-                      className="h-9 min-w-32 bg-muted/30 px-2.5 focus-visible:outline-none focus-visible:ring-2 sm:min-w-36"
+                      className="h-9 min-w-32 bg-muted/30 px-2.5 focus-visible:outline-none focus-visible:ring-2 sm:min-w-36 cursor-pointer"
                     >
                       <SelectValue>
                         <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[feedback.status]}`}>
