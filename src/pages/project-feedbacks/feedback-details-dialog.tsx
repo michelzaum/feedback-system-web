@@ -134,31 +134,9 @@ export function FeedbackDetailsDialog({
             <DialogHeader className="shrink-0 border-b bg-card px-5 pb-5 pt-5 sm:px-7 sm:pt-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1 space-y-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                      <MessageSquareText className="size-3.5 text-brand" />
-                      Detalhes do feedback
-                    </span>
-                  </div>
                   <DialogTitle className="max-w-xl text-balance text-2xl font-semibold leading-tight tracking-[-0.035em]">
                     {feedback.title}
                   </DialogTitle>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-                    <span className="inline-flex min-w-0 items-center gap-1.5">
-                      <FolderKanban className="size-3.5 shrink-0" />
-                      <span className="truncate">{project?.name ?? "Projeto"}</span>
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 tabular-nums">
-                      <CalendarDays className="size-3.5 shrink-0" />
-                      {formatDate(feedback.createdAt, {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-1.5 self-end sm:self-start">
                   <Select
@@ -204,16 +182,31 @@ export function FeedbackDetailsDialog({
               </div>
             </DialogHeader>
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+            <div className="min-h-0 flex-1 flex flex-col gap-4 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
               <section className="space-y-3">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   Descrição
                 </h3>
-                <DialogDescription className="whitespace-pre-wrap rounded-xl border-l-2 bg-muted/25 px-4 py-3.5 text-sm leading-6 text-foreground/85">
+                <DialogDescription className="whitespace-pre-wrap rounded-xl border bg-muted/25 px-4 py-3.5 text-sm leading-6 text-foreground/85">
                   {feedback.description}
                 </DialogDescription>
               </section>
-
+              <section>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+                  <span className="inline-flex min-w-0 items-center gap-1.5">
+                    <FolderKanban className="size-3.5 shrink-0" />
+                    <span className="truncate">{project?.name ?? "Projeto"}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 tabular-nums">
+                    <CalendarDays className="size-3.5 shrink-0" />
+                    {formatDate(feedback.createdAt, {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+              </section>
               <section className="mt-7 space-y-4">
                 <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
                   <div className="flex items-center gap-2.5">
@@ -221,8 +214,7 @@ export function FeedbackDetailsDialog({
                       <MessageSquareText className="size-4" />
                     </span>
                     <div>
-                      <h3 className="text-sm font-semibold">Comentários internos</h3>
-                      <p className="text-xs text-muted-foreground">Compartilhadas com a equipe</p>
+                      <h3 className="text-sm font-semibold">Comentários da equipe</h3>
                     </div>
                   </div>
                   <Badge variant="secondary" className="min-w-7 justify-center tabular-nums">
