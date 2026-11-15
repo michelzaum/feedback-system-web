@@ -133,12 +133,22 @@ export function FeedbackDetailsDialog({
           <>
             <DialogHeader className="shrink-0 border-b bg-card px-5 pb-5 pt-5 sm:px-7 sm:pt-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0 flex-1 space-y-3">
-                  <DialogTitle className="max-w-xl text-balance text-2xl font-semibold leading-tight tracking-[-0.035em]">
+                <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
+                  <DialogTitle className="max-w-xl flex-1 text-balance text-2xl font-semibold leading-tight tracking-[-0.035em]">
                     {feedback.title}
                   </DialogTitle>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Fechar detalhes"
+                    onClick={() => onOpenChange(false)}
+                    className="size-10 shrink-0 hover:cursor-pointer sm:hidden"
+                  >
+                    <X className="size-4" />
+                  </Button>
                 </div>
-                <div className="flex shrink-0 items-center gap-1.5 self-end sm:self-start">
+                <div className="flex shrink-0 justify-start items-center gap-1.5 sm:self-end">
                   <Select
                     value={status}
                     onValueChange={(value) => {
@@ -174,7 +184,7 @@ export function FeedbackDetailsDialog({
                     size="icon"
                     aria-label="Fechar detalhes"
                     onClick={() => onOpenChange(false)}
-                    className="size-10 shrink-0 hover:cursor-pointer"
+                    className="hidden size-10 shrink-0 hover:cursor-pointer sm:inline-flex"
                   >
                     <X className="size-4" />
                   </Button>
@@ -182,7 +192,7 @@ export function FeedbackDetailsDialog({
               </div>
             </DialogHeader>
 
-            <div className="min-h-0 flex-1 flex flex-col gap-4 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+            <div className="min-h-0 flex-1 flex flex-col gap-6 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
               <section className="space-y-3">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   Descrição
@@ -192,19 +202,29 @@ export function FeedbackDetailsDialog({
                 </DialogDescription>
               </section>
               <section>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-                  <span className="inline-flex min-w-0 items-center gap-1.5">
-                    <FolderKanban className="size-3.5 shrink-0" />
-                    <span className="truncate">{project?.name ?? "Projeto"}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 tabular-nums">
-                    <CalendarDays className="size-3.5 shrink-0" />
-                    {formatDate(feedback.createdAt, {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </span>
+                <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-4 text-xs text-muted-foreground">
+                  <div className="flex flex-col min-w-0 items-start gap-1.5">
+                    <div className="flex justify-start items-start gap-1.5">
+                      <FolderKanban className="size-3.5 shrink-0" />
+                      <span>Projeto</span>
+                    </div>
+                    <span className="truncate text-md font-semibold">{project?.name ?? "Projeto"}</span>
+                  </div>
+                  <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 text-xs text-muted-foreground">
+                    <div className="flex flex-col min-w-0 items-start gap-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <CalendarDays className="size-3.5 shrink-0" />
+                        <span>Criado em</span>
+                      </div>
+                      <span className="truncate text-md font-semibold">
+                        {formatDate(feedback.createdAt, {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </section>
               <section className="mt-7 space-y-4">
