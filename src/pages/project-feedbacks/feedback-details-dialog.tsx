@@ -7,6 +7,7 @@ import {
   Send,
   ShieldCheck,
   Trash2,
+  UserRound,
   X,
 } from "lucide-react";
 
@@ -29,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Feedback, FeedbackNote, FeedbackStatus } from "@/api/feedback/types";
+import type { OrganizationMember } from "@/api/members/types";
 import type { Project } from "@/api/projects/types";
 
 const STATUS_LABELS: Record<FeedbackStatus, string> = {
@@ -54,11 +56,14 @@ interface FeedbackDetailsDialogProps {
   isSavingNote: boolean;
   deletingNoteId: string | null;
   isUpdatingStatus: boolean;
+  members: OrganizationMember[];
+  isUpdatingAssignee: boolean;
   onOpenChange: (open: boolean) => void;
   onNoteContentChange: (content: string) => void;
   onCreateNote: (event: React.FormEvent<HTMLFormElement>) => void;
   onDeleteNote: (noteId: string) => Promise<boolean>;
   onStatusChange: (status: FeedbackStatus) => Promise<boolean>;
+  onAssigneeChange: (assigneeId: string | null) => Promise<boolean>;
 }
 
 function formatDate(value: string, options: Intl.DateTimeFormatOptions) {
@@ -76,11 +81,14 @@ export function FeedbackDetailsDialog({
   isSavingNote,
   deletingNoteId,
   isUpdatingStatus,
+  members,
+  isUpdatingAssignee,
   onOpenChange,
   onNoteContentChange,
   onCreateNote,
   onDeleteNote,
   onStatusChange,
+  onAssigneeChange,
 }: FeedbackDetailsDialogProps) {
   const [commentToDelete, setCommentToDelete] = useState<FeedbackNote | null>(null);
   const [pendingStatus, setPendingStatus] = useState<{
@@ -226,6 +234,36 @@ export function FeedbackDetailsDialog({
                     </div>
                   </div>
                 </div>
+              </section>
+              <section className="max-w-sm space-y-2">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <UserRound className="size-3.5" />
+                  <span>Responsável</span>
+                </div>
+                <Select
+                  value={feedback.assigneeId ?? "unassigned"}
+                  onValueChange={(value) => {
+                    const selectedAssigneeId = value as string | null;
+                    if (selectedAssigneeId) {
+                      void onAssigneeChange(selectedAssigneeId === "unassigned" ? null : selectedAssigneeId);
+                    }
+                  }}
+                  disabled={isUpdatingAssignee}
+                >
+                  <SelectTrigger aria-label="Responsável pelo feedback" className="w-full bg-muted/30">
+                    <SelectValue>
+                      {(value) => value === "unassigned"
+                        ? "Sem responsável"
+                        : members.find((member) => member.id === value)?.name ?? feedback.assignee?.name ?? "Selecione um membro"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="unassigned">Sem responsável</SelectItem>
+                    {members.map((member) => (
+                      <SelectItem key={member.id} value={member.id}>{member.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </section>
               <section className="mt-7 space-y-4">
                 <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">

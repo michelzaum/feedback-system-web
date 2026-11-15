@@ -64,9 +64,12 @@ export function ProjectFeedbacks() {
     isSavingNote,
     deletingNoteId,
     isUpdatingStatus,
+    members,
+    isUpdatingAssignee,
     handleOpenDetails,
     handleDetailsOpenChange,
     handleStatusChange,
+    handleAssigneeChange,
     handleCreateNote,
     handleDeleteNote,
     setNoteContent,
@@ -175,11 +178,14 @@ export function ProjectFeedbacks() {
         isSavingNote={isSavingNote}
         deletingNoteId={deletingNoteId}
         isUpdatingStatus={isUpdatingStatus}
+        members={members}
+        isUpdatingAssignee={isUpdatingAssignee}
         onOpenChange={handleDetailsOpenChange}
         onNoteContentChange={setNoteContent}
         onCreateNote={handleCreateNote}
         onDeleteNote={handleDeleteNote}
         onStatusChange={handleStatusChange}
+        onAssigneeChange={handleAssigneeChange}
       />
     </div>
   );

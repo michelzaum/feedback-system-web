@@ -7,6 +7,7 @@ export interface CreateFeedbackPayload {
 
 export interface UpdateFeedbackPayload {
   status: FeedbackStatus;
+  assigneeId?: string | null;
 }
 
 export interface Feedback {
@@ -17,6 +18,8 @@ export interface Feedback {
   createdAt: string;
   updatedAt: string;
   status: FeedbackStatus;
+  assigneeId: string | null;
+  assignee: { id: string; name: string } | null;
 }
 
 export interface FeedbackNote {

@@ -8,6 +8,8 @@ import type { DragEndEvent, DragOverEvent } from "@dnd-kit/react";
 
 import { useAuthStore } from "@/store/auth";
 import { createFeedbackNote, deleteFeedbackNote, getFeedbackNotes, getFeedbacks, updateFeedback } from "@/api/feedback";
+import { getOrganizationMembers } from "@/api/members";
+import type { OrganizationMember } from "@/api/members/types";
 import type { Feedback, FeedbackNote, FeedbackStatus } from "@/api/feedback/types";
 
 export type FeedbackColumns = Record<FeedbackStatus, Feedback[]>;
@@ -57,6 +59,8 @@ export function useProjectFeedbacks() {
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [members, setMembers] = useState<OrganizationMember[]>([]);
+  const [isUpdatingAssignee, setIsUpdatingAssignee] = useState(false);
 
   const columnsRef = useRef<FeedbackColumns>(EMPTY_COLUMNS);
   const snapshotRef = useRef<FeedbackColumns>(EMPTY_COLUMNS);
@@ -68,6 +72,30 @@ export function useProjectFeedbacks() {
 
   const isLoading =
     isFetching && Boolean(selectedOrganization) && Boolean(project);
+
+  useEffect(() => {
+    if (!selectedOrganization) {
+      setMembers([]);
+      return;
+    }
+
+    let isCancelled = false;
+
+    getOrganizationMembers(selectedOrganization.id)
+      .then((organizationMembers) => {
+        if (!isCancelled) setMembers(organizationMembers);
+      })
+      .catch((error) => {
+        if (!isCancelled) {
+          toast.error("Erro ao carregar membros da organização");
+          console.log(error);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [selectedOrganization]);
 
   useEffect(() => {
     if (!selectedOrganization || !project) {
@@ -271,6 +299,50 @@ export function useProjectFeedbacks() {
     }
   };
 
+  const handleAssigneeChange = async (assigneeId: string | null): Promise<boolean> => {
+    if (!selectedFeedback || !selectedOrganization || !project || assigneeId === selectedFeedback.assigneeId) {
+      return assigneeId === selectedFeedback?.assigneeId;
+    }
+
+    const previousFeedback = selectedFeedback;
+    const selectedMember = members.find((member) => member.id === assigneeId);
+    const optimisticFeedback = {
+      ...selectedFeedback,
+      assigneeId,
+      assignee: selectedMember ? { id: selectedMember.id, name: selectedMember.name } : null,
+    };
+    setSelectedFeedback(optimisticFeedback);
+    setIsUpdatingAssignee(true);
+
+    try {
+      const savedFeedback = await updateFeedback(
+        selectedOrganization.id,
+        project.id,
+        selectedFeedback.id,
+        { status: selectedFeedback.status, assigneeId },
+      );
+      const confirmedFeedback = { ...optimisticFeedback, ...savedFeedback };
+      const nextColumns = { ...columnsRef.current };
+
+      for (const status of Object.keys(nextColumns) as FeedbackStatus[]) {
+        nextColumns[status] = nextColumns[status].map((feedback) =>
+          feedback.id === confirmedFeedback.id ? confirmedFeedback : feedback,
+        );
+      }
+
+      applyColumns(nextColumns);
+      setSelectedFeedback(confirmedFeedback);
+      return true;
+    } catch (error) {
+      toast.error("Erro ao atualizar responsável");
+      console.log(error);
+      setSelectedFeedback(previousFeedback);
+      return false;
+    } finally {
+      setIsUpdatingAssignee(false);
+    }
+  };
+
   const handleCreateNote = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -347,9 +419,12 @@ export function useProjectFeedbacks() {
     isSavingNote,
     deletingNoteId,
     isUpdatingStatus,
+    members,
+    isUpdatingAssignee,
     handleOpenDetails,
     handleDetailsOpenChange,
     handleStatusChange,
+    handleAssigneeChange,
     handleCreateNote,
     handleDeleteNote,
     setNoteContent,
