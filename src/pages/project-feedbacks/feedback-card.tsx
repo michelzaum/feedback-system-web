@@ -3,7 +3,6 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { cn } from "cn";
 
 import {
-  Card,
   CardContent,
   CardFooter,
   CardHeader,
@@ -15,9 +14,10 @@ interface FeedbackCardProps {
   feedback: Feedback;
   status: FeedbackStatus;
   index: number;
+  onOpen: (feedback: Feedback) => void;
 }
 
-export function FeedbackCard({ feedback, status, index }: FeedbackCardProps) {
+export function FeedbackCard({ feedback, status, index, onOpen }: FeedbackCardProps) {
   const { ref, isDragging } = useSortable({
     id: feedback.id,
     index,
@@ -26,11 +26,24 @@ export function FeedbackCard({ feedback, status, index }: FeedbackCardProps) {
     group: status,
   });
 
+  const handleOpen = () => onOpen(feedback);
+  const handleKeyDownCapture = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== "Enter") return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    handleOpen();
+  };
+
   return (
-    <Card
+    <button
       ref={ref}
+      type="button"
+      onClick={handleOpen}
+      onKeyDownCapture={handleKeyDownCapture}
+      aria-label={`Abrir detalhes de ${feedback.title}. Arraste para mudar de status.`}
       className={cn(
-        "cursor-grab gap-2 rounded-lg border-border/70 py-3 shadow-sm transition-all select-none hover:border-primary/40 hover:shadow-md active:cursor-grabbing",
+        "group/card relative flex w-full cursor-grab flex-col gap-2 overflow-hidden rounded-lg bg-card py-3 text-left text-sm text-card-foreground ring-1 ring-foreground/10 shadow-sm transition-all select-none hover:cursor-pointer hover:ring-primary/30 hover:shadow-md active:cursor-grabbing [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0",
         isDragging && "border-primary/50 shadow-lg ring-2 ring-primary/40"
       )}
     >
@@ -51,6 +64,6 @@ export function FeedbackCard({ feedback, status, index }: FeedbackCardProps) {
         </span>
         <GripVertical className="size-4 text-muted-foreground/50" />
       </CardFooter>
-    </Card>
+    </button>
   );
 }

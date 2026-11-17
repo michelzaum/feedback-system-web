@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 
 import { FeedbackBoard } from "./board";
+import { FeedbackDetailsDialog } from "./feedback-details-dialog";
 import { useProjectFeedbacks } from "./useProjectFeedbacks";
 
 function BoardSkeleton() {
@@ -54,6 +55,24 @@ export function ProjectFeedbacks() {
     handleDragOver,
     handleDragEnd,
     handleBack,
+    selectedFeedback,
+    isDetailsOpen,
+    feedbackNotes,
+    currentUserId,
+    isNotesLoading,
+    noteContent,
+    isSavingNote,
+    deletingNoteId,
+    isUpdatingStatus,
+    members,
+    isUpdatingAssignee,
+    handleOpenDetails,
+    handleDetailsOpenChange,
+    handleStatusChange,
+    handleAssigneeChange,
+    handleCreateNote,
+    handleDeleteNote,
+    setNoteContent,
   } = useProjectFeedbacks();
 
   if (!isLoading && !project) {
@@ -143,9 +162,31 @@ export function ProjectFeedbacks() {
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
+            onOpenFeedback={handleOpenDetails}
           />
         )}
       </div>
+
+      <FeedbackDetailsDialog
+        feedback={selectedFeedback}
+        project={project}
+        open={isDetailsOpen}
+        notes={feedbackNotes}
+        currentUserId={currentUserId}
+        isNotesLoading={isNotesLoading}
+        noteContent={noteContent}
+        isSavingNote={isSavingNote}
+        deletingNoteId={deletingNoteId}
+        isUpdatingStatus={isUpdatingStatus}
+        members={members}
+        isUpdatingAssignee={isUpdatingAssignee}
+        onOpenChange={handleDetailsOpenChange}
+        onNoteContentChange={setNoteContent}
+        onCreateNote={handleCreateNote}
+        onDeleteNote={handleDeleteNote}
+        onStatusChange={handleStatusChange}
+        onAssigneeChange={handleAssigneeChange}
+      />
     </div>
   );
 }

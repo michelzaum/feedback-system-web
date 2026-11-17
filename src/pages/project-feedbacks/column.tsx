@@ -12,6 +12,7 @@ interface FeedbackColumnProps {
   icon: React.ReactNode;
   accent: string;
   feedbacks: Feedback[];
+  onOpenFeedback: (feedback: Feedback) => void;
 }
 
 export function FeedbackColumn({
@@ -20,6 +21,7 @@ export function FeedbackColumn({
   icon,
   accent,
   feedbacks,
+  onOpenFeedback,
 }: FeedbackColumnProps) {
   const { ref, isDropTarget } = useDroppable({
     id: status,
@@ -59,6 +61,7 @@ export function FeedbackColumn({
             feedback={feedback}
             status={status}
             index={index}
+            onOpen={onOpenFeedback}
           />
         ))}
 
