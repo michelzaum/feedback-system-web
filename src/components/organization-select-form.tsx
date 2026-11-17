@@ -79,7 +79,7 @@ export function OrganizationSelectForm({
                 </Select>
               </Field>
               <Field className="gap-2">
-                <Button type="submit" size="lg" className="mt-2 w-full gap-2 hover:cursor-pointer" disabled={isLoading || !selectedOrgId}>
+                <Button type="submit" size="lg" className="mt-2 w-full gap-2 bg-brand text-brand-foreground hover:cursor-pointer hover:bg-brand/85" disabled={isLoading || !selectedOrgId}>
                   {isLoading ? "Aguarde..." : "Continuar"}
                   {!isLoading && <ArrowRight className="size-4" />}
                 </Button>
