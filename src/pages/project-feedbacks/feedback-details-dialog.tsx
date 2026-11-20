@@ -23,13 +23,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Feedback, FeedbackNote, FeedbackStatus } from "@/api/feedback/types";
 import type { OrganizationMember } from "@/api/members/types";
@@ -93,6 +86,7 @@ export function FeedbackDetailsDialog({
   onAssigneeChange,
 }: FeedbackDetailsDialogProps) {
   const [commentToDelete, setCommentToDelete] = useState<FeedbackNote | null>(null);
+  const [isStatusListOpen, setIsStatusListOpen] = useState(false);
   const [isAssigneeListOpen, setIsAssigneeListOpen] = useState(false);
   const [assigneeQuery, setAssigneeQuery] = useState("");
   const [pendingStatus, setPendingStatus] = useState<{
@@ -119,7 +113,9 @@ export function FeedbackDetailsDialog({
 
     const saved = await onStatusChange(nextStatus);
 
-    if (!saved) {
+    if (saved) {
+      setIsStatusListOpen(false);
+    } else {
       setPendingStatus(null);
     }
   };
@@ -174,35 +170,52 @@ export function FeedbackDetailsDialog({
                   </Button>
                 </div>
                 <div className="flex shrink-0 justify-start items-center gap-1.5 sm:self-end">
-                  <Select
-                    value={status}
-                    onValueChange={(value) => {
-                      if (value) void handleStatusSelection(value as FeedbackStatus);
+                  <div
+                    className="relative"
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget)) {
+                        setIsStatusListOpen(false);
+                      }
                     }}
-                    disabled={isUpdatingStatus}
                   >
-                    <SelectTrigger
-                      aria-label="Status do feedback"
-                      className="h-9 min-w-32 bg-muted/30 px-2.5 focus-visible:outline-none focus-visible:ring-2 sm:min-w-36 cursor-pointer"
+                    <button
+                      type="button"
+                      aria-label={`Alterar status: ${STATUS_LABELS[status]}`}
+                      aria-haspopup="listbox"
+                      aria-expanded={isStatusListOpen}
+                      onClick={() => setIsStatusListOpen((isOpen) => !isOpen)}
+                      disabled={isUpdatingStatus}
+                      className="flex h-10 items-center gap-2 rounded-lg border border-transparent px-2.5 transition hover:cursor-pointer hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <SelectValue>
-                        {(value) => {
-                          const selectedStatus = value as FeedbackStatus;
-
-                          return (
-                            <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[selectedStatus]}`}>
-                              {STATUS_LABELS[selectedStatus]}
+                      <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[status]}`}>
+                        {STATUS_LABELS[status]}
+                      </span>
+                      <ChevronDown className="size-4 text-muted-foreground" />
+                    </button>
+                    {isStatusListOpen && (
+                      <div
+                        role="listbox"
+                        aria-label="Status do feedback"
+                        className="absolute right-0 z-20 mt-1 min-w-40 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg"
+                      >
+                        {(Object.keys(STATUS_LABELS) as FeedbackStatus[]).map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            role="option"
+                            aria-selected={status === option}
+                            disabled={isUpdatingStatus}
+                            onClick={() => void handleStatusSelection(option)}
+                            className="flex w-full items-center rounded-md px-2 py-2 text-left hover:cursor-pointer hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[option]}`}>
+                              {STATUS_LABELS[option]}
                             </span>
-                          );
-                        }}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NEW">Novo</SelectItem>
-                      <SelectItem value="IN_PROGRESS">Em progresso</SelectItem>
-                      <SelectItem value="COMPLETED">Concluído</SelectItem>
-                    </SelectContent>
-                  </Select>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <Button
                     type="button"
                     variant="ghost"
