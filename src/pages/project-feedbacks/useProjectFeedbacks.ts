@@ -216,15 +216,42 @@ export function useProjectFeedbacks() {
     if (!initialStatus || !newStatus || initialStatus === newStatus) return;
     if (!selectedOrganization || !project) return;
 
+    const previousSelectedFeedback =
+      selectedFeedback?.id === feedbackId ? selectedFeedback : null;
+
+    if (previousSelectedFeedback) {
+      setSelectedFeedback({ ...previousSelectedFeedback, status: newStatus });
+    }
+
     try {
-      await updateFeedback(selectedOrganization.id, project.id, feedbackId, {
-        status: newStatus,
-      });
+      const savedFeedback = await updateFeedback(
+        selectedOrganization.id,
+        project.id,
+        feedbackId,
+        { status: newStatus },
+      );
+      const confirmedColumns = { ...columnsRef.current };
+
+      for (const status of Object.keys(confirmedColumns) as FeedbackStatus[]) {
+        confirmedColumns[status] = confirmedColumns[status].map((feedback) =>
+          feedback.id === feedbackId ? { ...feedback, ...savedFeedback } : feedback,
+        );
+      }
+
+      applyColumns(confirmedColumns);
+
+      if (previousSelectedFeedback) {
+        setSelectedFeedback({ ...previousSelectedFeedback, ...savedFeedback });
+      }
     } catch (error) {
       toast.error("Erro ao atualizar status");
       console.log(error);
 
       applyColumns(snapshotRef.current);
+
+      if (previousSelectedFeedback) {
+        setSelectedFeedback(previousSelectedFeedback);
+      }
     }
   };
 
