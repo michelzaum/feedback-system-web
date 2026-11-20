@@ -1,4 +1,4 @@
-import { CalendarDays, GripVertical, UserRound } from "lucide-react";
+import { CalendarDays, UserRound } from "lucide-react";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { cn } from "cn";
 
