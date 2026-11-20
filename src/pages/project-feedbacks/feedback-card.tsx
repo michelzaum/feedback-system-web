@@ -58,10 +58,6 @@ export function FeedbackCard({ feedback, status, index, onOpen }: FeedbackCardPr
         </p>
       </CardContent>
       <CardFooter className="justify-between px-4 py-2.5">
-        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <CalendarDays className="size-3.5" />
-          {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
-        </span>
         <span className="flex min-w-0 items-center gap-2">
           {feedback.assignee && (
             <span
@@ -72,6 +68,10 @@ export function FeedbackCard({ feedback, status, index, onOpen }: FeedbackCardPr
               <span className="truncate">{feedback.assignee.name}</span>
             </span>
           )}
+        </span>
+        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <CalendarDays className="size-3.5" />
+          {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
         </span>
       </CardFooter>
     </button>
