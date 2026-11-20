@@ -4,7 +4,6 @@ import {
   ChevronDown,
   FolderKanban,
   LoaderCircle,
-  MessageSquareText,
   Search,
   Send,
   ShieldCheck,
@@ -240,14 +239,7 @@ export function FeedbackDetailsDialog({
                 </DialogDescription>
               </section>
               <section>
-                <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-4 text-xs text-muted-foreground">
-                  <div className="flex flex-col min-w-0 items-start gap-1.5">
-                    <div className="flex justify-start items-start gap-1.5">
-                      <FolderKanban className="size-3.5 shrink-0" />
-                      <span>Projeto</span>
-                    </div>
-                    <span className="truncate text-md font-semibold">{project?.name ?? "Projeto"}</span>
-                  </div>
+                <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-4 text-xs text-muted-foreground md:flex-row md:gap-32 md:py-4">
                   <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 text-xs text-muted-foreground">
                     <div className="flex flex-col min-w-0 items-start gap-1.5">
                       <div className="flex items-center gap-1.5">
@@ -262,7 +254,14 @@ export function FeedbackDetailsDialog({
                         })}
                       </span>
                     </div>
-                  </div>
+                    </div>
+                    <div className="flex flex-col min-w-0 items-start gap-1.5">
+                      <div className="flex justify-start items-start gap-1.5">
+                        <FolderKanban className="size-3.5 shrink-0" />
+                        <span>Projeto</span>
+                      </div>
+                      <span className="truncate text-md font-semibold">{project?.name ?? "Projeto"}</span>
+                    </div>
                 </div>
               </section>
               <section
@@ -361,14 +360,7 @@ export function FeedbackDetailsDialog({
               </section>
               <section className="mt-7 space-y-4">
                 <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                      <MessageSquareText className="size-4" />
-                    </span>
-                    <div>
-                      <h3 className="text-sm font-semibold">Comentários da equipe</h3>
-                    </div>
-                  </div>
+                  <h3 className="text-sm md:text-lg">Comentários da equipe</h3>
                   <Badge variant="secondary" className="min-w-7 justify-center tabular-nums">
                     {notes.length}
                   </Badge>
