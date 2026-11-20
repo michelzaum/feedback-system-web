@@ -1,9 +1,10 @@
 import { useState } from "react";
 import {
   CalendarDays,
+  ChevronDown,
   FolderKanban,
   LoaderCircle,
-  MessageSquareText,
+  Search,
   Send,
   ShieldCheck,
   Trash2,
@@ -21,13 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Feedback, FeedbackNote, FeedbackStatus } from "@/api/feedback/types";
 import type { OrganizationMember } from "@/api/members/types";
@@ -91,6 +85,9 @@ export function FeedbackDetailsDialog({
   onAssigneeChange,
 }: FeedbackDetailsDialogProps) {
   const [commentToDelete, setCommentToDelete] = useState<FeedbackNote | null>(null);
+  const [isStatusListOpen, setIsStatusListOpen] = useState(false);
+  const [isAssigneeListOpen, setIsAssigneeListOpen] = useState(false);
+  const [assigneeQuery, setAssigneeQuery] = useState("");
   const [pendingStatus, setPendingStatus] = useState<{
     feedbackId: string;
     previous: FeedbackStatus;
@@ -115,7 +112,9 @@ export function FeedbackDetailsDialog({
 
     const saved = await onStatusChange(nextStatus);
 
-    if (!saved) {
+    if (saved) {
+      setIsStatusListOpen(false);
+    } else {
       setPendingStatus(null);
     }
   };
@@ -127,6 +126,19 @@ export function FeedbackDetailsDialog({
 
     if (deleted) {
       setCommentToDelete(null);
+    }
+  };
+
+  const filteredMembers = members.filter((member) =>
+    member.name.toLocaleLowerCase("pt-BR").includes(assigneeQuery.trim().toLocaleLowerCase("pt-BR")),
+  );
+
+  const selectAssignee = async (assigneeId: string | null) => {
+    const saved = await onAssigneeChange(assigneeId);
+
+    if (saved) {
+      setAssigneeQuery("");
+      setIsAssigneeListOpen(false);
     }
   };
 
@@ -157,35 +169,52 @@ export function FeedbackDetailsDialog({
                   </Button>
                 </div>
                 <div className="flex shrink-0 justify-start items-center gap-1.5 sm:self-end">
-                  <Select
-                    value={status}
-                    onValueChange={(value) => {
-                      if (value) void handleStatusSelection(value as FeedbackStatus);
+                  <div
+                    className="relative"
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget)) {
+                        setIsStatusListOpen(false);
+                      }
                     }}
-                    disabled={isUpdatingStatus}
                   >
-                    <SelectTrigger
-                      aria-label="Status do feedback"
-                      className="h-9 min-w-32 bg-muted/30 px-2.5 focus-visible:outline-none focus-visible:ring-2 sm:min-w-36 cursor-pointer"
+                    <button
+                      type="button"
+                      aria-label={`Alterar status: ${STATUS_LABELS[status]}`}
+                      aria-haspopup="listbox"
+                      aria-expanded={isStatusListOpen}
+                      onClick={() => setIsStatusListOpen((isOpen) => !isOpen)}
+                      disabled={isUpdatingStatus}
+                      className="flex h-10 items-center gap-2 rounded-lg border border-transparent px-2.5 transition hover:cursor-pointer hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <SelectValue>
-                        {(value) => {
-                          const selectedStatus = value as FeedbackStatus;
-
-                          return (
-                            <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[selectedStatus]}`}>
-                              {STATUS_LABELS[selectedStatus]}
+                      <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[status]}`}>
+                        {STATUS_LABELS[status]}
+                      </span>
+                      <ChevronDown className="size-4 text-muted-foreground" />
+                    </button>
+                    {isStatusListOpen && (
+                      <div
+                        role="listbox"
+                        aria-label="Status do feedback"
+                        className="absolute right-0 z-20 mt-1 min-w-40 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg"
+                      >
+                        {(Object.keys(STATUS_LABELS) as FeedbackStatus[]).map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            role="option"
+                            aria-selected={status === option}
+                            disabled={isUpdatingStatus}
+                            onClick={() => void handleStatusSelection(option)}
+                            className="flex w-full items-center rounded-md px-2 py-2 text-left hover:cursor-pointer hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <span className={`rounded-md px-2 py-1 text-xs font-medium ${STATUS_STYLES[option]}`}>
+                              {STATUS_LABELS[option]}
                             </span>
-                          );
-                        }}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NEW">Novo</SelectItem>
-                      <SelectItem value="IN_PROGRESS">Em progresso</SelectItem>
-                      <SelectItem value="COMPLETED">Concluído</SelectItem>
-                    </SelectContent>
-                  </Select>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <Button
                     type="button"
                     variant="ghost"
@@ -210,14 +239,7 @@ export function FeedbackDetailsDialog({
                 </DialogDescription>
               </section>
               <section>
-                <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-4 text-xs text-muted-foreground">
-                  <div className="flex flex-col min-w-0 items-start gap-1.5">
-                    <div className="flex justify-start items-start gap-1.5">
-                      <FolderKanban className="size-3.5 shrink-0" />
-                      <span>Projeto</span>
-                    </div>
-                    <span className="truncate text-md font-semibold">{project?.name ?? "Projeto"}</span>
-                  </div>
+                <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-4 text-xs text-muted-foreground md:flex-row md:gap-32 md:py-4">
                   <div className="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 text-xs text-muted-foreground">
                     <div className="flex flex-col min-w-0 items-start gap-1.5">
                       <div className="flex items-center gap-1.5">
@@ -232,49 +254,113 @@ export function FeedbackDetailsDialog({
                         })}
                       </span>
                     </div>
-                  </div>
+                    </div>
+                    <div className="flex flex-col min-w-0 items-start gap-1.5">
+                      <div className="flex justify-start items-start gap-1.5">
+                        <FolderKanban className="size-3.5 shrink-0" />
+                        <span>Projeto</span>
+                      </div>
+                      <span className="truncate text-md font-semibold">{project?.name ?? "Projeto"}</span>
+                    </div>
                 </div>
               </section>
-              <section className="max-w-sm space-y-2">
+              <section
+                className="relative max-w-sm space-y-2"
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) {
+                    setIsAssigneeListOpen(false);
+                    setAssigneeQuery("");
+                  }
+                }}
+              >
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <UserRound className="size-3.5" />
                   <span>Responsável</span>
                 </div>
-                <Select
-                  value={feedback.assigneeId ?? "unassigned"}
-                  onValueChange={(value) => {
-                    const selectedAssigneeId = value as string | null;
-                    if (selectedAssigneeId) {
-                      void onAssigneeChange(selectedAssigneeId === "unassigned" ? null : selectedAssigneeId);
-                    }
-                  }}
-                  disabled={isUpdatingAssignee}
-                >
-                  <SelectTrigger aria-label="Responsável pelo feedback" className="w-full bg-muted/30">
-                    <SelectValue>
-                      {(value) => value === "unassigned"
-                        ? "Sem responsável"
-                        : members.find((member) => member.id === value)?.name ?? feedback.assignee?.name ?? "Selecione um membro"}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="unassigned">Sem responsável</SelectItem>
-                    {members.map((member) => (
-                      <SelectItem key={member.id} value={member.id}>{member.name}</SelectItem>
+                {isAssigneeListOpen ? (
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="text"
+                      role="combobox"
+                      aria-label="Buscar responsável pelo feedback"
+                      aria-autocomplete="list"
+                      aria-expanded="true"
+                      aria-controls="feedback-assignee-options"
+                      autoComplete="off"
+                      autoFocus
+                      value={assigneeQuery}
+                      placeholder="Buscar membro..."
+                      onChange={(event) => setAssigneeQuery(event.currentTarget.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                          setIsAssigneeListOpen(false);
+                          setAssigneeQuery("");
+                        }
+                      }}
+                      disabled={isUpdatingAssignee}
+                      className="h-10 w-full rounded-lg border border-input bg-muted/30 py-2 pl-9 pr-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    aria-label={"Alterar responsável: " + (feedback.assignee?.name ?? "Sem responsável")}
+                    onClick={() => {
+                      setAssigneeQuery("");
+                      setIsAssigneeListOpen(true);
+                    }}
+                    disabled={isUpdatingAssignee}
+                    className="flex h-10 w-full items-center justify-between rounded-lg border border-transparent bg-transparent px-3 text-left text-sm font-medium transition hover:cursor-pointer hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <span className={feedback.assignee ? "text-foreground" : "text-muted-foreground"}>
+                      {feedback.assignee?.name ?? "Sem responsável"}
+                    </span>
+                    <ChevronDown className="size-4 text-muted-foreground" />
+                  </button>
+                )}
+                {isAssigneeListOpen && (
+                  <div
+                    id="feedback-assignee-options"
+                    role="listbox"
+                    aria-label="Membros disponíveis"
+                    className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg"
+                  >
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={feedback.assigneeId === null}
+                      disabled={isUpdatingAssignee}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => void selectAssignee(null)}
+                      className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-muted-foreground hover:cursor-pointer hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Sem responsável
+                    </button>
+                    {filteredMembers.map((member) => (
+                      <button
+                        key={member.id}
+                        type="button"
+                        role="option"
+                        aria-selected={feedback.assigneeId === member.id}
+                        disabled={isUpdatingAssignee}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => void selectAssignee(member.id)}
+                        className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:cursor-pointer hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <span className="truncate">{member.name}</span>
+                        <span className="ml-auto truncate pl-3 text-xs text-muted-foreground">{member.email}</span>
+                      </button>
                     ))}
-                  </SelectContent>
-                </Select>
+                    {filteredMembers.length === 0 && (
+                      <p className="px-3 py-2 text-sm text-muted-foreground">Nenhum membro encontrado</p>
+                    )}
+                  </div>
+                )}
               </section>
               <section className="mt-7 space-y-4">
                 <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                      <MessageSquareText className="size-4" />
-                    </span>
-                    <div>
-                      <h3 className="text-sm font-semibold">Comentários da equipe</h3>
-                    </div>
-                  </div>
+                  <h3 className="text-sm md:text-lg">Comentários da equipe</h3>
                   <Badge variant="secondary" className="min-w-7 justify-center tabular-nums">
                     {notes.length}
                   </Badge>
