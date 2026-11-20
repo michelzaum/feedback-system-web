@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   CalendarDays,
+  ChevronDown,
   FolderKanban,
   LoaderCircle,
   MessageSquareText,
@@ -264,36 +265,48 @@ export function FeedbackDetailsDialog({
                   <UserRound className="size-3.5" />
                   <span>Responsável</span>
                 </div>
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="text"
-                    role="combobox"
-                    aria-label="Buscar responsável pelo feedback"
-                    aria-autocomplete="list"
-                    aria-expanded={isAssigneeListOpen}
-                    aria-controls="feedback-assignee-options"
-                    autoComplete="off"
-                    value={isAssigneeListOpen ? assigneeQuery : feedback.assignee?.name ?? ""}
-                    placeholder={feedback.assignee?.name ?? "Adicionar responsável"}
-                    onFocus={() => {
+                {isAssigneeListOpen ? (
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="text"
+                      role="combobox"
+                      aria-label="Buscar responsável pelo feedback"
+                      aria-autocomplete="list"
+                      aria-expanded="true"
+                      aria-controls="feedback-assignee-options"
+                      autoComplete="off"
+                      autoFocus
+                      value={assigneeQuery}
+                      placeholder="Buscar membro..."
+                      onChange={(event) => setAssigneeQuery(event.currentTarget.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                          setIsAssigneeListOpen(false);
+                          setAssigneeQuery("");
+                        }
+                      }}
+                      disabled={isUpdatingAssignee}
+                      className="h-10 w-full rounded-lg border border-input bg-muted/30 py-2 pl-9 pr-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    aria-label={"Alterar responsável: " + (feedback.assignee?.name ?? "Sem responsável")}
+                    onClick={() => {
                       setAssigneeQuery("");
                       setIsAssigneeListOpen(true);
                     }}
-                    onChange={(event) => {
-                      setAssigneeQuery(event.currentTarget.value);
-                      setIsAssigneeListOpen(true);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Escape") {
-                        setIsAssigneeListOpen(false);
-                        setAssigneeQuery("");
-                      }
-                    }}
-                  disabled={isUpdatingAssignee}
-                    className="h-10 w-full rounded-lg border border-input bg-muted/30 py-2 pl-9 pr-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-                  />
-                </div>
+                    disabled={isUpdatingAssignee}
+                    className="flex h-10 w-full items-center justify-between rounded-lg border border-transparent bg-transparent px-3 text-left text-sm font-medium transition hover:cursor-pointer hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <span className={feedback.assignee ? "text-foreground" : "text-muted-foreground"}>
+                      {feedback.assignee?.name ?? "Sem responsável"}
+                    </span>
+                    <ChevronDown className="size-4 text-muted-foreground" />
+                  </button>
+                )}
                 {isAssigneeListOpen && (
                   <div
                     id="feedback-assignee-options"
