@@ -4,6 +4,7 @@ import {
   FolderKanban,
   LoaderCircle,
   MessageSquareText,
+  Search,
   Send,
   ShieldCheck,
   Trash2,
@@ -91,6 +92,8 @@ export function FeedbackDetailsDialog({
   onAssigneeChange,
 }: FeedbackDetailsDialogProps) {
   const [commentToDelete, setCommentToDelete] = useState<FeedbackNote | null>(null);
+  const [isAssigneeListOpen, setIsAssigneeListOpen] = useState(false);
+  const [assigneeQuery, setAssigneeQuery] = useState("");
   const [pendingStatus, setPendingStatus] = useState<{
     feedbackId: string;
     previous: FeedbackStatus;
@@ -127,6 +130,19 @@ export function FeedbackDetailsDialog({
 
     if (deleted) {
       setCommentToDelete(null);
+    }
+  };
+
+  const filteredMembers = members.filter((member) =>
+    member.name.toLocaleLowerCase("pt-BR").includes(assigneeQuery.trim().toLocaleLowerCase("pt-BR")),
+  );
+
+  const selectAssignee = async (assigneeId: string | null) => {
+    const saved = await onAssigneeChange(assigneeId);
+
+    if (saved) {
+      setAssigneeQuery("");
+      setIsAssigneeListOpen(false);
     }
   };
 
@@ -235,35 +251,87 @@ export function FeedbackDetailsDialog({
                   </div>
                 </div>
               </section>
-              <section className="max-w-sm space-y-2">
+              <section
+                className="relative max-w-sm space-y-2"
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) {
+                    setIsAssigneeListOpen(false);
+                    setAssigneeQuery("");
+                  }
+                }}
+              >
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <UserRound className="size-3.5" />
                   <span>Responsável</span>
                 </div>
-                <Select
-                  value={feedback.assigneeId ?? "unassigned"}
-                  onValueChange={(value) => {
-                    const selectedAssigneeId = value as string | null;
-                    if (selectedAssigneeId) {
-                      void onAssigneeChange(selectedAssigneeId === "unassigned" ? null : selectedAssigneeId);
-                    }
-                  }}
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    role="combobox"
+                    aria-label="Buscar responsável pelo feedback"
+                    aria-autocomplete="list"
+                    aria-expanded={isAssigneeListOpen}
+                    aria-controls="feedback-assignee-options"
+                    autoComplete="off"
+                    value={isAssigneeListOpen ? assigneeQuery : feedback.assignee?.name ?? ""}
+                    placeholder={feedback.assignee?.name ?? "Adicionar responsável"}
+                    onFocus={() => {
+                      setAssigneeQuery("");
+                      setIsAssigneeListOpen(true);
+                    }}
+                    onChange={(event) => {
+                      setAssigneeQuery(event.currentTarget.value);
+                      setIsAssigneeListOpen(true);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Escape") {
+                        setIsAssigneeListOpen(false);
+                        setAssigneeQuery("");
+                      }
+                    }}
                   disabled={isUpdatingAssignee}
-                >
-                  <SelectTrigger aria-label="Responsável pelo feedback" className="w-full bg-muted/30">
-                    <SelectValue>
-                      {(value) => value === "unassigned"
-                        ? "Sem responsável"
-                        : members.find((member) => member.id === value)?.name ?? feedback.assignee?.name ?? "Selecione um membro"}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="unassigned">Sem responsável</SelectItem>
-                    {members.map((member) => (
-                      <SelectItem key={member.id} value={member.id}>{member.name}</SelectItem>
+                    className="h-10 w-full rounded-lg border border-input bg-muted/30 py-2 pl-9 pr-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
+                {isAssigneeListOpen && (
+                  <div
+                    id="feedback-assignee-options"
+                    role="listbox"
+                    aria-label="Membros disponíveis"
+                    className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg"
+                  >
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={feedback.assigneeId === null}
+                      disabled={isUpdatingAssignee}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => void selectAssignee(null)}
+                      className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm text-muted-foreground hover:cursor-pointer hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Sem responsável
+                    </button>
+                    {filteredMembers.map((member) => (
+                      <button
+                        key={member.id}
+                        type="button"
+                        role="option"
+                        aria-selected={feedback.assigneeId === member.id}
+                        disabled={isUpdatingAssignee}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => void selectAssignee(member.id)}
+                        className="flex w-full items-center rounded-md px-3 py-2 text-left text-sm hover:cursor-pointer hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <span className="truncate">{member.name}</span>
+                        <span className="ml-auto truncate pl-3 text-xs text-muted-foreground">{member.email}</span>
+                      </button>
                     ))}
-                  </SelectContent>
-                </Select>
+                    {filteredMembers.length === 0 && (
+                      <p className="px-3 py-2 text-sm text-muted-foreground">Nenhum membro encontrado</p>
+                    )}
+                  </div>
+                )}
               </section>
               <section className="mt-7 space-y-4">
                 <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
