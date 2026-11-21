@@ -34,7 +34,7 @@ function NoOrganization() {
       <div className="pointer-events-none absolute -bottom-32 -right-20 size-80 rounded-full bg-primary/10 blur-3xl" />
       <div className="relative w-full max-w-lg">
         <Card className="w-full overflow-hidden border-border/70 shadow-xl shadow-primary/5">
-          <div className="h-1.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
+          <div className="h-1.5 bg-linear-to-r from-brand/40 via-brand to-brand/40" />
           {isCheckingOrganizations ? (
             <CardContent className="flex items-center justify-center gap-3 px-6 py-20 text-sm text-muted-foreground sm:px-10">
               <Loader2 className="size-4 animate-spin" />
@@ -43,7 +43,7 @@ function NoOrganization() {
           ) : (
             <>
               <CardHeader className="flex flex-col items-center gap-6 px-6 pt-9 text-center sm:px-10">
-                <div className="relative flex size-20 items-center justify-center rounded-3xl bg-primary/10 text-primary ring-1 ring-primary/15">
+                <div className="relative flex size-20 items-center justify-center rounded-3xl bg-brand/10 text-primary ring-1 ring-brand/15">
                   <Building2 className="size-9" />
                   <span className="absolute -bottom-2 -right-2 flex size-8 items-center justify-center rounded-full bg-background text-muted-foreground shadow-sm ring-1 ring-border">
                     <UsersRound className="size-4" />
@@ -60,7 +60,7 @@ function NoOrganization() {
                 <Button
                   type="button"
                   size="lg"
-                  className="w-full gap-2 hover:cursor-pointer"
+                  className="w-full gap-2 bg-brand text-brand-foreground hover:cursor-pointer hover:bg-brand/85"
                   onClick={onCheckOrganizations}
                 >
                   <RefreshCw className="size-4" />
@@ -106,7 +106,7 @@ function NoOrganization() {
                           <Button
                             type="submit"
                             size="lg"
-                            className="w-full gap-2 hover:cursor-pointer"
+                            className="w-full gap-2 bg-brand text-brand-foreground hover:cursor-pointer hover:bg-brand/85"
                             disabled={isSubmitting || !organizationName.trim()}
                           >
                             {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}

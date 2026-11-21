@@ -4,7 +4,7 @@ import type { DragEndEvent, DragOverEvent } from "@dnd-kit/react";
 
 import { FeedbackColumn } from "./column";
 import type { FeedbackColumns } from "./useProjectFeedbacks";
-import type { FeedbackStatus } from "@/api/feedback/types";
+import type { Feedback, FeedbackStatus } from "@/api/feedback/types";
 
 const COLUMN_ITEMS: {
   status: FeedbackStatus;
@@ -39,6 +39,7 @@ interface FeedbackBoardProps {
   onDragStart: () => void;
   onDragOver: (event: DragOverEvent) => void;
   onDragEnd: (event: DragEndEvent) => void;
+  onOpenFeedback: (feedback: Feedback) => void;
 }
 
 export function FeedbackBoard({
@@ -46,6 +47,7 @@ export function FeedbackBoard({
   onDragStart,
   onDragOver,
   onDragEnd,
+  onOpenFeedback,
 }: FeedbackBoardProps) {
   return (
     <DragDropProvider
@@ -62,6 +64,7 @@ export function FeedbackBoard({
             icon={column.icon}
             accent={column.accent}
             feedbacks={columns[column.status]}
+            onOpenFeedback={onOpenFeedback}
           />
         ))}
       </div>
